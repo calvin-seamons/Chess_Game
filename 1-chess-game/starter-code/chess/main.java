@@ -20,8 +20,8 @@ public class main {
                     System.out.print("|" + piece.getSymbol(piece.getPieceType()));
                 }
             }
-            System.out.println();
+            System.out.println("|");
         }
-        System.out.println("  a b c d e f g h\n");
+        System.out.println("   a b c d e f g h\n");
     }
 }

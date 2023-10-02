@@ -49,11 +49,21 @@ public class Chess_Piece implements ChessPiece{
     private Collection<ChessMove> rookMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> chessMoves = new ArrayList<>();
         int counter = 1;
+        ChessGame.TeamColor opponentTeam;
+        if(board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE)
+            opponentTeam = ChessGame.TeamColor.BLACK;
+        else
+            opponentTeam = ChessGame.TeamColor.WHITE;
         // Check all the positions above the rook
         while(myPosition.getRow() + counter < 9) {
             if(board.getPiece(new Chess_Position(myPosition.getRow() + counter, myPosition.getColumn())) == null) {
                 chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() + counter, myPosition.getColumn())));
                 counter++;
+            }
+            else if(board.getPiece(new Chess_Position(myPosition.getRow() + counter, myPosition.getColumn())).getTeamColor() == opponentTeam){
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() + counter, myPosition.getColumn())));
+                counter = 1;
+                break;
             }
             else {
                 counter = 1;
@@ -67,6 +77,11 @@ public class Chess_Piece implements ChessPiece{
                 chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), myPosition.getColumn() + counter)));
                 counter++;
             }
+            else if(board.getPiece(new Chess_Position(myPosition.getRow(), myPosition.getColumn() + counter)).getTeamColor() == opponentTeam){
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), myPosition.getColumn() + counter)));
+                counter = 1;
+                break;
+            }
             else {
                 counter = 1;
                 break;
@@ -79,6 +94,11 @@ public class Chess_Piece implements ChessPiece{
                 chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - counter, myPosition.getColumn())));
                 counter++;
             }
+            else if(board.getPiece(new Chess_Position(myPosition.getRow() - counter, myPosition.getColumn())).getTeamColor() == opponentTeam){
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - counter, myPosition.getColumn())));
+                counter = 1;
+                break;
+            }
             else {
                 counter = 1;
                 break;
@@ -90,6 +110,10 @@ public class Chess_Piece implements ChessPiece{
             if(board.getPiece(new Chess_Position(myPosition.getRow(), myPosition.getColumn() - counter)) == null) {
                 chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), myPosition.getColumn() - counter)));
                 counter++;
+            }
+            else if(board.getPiece(new Chess_Position(myPosition.getRow(), myPosition.getColumn() - counter)).getTeamColor() == opponentTeam){
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), myPosition.getColumn() - counter)));
+                break;
             }
             else
                 break;
