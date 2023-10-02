@@ -6,6 +6,11 @@ public class Chess_Game implements ChessGame{
     private TeamColor teamTurn;
     private ChessBoard board;
 
+    public Chess_Game() {
+        this.teamTurn = TeamColor.WHITE;
+        this.board = new Chess_Board();
+    }
+
     /**
      * @return Which team's turn it is
      */
@@ -32,7 +37,14 @@ public class Chess_Game implements ChessGame{
      */
     @Override
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        return null;
+        Collection<ChessMove> chessMoves = board.getPiece(startPosition).pieceMoves(board, startPosition);
+
+        // Print out all the moves
+        System.out.println("Valid moves for piece at row: " + startPosition.getRow() + ", column: " + startPosition.getColumn());
+        for (ChessMove chessMove : chessMoves) {
+            System.out.println("Row: " + chessMove.getEndPosition().getRow() + ", Column: " +chessMove.getEndPosition().getColumn());
+        }
+        return chessMoves;
     }
 
     /**

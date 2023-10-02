@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.ArrayList;
 
 public class Chess_Piece implements ChessPiece{
     private ChessPiece.PieceType PieceType;
@@ -38,7 +39,102 @@ public class Chess_Piece implements ChessPiece{
      */
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-
+        if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.PAWN)
+            return pawnMoves(board, myPosition);
+        else if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.ROOK)
+            return rookMoves(board, myPosition);
         return null;
+    }
+
+    private Collection<ChessMove> rookMoves(ChessBoard board, ChessPosition myPosition) {
+        Collection<ChessMove> chessMoves = new ArrayList<>();
+        int counter = 1;
+        // Check all the positions above the rook
+        while(myPosition.getRow() + counter < 9) {
+            if(board.getPiece(new Chess_Position(myPosition.getRow() + counter, myPosition.getColumn())) == null) {
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() + counter, myPosition.getColumn())));
+                counter++;
+            }
+            else {
+                counter = 1;
+                break;
+            }
+        }
+
+        // Check all the positions to the right of the rook
+        while(myPosition.getColumn() + counter < 9) {
+            if(board.getPiece(new Chess_Position(myPosition.getRow(), myPosition.getColumn() + counter)) == null) {
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), myPosition.getColumn() + counter)));
+                counter++;
+            }
+            else {
+                counter = 1;
+                break;
+            }
+        }
+
+        // Check all the positions below the rook
+        while(myPosition.getRow() - counter > 1) {
+            if(board.getPiece(new Chess_Position(myPosition.getRow() - counter, myPosition.getColumn())) == null) {
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - counter, myPosition.getColumn())));
+                counter++;
+            }
+            else {
+                counter = 1;
+                break;
+            }
+        }
+
+        // Check all the positions to the left of the rook
+        while(myPosition.getColumn() > 1) {
+            if(board.getPiece(new Chess_Position(myPosition.getRow(), myPosition.getColumn() - counter)) == null) {
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), myPosition.getColumn() - counter)));
+                counter++;
+            }
+            else
+                break;
+        }
+        return chessMoves;
+    }
+
+    private Collection<ChessMove> pawnMoves(ChessBoard board, ChessPosition myPosition) {
+        Collection<ChessMove> chessMoves = new ArrayList<>();
+
+        if(board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE) {
+            if(myPosition.getRow() == 2) {
+                if(board.getPiece(new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn())) == null)
+                    if(board.getPiece(new Chess_Position(myPosition.getRow() + 2, myPosition.getColumn())) == null)
+                        chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() + 2, myPosition.getColumn())));
+            }
+            if(board.getPiece(new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn())) == null)
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn())));
+        }
+        else {
+            if(myPosition.getRow() == 7) {
+                if(board.getPiece(new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn())) == null)
+                    if(board.getPiece(new Chess_Position(myPosition.getRow() - 2, myPosition.getColumn())) == null)
+                        chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - 2, myPosition.getColumn())));
+            }
+            if(board.getPiece(new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn())) == null)
+                    chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn())));
+        }
+        return chessMoves;
+    }
+
+    public String getSymbol(ChessPiece.PieceType PieceType) {
+        if (this.PieceType == ChessPiece.PieceType.PAWN)
+            return "P";
+        else if (this.PieceType == ChessPiece.PieceType.ROOK)
+            return "R";
+        else if (this.PieceType == ChessPiece.PieceType.KNIGHT)
+            return "N";
+        else if (this.PieceType == ChessPiece.PieceType.BISHOP)
+            return "B";
+        else if (this.PieceType == ChessPiece.PieceType.QUEEN)
+            return "Q";
+        else if (this.PieceType == ChessPiece.PieceType.KING)
+            return "K";
+        else
+            return " ";
     }
 }

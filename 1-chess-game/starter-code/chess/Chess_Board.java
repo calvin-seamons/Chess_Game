@@ -44,7 +44,7 @@ public class Chess_Board implements ChessBoard {
         }
 
         // Set white pieces
-        board[0][0] = new Chess_Piece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK, new Chess_Position(1, 1));
+        board[2][0] = new Chess_Piece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK, new Chess_Position(3, 1));
         board[0][1] = new Chess_Piece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT, new Chess_Position(1, 2));
         board[0][2] = new Chess_Piece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP, new Chess_Position(1, 3));
         board[0][3] = new Chess_Piece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN, new Chess_Position(1, 4));
