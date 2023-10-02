@@ -6,7 +6,6 @@ import java.util.Collection;
  * Represents a single chess piece
  */
 public interface ChessPiece {
-
     /**
      * The various different chess piece options
      */
@@ -17,6 +16,11 @@ public interface ChessPiece {
         KNIGHT,
         ROOK,
         PAWN
+    }
+
+    enum Team{
+        WHITE,
+        BLACK
     }
 
     /**
