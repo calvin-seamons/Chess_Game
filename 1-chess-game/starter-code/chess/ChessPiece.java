@@ -6,6 +6,15 @@ import java.util.Collection;
  * Represents a single chess piece
  */
 public interface ChessPiece {
+    // NOT IN OG INTERFACE
+    void setPosition(ChessPosition endPosition);
+
+    //NOT IN OG INTERFACE
+    boolean getHasMoved();
+
+    //NOT IN OG INTERFACE
+    void setHasMoved(boolean hasMoved);
+
     /**
      * The various different chess piece options
      */
@@ -15,7 +24,7 @@ public interface ChessPiece {
         BISHOP,
         KNIGHT,
         ROOK,
-        PAWN
+        PAWN;
     }
 
     enum Team{

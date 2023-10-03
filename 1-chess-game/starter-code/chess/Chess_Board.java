@@ -23,6 +23,7 @@ public class Chess_Board implements ChessBoard {
         return lastMove;
     }
 
+    // NOT IN OG INTERFACE
     public Collection<ChessPiece> getOpponentPieces(ChessGame.TeamColor teamColor){
         Collection<ChessPiece> opponentPieces = new ArrayList<ChessPiece>();
         for(int i = 0; i < 8; i++){
@@ -53,6 +54,9 @@ public class Chess_Board implements ChessBoard {
      */
     @Override
     public ChessPiece getPiece(ChessPosition position) {
+        if (position.getRow() < 1 || position.getRow() > 8 || position.getColumn() < 1 || position.getColumn() > 8) {
+            throw new IllegalArgumentException("Invalid position");
+        }
         return board[position.getRow() - 1][position.getColumn() - 1];
     }
 

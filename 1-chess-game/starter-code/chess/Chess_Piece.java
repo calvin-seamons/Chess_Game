@@ -9,11 +9,27 @@ public class Chess_Piece implements ChessPiece{
     private final ChessGame.TeamColor teamColor;
     private Chess_Position position;
 
+    private boolean hasMoved = false;
+
     public Chess_Piece(ChessGame.TeamColor teamColor, ChessPiece.PieceType PieceType, Chess_Position position) {
         this.PieceType = PieceType;
         this.teamColor = teamColor;
         this.position = position;
     }
+
+    public void setHasMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
+    }
+
+    public boolean getHasMoved() {
+        return hasMoved;
+    }
+
+    @Override
+    public void setPosition(ChessPosition endPosition) {
+
+    }
+
     /**
      * @return Which team this chess piece belongs to
      */
@@ -37,6 +53,10 @@ public class Chess_Piece implements ChessPiece{
     @Override
     public ChessPosition getPosition() {
         return this.position;
+    }
+
+    public void setPosition(Chess_Position position) {
+        this.position = position;
     }
 
     /**
@@ -111,6 +131,23 @@ public class Chess_Piece implements ChessPiece{
                 chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), myPosition.getColumn() + 1)));
             else if(board.getPiece(new Chess_Position(myPosition.getRow(), myPosition.getColumn() + 1)).getTeamColor() == opponentTeam)
                 chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), myPosition.getColumn() + 1)));
+        }
+
+        // Check if the king can castle
+        // TODO Make sure that all the positions between the king and rook are not in check
+        if(!board.getPiece(myPosition).getHasMoved()){
+            // Check if the king can castle kingside
+            if(board.getPiece(new Chess_Position(myPosition.getRow(), 8)) != null && !board.getPiece(new Chess_Position(myPosition.getRow(), 8)).getHasMoved()){
+                if(board.getPiece(new Chess_Position(myPosition.getRow(), 7)) == null && board.getPiece(new Chess_Position(myPosition.getRow(), 6)) == null){
+                    chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), 7)));
+                }
+            }
+            // Check if the king can castle queenside
+            if(board.getPiece(new Chess_Position(myPosition.getRow(), 1)) != null && !board.getPiece(new Chess_Position(myPosition.getRow(), 1)).getHasMoved()){
+                if(board.getPiece(new Chess_Position(myPosition.getRow(), 2)) == null && board.getPiece(new Chess_Position(myPosition.getRow(), 3)) == null && board.getPiece(new Chess_Position(myPosition.getRow(), 4)) == null){
+                    chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), 3)));
+                }
+            }
         }
 
         return chessMoves;

@@ -38,6 +38,10 @@ public class Chess_Game implements ChessGame{
      */
     @Override
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+        if(board.getPiece(startPosition) == null){
+            return null;
+        }
+
         Collection<ChessMove> chessMoves = board.getPiece(startPosition).pieceMoves(board, startPosition);
 
         // Print out all the moves
@@ -59,9 +63,12 @@ public class Chess_Game implements ChessGame{
         if(board.getPiece(move.getStartPosition()) == null){
             throw new InvalidMoveException("No piece at start position");
         }
+        if(!validMoves(move.getStartPosition()).contains(move)){
+            throw new InvalidMoveException("Invalid move");
+        }
 
         // TODO Check if move is a castle
-        if(board.getPiece(move.getStartPosition()).getPieceType() == ChessPiece.PieceType.KING){
+        if(board.getPiece(move.getStartPosition()).getPieceType() == ChessPiece.PieceType.KING && !board.getPiece(move.getStartPosition()).getHasMoved()){
             if(move.getEndPosition().getColumn() - move.getStartPosition().getColumn() == 2){
                 // Castle kingside
                 ChessPosition rookStart = new Chess_Position(move.getStartPosition().getRow(), 8);
@@ -69,7 +76,13 @@ public class Chess_Game implements ChessGame{
                 ChessMove rookMove = new Chess_Move(rookStart, rookEnd);
                 board.addPiece(rookEnd, board.getPiece(rookStart));
                 board.addPiece(rookStart, null);
+                board.getPiece(rookEnd).setHasMoved(true);
                 board.setLastMove(rookMove);
+                board.getPiece(move.getStartPosition()).setPosition(move.getEndPosition());
+                board.getPiece(move.getStartPosition()).setHasMoved(true);
+                board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
+                board.addPiece(move.getStartPosition(), null);
+
             } else if(move.getEndPosition().getColumn() - move.getStartPosition().getColumn() == -2){
                 // Castle queenside
                 ChessPosition rookStart = new Chess_Position(move.getStartPosition().getRow(), 1);
@@ -77,7 +90,12 @@ public class Chess_Game implements ChessGame{
                 ChessMove rookMove = new Chess_Move(rookStart, rookEnd);
                 board.addPiece(rookEnd, board.getPiece(rookStart));
                 board.addPiece(rookStart, null);
+                board.getPiece(rookEnd).setHasMoved(true);
                 board.setLastMove(rookMove);
+                board.getPiece(move.getStartPosition()).setPosition(move.getEndPosition());
+                board.getPiece(move.getStartPosition()).setHasMoved(true);
+                board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
+                board.addPiece(move.getStartPosition(), null);
             }
         }
 
