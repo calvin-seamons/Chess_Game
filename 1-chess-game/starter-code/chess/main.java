@@ -4,9 +4,10 @@ public class main {
     public static void main(String[] args) throws InvalidMoveException {
         ChessGame game = new Chess_Game();
         ChessBoard board = new Chess_Board();
+        game.setBoard(board);
         // System.out.println(board.getPiece(new Chess_Position(8, 3)).getPieceType());
         printBoard(board);
-        game.validMoves(new Chess_Position(3, 1));
+        game.validMoves(new Chess_Position(1, 2));
     }
 
     public static void printBoard(ChessBoard board) {
