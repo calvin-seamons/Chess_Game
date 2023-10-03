@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Collection;
+
 /**
  * A chessboard that can hold and rearrange chess pieces
  */
@@ -24,4 +26,11 @@ public interface ChessBoard {
      * (How the game of chess normally starts)
      */
     void resetBoard();
+
+    void setLastMove(ChessMove move);
+
+    ChessMove getLastMove();
+
+    // NOT IN OG INTERFACE
+    Collection<ChessPiece> getOpponentPieces(ChessGame.TeamColor teamColor);
 }

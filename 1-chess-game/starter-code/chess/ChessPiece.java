@@ -33,6 +33,9 @@ public interface ChessPiece {
      */
     PieceType getPieceType();
 
+    // NOT PART OF THE OG INTERFACE
+    ChessPosition getPosition();
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in danger

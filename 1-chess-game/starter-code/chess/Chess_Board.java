@@ -1,13 +1,39 @@
 package chess;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 public class Chess_Board implements ChessBoard {
-    private ChessPiece[][] board;
+    private final ChessPiece[][] board;
+    private ChessMove lastMove;
 
     public Chess_Board() {
         board = new ChessPiece[8][8];
         resetBoard();
     }
 
+    // NOT IN OG INTERFACE
+    public void setLastMove(ChessMove lastMove) {
+        this.lastMove = lastMove;
+    }
+
+    // NOT IN OG INTERFACE
+    public ChessMove getLastMove() {
+        return lastMove;
+    }
+
+    public Collection<ChessPiece> getOpponentPieces(ChessGame.TeamColor teamColor){
+        Collection<ChessPiece> opponentPieces = new ArrayList<ChessPiece>();
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++) {
+                if(board[i][j] != null && board[i][j].getTeamColor() != teamColor){
+                    opponentPieces.add(board[i][j]);
+                }
+            }
+        }
+        return opponentPieces;
+    }
     /**
      * Adds a chess piece to the chessboard
      *
@@ -48,7 +74,7 @@ public class Chess_Board implements ChessBoard {
         board[0][1] = new Chess_Piece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT, new Chess_Position(1, 2));
         board[0][2] = new Chess_Piece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP, new Chess_Position(1, 3));
         board[0][3] = new Chess_Piece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN, new Chess_Position(1, 4));
-        board[2][4] = new Chess_Piece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING, new Chess_Position(3, 5));
+        board[0][4] = new Chess_Piece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING, new Chess_Position(1, 5));
         board[0][5] = new Chess_Piece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP, new Chess_Position(1, 6));
         board[0][6] = new Chess_Piece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT, new Chess_Position(1, 7));
         board[0][7] = new Chess_Piece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK, new Chess_Position(1, 8));

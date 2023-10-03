@@ -2,10 +2,11 @@ package chess;
 
 import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Chess_Piece implements ChessPiece{
-    private ChessPiece.PieceType PieceType;
-    private ChessGame.TeamColor teamColor;
+    private final ChessPiece.PieceType PieceType;
+    private final ChessGame.TeamColor teamColor;
     private Chess_Position position;
 
     public Chess_Piece(ChessGame.TeamColor teamColor, ChessPiece.PieceType PieceType, Chess_Position position) {
@@ -29,6 +30,15 @@ public class Chess_Piece implements ChessPiece{
         return this.PieceType;
     }
 
+
+    /**
+     * @return The position of this piece on the board
+     */
+    @Override
+    public ChessPosition getPosition() {
+        return this.position;
+    }
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in danger
@@ -40,7 +50,7 @@ public class Chess_Piece implements ChessPiece{
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.PAWN)
-            return pawnMoves(board, myPosition);
+            return pawnMoves(board, myPosition, board.getLastMove());
         else if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.ROOK)
             return rookMoves(board, myPosition);
         else if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.KNIGHT)
@@ -326,7 +336,7 @@ public class Chess_Piece implements ChessPiece{
         return chessMoves;
     }
 
-    private Collection<ChessMove> pawnMoves(ChessBoard board, ChessPosition myPosition) {
+    private Collection<ChessMove> pawnMoves(ChessBoard board, ChessPosition myPosition, ChessMove lastMove) {
         Collection<ChessMove> chessMoves = new ArrayList<>();
 
         if(board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE) {
@@ -360,6 +370,42 @@ public class Chess_Piece implements ChessPiece{
             if(board.getPiece(new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn() - 1)).getTeamColor() == ChessGame.TeamColor.WHITE)
                 chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn() - 1)));
         }
+
+        // Check to see if pawn can be promoted
+        if(board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE){
+            if(myPosition.getRow() == 7 && board.getPiece(new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn())) == null){
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn()), ChessPiece.PieceType.QUEEN));
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn()), ChessPiece.PieceType.ROOK));
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn()), ChessPiece.PieceType.BISHOP));
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn()), ChessPiece.PieceType.KNIGHT));
+            }
+        }
+        else{
+            if(myPosition.getRow() == 2 && board.getPiece(new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn())) == null){
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn()), ChessPiece.PieceType.QUEEN));
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn()), ChessPiece.PieceType.ROOK));
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn()), ChessPiece.PieceType.BISHOP));
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn()), ChessPiece.PieceType.KNIGHT));
+            }
+        }
+
+        // TODO Check to see if pawn can be captured en passant
+        // Not sure if this works
+        if(board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE){
+            if(Objects.equals(lastMove.getStartPosition(), new Chess_Position(7, myPosition.getColumn() + 1)) && Objects.equals(lastMove.getEndPosition(), new Chess_Position(5, myPosition.getColumn() + 1))){
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(6, myPosition.getColumn() + 1)));
+            } else if (Objects.equals(lastMove.getStartPosition(), new Chess_Position(7, myPosition.getColumn() - 1)) && Objects.equals(lastMove.getEndPosition(), new Chess_Position(5, myPosition.getColumn() - 1))){
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(6, myPosition.getColumn() - 1)));
+            }
+
+        } else{
+            if(Objects.equals(lastMove.getStartPosition(), new Chess_Position(2, myPosition.getColumn() + 1)) && Objects.equals(lastMove.getEndPosition(), new Chess_Position(4, myPosition.getColumn() + 1))){
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(3, myPosition.getColumn() + 1)));
+            } else if (Objects.equals(lastMove.getStartPosition(), new Chess_Position(2, myPosition.getColumn() - 1)) && Objects.equals(lastMove.getEndPosition(), new Chess_Position(4, myPosition.getColumn() - 1))){
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(3, myPosition.getColumn() - 1)));
+            }
+        }
+
         return chessMoves;
     }
 
