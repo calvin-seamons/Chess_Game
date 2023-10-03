@@ -7,7 +7,7 @@ public class main {
         game.setBoard(board);
         // System.out.println(board.getPiece(new Chess_Position(8, 3)).getPieceType());
         printBoard(board);
-        game.validMoves(new Chess_Position(1, 2));
+        game.validMoves(new Chess_Position(3, 5));
     }
 
     public static void printBoard(ChessBoard board) {
@@ -23,6 +23,6 @@ public class main {
             }
             System.out.println("|");
         }
-        System.out.println("   a b c d e f g h\n");
+        System.out.println("   1 2 3 4 5 6 7 8\n");
     }
 }

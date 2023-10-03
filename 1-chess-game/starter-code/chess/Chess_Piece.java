@@ -45,14 +45,150 @@ public class Chess_Piece implements ChessPiece{
             return rookMoves(board, myPosition);
         else if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.KNIGHT)
             return knightMoves(board, myPosition);
-//        else if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.BISHOP)
-//            return bishopMoves(board, myPosition);
-//        else if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.QUEEN)
-//            return queenMoves(board, myPosition);
-//        else if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.KING)
-//            return kingMoves(board, myPosition);
+        else if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.BISHOP)
+            return bishopMoves(board, myPosition);
+        else if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.QUEEN)
+            return queenMoves(board, myPosition);
+        else if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.KING)
+            return kingMoves(board, myPosition);
         else
             return null;
+    }
+
+    private Collection<ChessMove> kingMoves(ChessBoard board, ChessPosition myPosition) {
+        Collection<ChessMove> chessMoves = new ArrayList<>();
+        ChessGame.TeamColor opponentTeam;
+        if(board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE)
+            opponentTeam = ChessGame.TeamColor.BLACK;
+        else
+            opponentTeam = ChessGame.TeamColor.WHITE;
+
+        // Check all the positions above the king
+        if(myPosition.getRow() + 1 < 9) {
+            for(int x=-1; x<2; x++){
+                if(myPosition.getColumn() + x > 0 && myPosition.getColumn() + x < 9) {
+                    if(board.getPiece(new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn() + x)) == null)
+                        chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn() + x)));
+                    else if(board.getPiece(new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn() + x)).getTeamColor() == opponentTeam)
+                        chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn() + x)));
+                }
+            }
+        }
+
+        // Check all the positions below the king
+        if(myPosition.getRow() - 1 > 0) {
+            for(int x=-1; x<2; x++){
+                if(myPosition.getColumn() + x > 0 && myPosition.getColumn() + x < 9) {
+                    if(board.getPiece(new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn() + x)) == null)
+                        chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn() + x)));
+                    else if(board.getPiece(new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn() + x)).getTeamColor() == opponentTeam)
+                        chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn() + x)));
+                }
+            }
+        }
+
+        // Check all the positions to the left of the king
+        if(myPosition.getColumn() - 1 > 0) {
+            if(board.getPiece(new Chess_Position(myPosition.getRow(), myPosition.getColumn() - 1)) == null)
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), myPosition.getColumn() - 1)));
+            else if(board.getPiece(new Chess_Position(myPosition.getRow(), myPosition.getColumn() - 1)).getTeamColor() == opponentTeam)
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), myPosition.getColumn() - 1)));
+        }
+
+        // Check all the positions to the right of the king
+        if(myPosition.getColumn() + 1 < 9) {
+            if(board.getPiece(new Chess_Position(myPosition.getRow(), myPosition.getColumn() + 1)) == null)
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), myPosition.getColumn() + 1)));
+            else if(board.getPiece(new Chess_Position(myPosition.getRow(), myPosition.getColumn() + 1)).getTeamColor() == opponentTeam)
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), myPosition.getColumn() + 1)));
+        }
+
+        return chessMoves;
+    }
+
+    private Collection<ChessMove> queenMoves(ChessBoard board, ChessPosition myPosition) {
+        Collection<ChessMove> chessMoves = new ArrayList<>();
+        chessMoves.addAll(rookMoves(board, myPosition));
+        chessMoves.addAll(bishopMoves(board, myPosition));
+        return chessMoves;
+    }
+
+    private Collection<ChessMove> bishopMoves(ChessBoard board, ChessPosition myPosition) {
+        Collection<ChessMove> chessMoves = new ArrayList<>();
+        int counter = 1;
+        ChessGame.TeamColor opponentTeam;
+        if(board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE)
+            opponentTeam = ChessGame.TeamColor.BLACK;
+        else
+            opponentTeam = ChessGame.TeamColor.WHITE;
+
+        // Check all the positions above and to the right of the bishop
+        while(myPosition.getRow() + counter < 9 && myPosition.getColumn() + counter < 9) {
+            if(board.getPiece(new Chess_Position(myPosition.getRow() + counter, myPosition.getColumn() + counter)) == null) {
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() + counter, myPosition.getColumn() + counter)));
+                counter++;
+            }
+            else if(board.getPiece(new Chess_Position(myPosition.getRow() + counter, myPosition.getColumn() + counter)).getTeamColor() == opponentTeam){
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() + counter, myPosition.getColumn() + counter)));
+                counter = 1;
+                break;
+            }
+            else {
+                counter = 1;
+                break;
+            }
+        }
+
+        // Check all the positions below and to the right of the bishop
+        while(myPosition.getRow() - counter > 0 && myPosition.getColumn() + counter < 9) {
+            if(board.getPiece(new Chess_Position(myPosition.getRow() - counter, myPosition.getColumn() + counter)) == null) {
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - counter, myPosition.getColumn() + counter)));
+                counter++;
+            }
+            else if(board.getPiece(new Chess_Position(myPosition.getRow() - counter, myPosition.getColumn() + counter)).getTeamColor() == opponentTeam){
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - counter, myPosition.getColumn() + counter)));
+                counter = 1;
+                break;
+            }
+            else {
+                counter = 1;
+                break;
+            }
+        }
+
+        // Check all the positions below and to the left of the bishop
+        while(myPosition.getRow() - counter > 0 && myPosition.getColumn() - counter > 0) {
+            if(board.getPiece(new Chess_Position(myPosition.getRow() - counter, myPosition.getColumn() - counter)) == null) {
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - counter, myPosition.getColumn() - counter)));
+                counter++;
+            }
+            else if(board.getPiece(new Chess_Position(myPosition.getRow() - counter, myPosition.getColumn() - counter)).getTeamColor() == opponentTeam){
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - counter, myPosition.getColumn() - counter)));
+                counter = 1;
+                break;
+            }
+            else {
+                counter = 1;
+                break;
+            }
+        }
+
+        // Check all the positions above and to the left of the bishop
+        while(myPosition.getRow() + counter < 9 && myPosition.getColumn() - counter > 0) {
+            if(board.getPiece(new Chess_Position(myPosition.getRow() + counter, myPosition.getColumn() - counter)) == null) {
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() + counter, myPosition.getColumn() - counter)));
+                counter++;
+            }
+            else if(board.getPiece(new Chess_Position(myPosition.getRow() + counter, myPosition.getColumn() - counter)).getTeamColor() == opponentTeam){
+                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() + counter, myPosition.getColumn() - counter)));
+                break;
+            }
+            else {
+                break;
+            }
+        }
+
+        return chessMoves;
     }
 
     private Collection<ChessMove> knightMoves(ChessBoard board, ChessPosition myPosition){
