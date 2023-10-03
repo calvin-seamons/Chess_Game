@@ -7,11 +7,11 @@ import java.util.Objects;
 public class Chess_Piece implements ChessPiece{
     private final ChessPiece.PieceType PieceType;
     private final ChessGame.TeamColor teamColor;
-    private Chess_Position position;
+    private ChessPosition position;
 
     private boolean hasMoved = false;
 
-    public Chess_Piece(ChessGame.TeamColor teamColor, ChessPiece.PieceType PieceType, Chess_Position position) {
+    public Chess_Piece(ChessGame.TeamColor teamColor, ChessPiece.PieceType PieceType, ChessPosition position) {
         this.PieceType = PieceType;
         this.teamColor = teamColor;
         this.position = position;

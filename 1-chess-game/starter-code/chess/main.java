@@ -7,7 +7,7 @@ public class main {
         game.setBoard(board);
         // System.out.println(board.getPiece(new Chess_Position(8, 3)).getPieceType());
         printBoard(board);
-        game.validMoves(new Chess_Position(3, 5));
+        game.validMoves(new Chess_Position(1, 5));
     }
 
     public static void printBoard(ChessBoard board) {
