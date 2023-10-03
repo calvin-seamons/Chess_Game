@@ -394,18 +394,23 @@ public class Chess_Piece implements ChessPiece{
             if(board.getPiece(new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn())) == null)
                     chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn())));
         }
-        //Check to see if there is a piece to capture
+        // Check to see if there is a piece to capture
+        // TODO Make sure that the piece is not on the edge of the board
         if(board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE) {
-            if(board.getPiece(new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn() + 1)).getTeamColor() == ChessGame.TeamColor.BLACK)
-                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn() + 1)));
-            if(board.getPiece(new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn() - 1)).getTeamColor() == ChessGame.TeamColor.BLACK)
-                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn() - 1)));
+            if(board.getPiece(new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn() + 1)) != null && board.getPiece(new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn() - 1)) != null) {
+                if (board.getPiece(new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn() + 1)).getTeamColor() == ChessGame.TeamColor.BLACK)
+                    chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn() + 1)));
+                if (board.getPiece(new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn() - 1)).getTeamColor() == ChessGame.TeamColor.BLACK)
+                    chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() + 1, myPosition.getColumn() - 1)));
+            }
         }
         else {
-            if(board.getPiece(new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn() + 1)).getTeamColor() == ChessGame.TeamColor.WHITE)
-                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn() + 1)));
-            if(board.getPiece(new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn() - 1)).getTeamColor() == ChessGame.TeamColor.WHITE)
-                chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn() - 1)));
+            if(board.getPiece(new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn() + 1)) != null && board.getPiece(new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn() - 1)) != null) {
+                if (board.getPiece(new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn() + 1)).getTeamColor() == ChessGame.TeamColor.WHITE)
+                    chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn() + 1)));
+                if (board.getPiece(new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn() - 1)).getTeamColor() == ChessGame.TeamColor.WHITE)
+                    chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow() - 1, myPosition.getColumn() - 1)));
+            }
         }
 
         // Check to see if pawn can be promoted
@@ -428,6 +433,8 @@ public class Chess_Piece implements ChessPiece{
 
         // TODO Check to see if pawn can be captured en passant
         // Not sure if this works
+        if(board.getLastMove() == null)
+            return chessMoves;
         if(board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE){
             if(Objects.equals(lastMove.getStartPosition(), new Chess_Position(7, myPosition.getColumn() + 1)) && Objects.equals(lastMove.getEndPosition(), new Chess_Position(5, myPosition.getColumn() + 1))){
                 chessMoves.add(new Chess_Move(myPosition, new Chess_Position(6, myPosition.getColumn() + 1)));

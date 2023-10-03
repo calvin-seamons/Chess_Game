@@ -13,6 +13,15 @@ public class Chess_Board implements ChessBoard {
         resetBoard();
     }
 
+    public Chess_Board(Chess_Board board) {
+        this.board = new ChessPiece[8][8];
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++) {
+                this.board[i][j] = board.board[i][j];
+            }
+        }
+    }
+
     // NOT IN OG INTERFACE
     public void setLastMove(ChessMove lastMove) {
         this.lastMove = lastMove;
@@ -83,14 +92,14 @@ public class Chess_Board implements ChessBoard {
         board[0][6] = new Chess_Piece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT, new Chess_Position(1, 7));
         board[0][7] = new Chess_Piece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK, new Chess_Position(1, 8));
 
-        for (int j = 0; j < 8; j++) {
-            board[1][j] = new Chess_Piece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN, new Chess_Position(2, j + 1));
-        }
+//        for (int j = 0; j < 8; j++) {
+//            board[1][j] = new Chess_Piece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN, new Chess_Position(2, j + 1));
+//        }
 
         // Set black pieces
         board[7][0] = new Chess_Piece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK, new Chess_Position(8, 1));
         board[7][1] = new Chess_Piece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT, new Chess_Position(8, 2));
-        board[7][2] = new Chess_Piece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP, new Chess_Position(8, 3));
+        board[2][6] = new Chess_Piece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP, new Chess_Position(3, 7));
         board[7][3] = new Chess_Piece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN, new Chess_Position(8, 4));
         board[7][4] = new Chess_Piece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING, new Chess_Position(8, 5));
         board[7][5] = new Chess_Piece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP, new Chess_Position(8, 6));
