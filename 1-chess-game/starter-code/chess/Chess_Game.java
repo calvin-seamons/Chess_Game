@@ -51,16 +51,19 @@ public class Chess_Game implements ChessGame{
         Collection<ChessMove> chessMoves = board.getPiece(startPosition).pieceMoves(board, startPosition);
         Collection<ChessMove> invalidChessMoves = new ArrayList<ChessMove>();
 
+
         for (ChessMove chessMove : chessMoves) {
             Chess_Game tempGame = new Chess_Game(this);
             tempGame.setBoard(new Chess_Board((Chess_Board) this.board));
+            ChessGame.TeamColor tempTeamTurn = tempGame.board.getPiece(chessMove.getStartPosition()).getTeamColor();
             tempGame.applyMove(chessMove);
-            if(tempGame.isInCheck(tempGame.getTeamTurn())) {
+            if(tempGame.isInCheck(tempTeamTurn)){
                 invalidChessMoves.add(chessMove); // Move results in check, add to invalid moves list
+                System.out.println("Invalid move: " + chessMove.getEndPosition().getRow() + ", " + chessMove.getEndPosition().getColumn());
             }
         }
-
         chessMoves.removeAll(invalidChessMoves);
+        this.board.getPiece(startPosition).setPosition(startPosition);
 
         System.out.println("Valid moves for piece at row: " + startPosition.getRow() + ", column: " + startPosition.getColumn());
         for (ChessMove chessMove : chessMoves) {
@@ -83,15 +86,23 @@ public class Chess_Game implements ChessGame{
         if(!validMoves(move.getStartPosition()).contains(move)){
             throw new InvalidMoveException("Invalid move");
         }
+//        if(board.getPiece(move.getStartPosition()).getTeamColor() != board.getPiece(board.getLastMove().getEndPosition()).getTeamColor()){
+//            throw new InvalidMoveException("Not your turn");
+//        }
         if(board.getPiece(move.getStartPosition()).getTeamColor() != teamTurn){
             throw new InvalidMoveException("Not your turn");
         }
         applyMove(move);
         this.board.setLastMove(move);
+        if(teamTurn == TeamColor.WHITE){
+            teamTurn = TeamColor.BLACK;
+        } else {
+            teamTurn = TeamColor.WHITE;
+        }
     }
 
     private void applyMove(ChessMove move) {
-        // TODO Check if move is a castle
+        // Check if move is a castle
         if(board.getPiece(move.getStartPosition()).getPieceType() == ChessPiece.PieceType.KING && !board.getPiece(move.getStartPosition()).getHasMoved()){
             if(move.getEndPosition().getColumn() - move.getStartPosition().getColumn() == 2){
                 // Castle kingside
@@ -142,6 +153,7 @@ public class Chess_Game implements ChessGame{
     @Override
     public boolean isInCheck(TeamColor teamColor) {
         ArrayList<ChessPiece> opponentPieces = (ArrayList<ChessPiece>) board.getOpponentPieces(teamColor);
+
         for (ChessPiece piece : opponentPieces) {
             Collection<ChessMove> validMoves = piece.pieceMoves(board, piece.getPosition());
             for (ChessMove move : validMoves) {
@@ -155,6 +167,7 @@ public class Chess_Game implements ChessGame{
         return false;
     }
 
+
     /**
      * Determines if the given team is in checkmate
      *
@@ -163,6 +176,21 @@ public class Chess_Game implements ChessGame{
      */
     @Override
     public boolean isInCheckmate(TeamColor teamColor) {
+        Collection<ChessMove> totalValidMoves = new ArrayList<>();
+        ChessGame.TeamColor opponentColor;
+        if(teamColor == ChessGame.TeamColor.WHITE){
+            opponentColor = ChessGame.TeamColor.BLACK;
+        } else {
+            opponentColor = ChessGame.TeamColor.WHITE;
+        }
+
+        if(isInCheck(teamColor)){
+            ArrayList<ChessPiece> teamPieces = (ArrayList<ChessPiece>) board.getOpponentPieces(opponentColor);
+            for (ChessPiece piece : teamPieces) {
+                totalValidMoves.addAll(validMoves(piece.getPosition()));
+            }
+            return totalValidMoves.isEmpty();
+        }
         return false;
     }
 
@@ -174,6 +202,21 @@ public class Chess_Game implements ChessGame{
      */
     @Override
     public boolean isInStalemate(TeamColor teamColor) {
+        Collection<ChessMove> totalValidMoves = new ArrayList<>();
+        ChessGame.TeamColor opponentColor;
+        if(teamColor == ChessGame.TeamColor.WHITE){
+            opponentColor = ChessGame.TeamColor.BLACK;
+        } else {
+            opponentColor = ChessGame.TeamColor.WHITE;
+        }
+
+        if(!isInCheck(teamColor)){
+            ArrayList<ChessPiece> teamPieces = (ArrayList<ChessPiece>) board.getOpponentPieces(opponentColor);
+            for (ChessPiece piece : teamPieces) {
+                totalValidMoves.addAll(validMoves(piece.getPosition()));
+            }
+            return totalValidMoves.isEmpty();
+        }
         return false;
     }
 
