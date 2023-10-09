@@ -7,6 +7,7 @@ import java.util.List;
 public class Chess_Board implements ChessBoard {
     private final ChessPiece[][] board;
     private ChessMove lastMove;
+    private Collection<ChessPosition> opponentValidEndPositions = new ArrayList<ChessPosition>();
 
 //    public Chess_Board() {
 //        board = new ChessPiece[8][8];
@@ -36,6 +37,14 @@ public class Chess_Board implements ChessBoard {
         return lastMove;
     }
 
+    public void setOpponentValidEndPositions(ChessGame.TeamColor teamTurn) {
+        this.opponentValidEndPositions = this.opponentValidEndMoves(teamTurn);
+    }
+
+    public Collection<ChessPosition> getOpponentValidEndPositions() {
+        return opponentValidEndPositions;
+    }
+
     // NOT IN OG INTERFACE
     public Collection<ChessPiece> getOpponentPieces(ChessGame.TeamColor teamColor){
         Collection<ChessPiece> opponentPieces = new ArrayList<ChessPiece>();
@@ -47,6 +56,21 @@ public class Chess_Board implements ChessBoard {
             }
         }
         return opponentPieces;
+    }
+
+    public Collection<ChessPosition> opponentValidEndMoves(ChessGame.TeamColor teamColor){
+        Collection<ChessPosition> opponentValidEndPositions = new ArrayList<ChessPosition>();
+        Collection<ChessMove> opponentValidMoves = new ArrayList<ChessMove>();
+        Collection<ChessPiece> opponentPieces = this.getOpponentPieces(teamColor);
+        for(ChessPiece piece : opponentPieces){
+            opponentValidMoves.addAll(piece.pieceMoves(this, piece.getPosition()));
+        }
+        // Get all the end positions
+        for(ChessMove move : opponentValidMoves){
+            opponentValidEndPositions.add(move.getEndPosition());
+        }
+
+        return opponentValidEndPositions;
     }
     /**
      * Adds a chess piece to the chessboard

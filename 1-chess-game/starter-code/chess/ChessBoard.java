@@ -33,4 +33,8 @@ public interface ChessBoard {
 
     // NOT IN OG INTERFACE
     Collection<ChessPiece> getOpponentPieces(ChessGame.TeamColor teamColor);
+
+    Collection<ChessPosition> opponentValidEndMoves(ChessGame.TeamColor teamColor);
+
+    Collection<ChessPosition> getOpponentValidEndPositions();
 }

@@ -56,7 +56,7 @@ public class Chess_Game implements ChessGame{
             Chess_Game tempGame = new Chess_Game(this);
             tempGame.setBoard(new Chess_Board((Chess_Board) this.board));
             ChessGame.TeamColor tempTeamTurn = tempGame.board.getPiece(chessMove.getStartPosition()).getTeamColor();
-            tempGame.applyMove(chessMove);
+            tempGame.applyMove(chessMove, true);
             if(tempGame.isInCheck(tempTeamTurn)){
                 invalidChessMoves.add(chessMove); // Move results in check, add to invalid moves list
                 System.out.println("Invalid move: " + chessMove.getEndPosition().getRow() + ", " + chessMove.getEndPosition().getColumn());
@@ -92,7 +92,7 @@ public class Chess_Game implements ChessGame{
         if(board.getPiece(move.getStartPosition()).getTeamColor() != teamTurn){
             throw new InvalidMoveException("Not your turn");
         }
-        applyMove(move);
+        applyMove(move, false);
         this.board.setLastMove(move);
         if(teamTurn == TeamColor.WHITE){
             teamTurn = TeamColor.BLACK;
@@ -101,20 +101,20 @@ public class Chess_Game implements ChessGame{
         }
     }
 
-    private void applyMove(ChessMove move) {
+    private void applyMove(ChessMove move, boolean tempGame) {
         // Check if move is a castle
         if(board.getPiece(move.getStartPosition()).getPieceType() == ChessPiece.PieceType.KING && !board.getPiece(move.getStartPosition()).getHasMoved()){
             if(move.getEndPosition().getColumn() - move.getStartPosition().getColumn() == 2){
                 // Castle kingside
                 ChessPosition rookStart = new Chess_Position(move.getStartPosition().getRow(), 8);
                 ChessPosition rookEnd = new Chess_Position(move.getStartPosition().getRow(), 6);
-                castleMove(move, rookStart, rookEnd);
+                castleMove(move, rookStart, rookEnd, tempGame);
 
             } else if(move.getEndPosition().getColumn() - move.getStartPosition().getColumn() == -2){
                 // Castle queenside
                 ChessPosition rookStart = new Chess_Position(move.getStartPosition().getRow(), 1);
                 ChessPosition rookEnd = new Chess_Position(move.getStartPosition().getRow(), 4);
-                castleMove(move, rookStart, rookEnd);
+                castleMove(move, rookStart, rookEnd, tempGame);
             }
         }
 
@@ -128,18 +128,21 @@ public class Chess_Game implements ChessGame{
         }
 
         board.getPiece(move.getStartPosition()).setPosition(move.getEndPosition());
-        board.getPiece(move.getStartPosition()).setHasMoved(true);
+        if(!tempGame)
+            board.getPiece(move.getStartPosition()).setHasMoved(true);
         board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
         board.addPiece(move.getStartPosition(), null);
     }
 
-    private void castleMove(ChessMove move, ChessPosition rookStart, ChessPosition rookEnd) {
+    private void castleMove(ChessMove move, ChessPosition rookStart, ChessPosition rookEnd, boolean tempGame) {
         ChessMove rookMove = new Chess_Move(rookStart, rookEnd);
         board.addPiece(rookEnd, board.getPiece(rookStart));
         board.addPiece(rookStart, null);
-        board.getPiece(rookEnd).setHasMoved(true);
+        if(!tempGame)
+            board.getPiece(rookEnd).setHasMoved(true);
         board.getPiece(move.getStartPosition()).setPosition(move.getEndPosition());
-        board.getPiece(move.getStartPosition()).setHasMoved(true);
+        if(!tempGame)
+            board.getPiece(move.getStartPosition()).setHasMoved(true);
         board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
         board.addPiece(move.getStartPosition(), null);
     }

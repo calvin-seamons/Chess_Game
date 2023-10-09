@@ -84,8 +84,10 @@ public class Chess_Piece implements ChessPiece{
             return bishopMoves(board, myPosition);
         else if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.QUEEN)
             return queenMoves(board, myPosition);
-        else if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.KING)
+        else if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.KING) {
+//            board.setOpponentValidEndPositions(board.getPiece(myPosition).getTeamColor());
             return kingMoves(board, myPosition);
+        }
         else
             return null;
     }
@@ -138,19 +140,25 @@ public class Chess_Piece implements ChessPiece{
                 chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), myPosition.getColumn() + 1)));
         }
 
+        System.out.println(board.getPiece(myPosition).getHasMoved());
+//        ArrayList opponentEndPositions = (ArrayList) board.getOpponentValidEndPositions();
         // Check if the king can castle
         // TODO Make sure that all the positions between the king and rook are not in check
         if(!board.getPiece(myPosition).getHasMoved() && myPosition.getColumn() == 5){
             // Check if the king can castle kingside
-            if(board.getPiece(new Chess_Position(myPosition.getRow(), 8)) != null && !board.getPiece(new Chess_Position(myPosition.getRow(), 8)).getHasMoved()){
+            if(board.getPiece(new Chess_Position(myPosition.getRow(), 8)) != null){
                 if(board.getPiece(new Chess_Position(myPosition.getRow(), 7)) == null && board.getPiece(new Chess_Position(myPosition.getRow(), 6)) == null){
-                    chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), 7)));
+//                    if(opponentEndPositions.contains(new Chess_Position(myPosition.getRow(), 6)) || opponentEndPositions.contains(new Chess_Position(myPosition.getRow(), 7))){
+                        chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), 7)));
+//                    }
                 }
             }
             // Check if the king can castle queenside
-            if(board.getPiece(new Chess_Position(myPosition.getRow(), 1)) != null && !board.getPiece(new Chess_Position(myPosition.getRow(), 1)).getHasMoved()){
+            if(board.getPiece(new Chess_Position(myPosition.getRow(), 1)) != null){
                 if(board.getPiece(new Chess_Position(myPosition.getRow(), 2)) == null && board.getPiece(new Chess_Position(myPosition.getRow(), 3)) == null && board.getPiece(new Chess_Position(myPosition.getRow(), 4)) == null){
-                    chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), 3)));
+//                    if(opponentEndPositions.contains(new Chess_Position(myPosition.getRow(), 2)) || opponentEndPositions.contains(new Chess_Position(myPosition.getRow(), 3))){
+                        chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), 3)));
+//                    }
                 }
             }
         }
