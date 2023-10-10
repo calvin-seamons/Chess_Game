@@ -190,18 +190,18 @@ public class Chess_Piece implements ChessPiece{
                     // Make sure that the rook hasn't moved on that side
                     if(board.getPiece(new Chess_Position(myPosition.getRow(), 8)) != null && !board.getPiece(new Chess_Position(myPosition.getRow(), 8)).getHasMoved())
                         chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), 7)));
-                    else{
-                        System.out.println("Rook has moved");
-                    }
+//                    else{
+//                        System.out.println("Rook has moved");
+//                    }
             }
             if (canCastleQueen) {
                 // Same thing here
                 if(board.getPiece(new Chess_Position(myPosition.getRow(), 4)) == null && board.getPiece(new Chess_Position(myPosition.getRow(), 3)) == null)
                     if(board.getPiece(new Chess_Position(myPosition.getRow(), 1)) != null && !board.getPiece(new Chess_Position(myPosition.getRow(), 1)).getHasMoved())
                         chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), 3)));
-                    else{
-                        System.out.println("Rook has moved");
-                    }
+//                    else{
+//                        System.out.println("Rook has moved");
+//                    }
             }
         }
 

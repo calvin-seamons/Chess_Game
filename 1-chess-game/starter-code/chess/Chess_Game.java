@@ -73,7 +73,7 @@ public class Chess_Game implements ChessGame{
             tempGame.applyMove(chessMove, true);
             if(tempGame.isInCheck(tempTeamTurn)){
                 invalidChessMoves.add(chessMove); // Move results in check, add to invalid moves list
-                System.out.println("Invalid move: " + chessMove.getEndPosition().getRow() + ", " + chessMove.getEndPosition().getColumn());
+//                System.out.println("Invalid move: " + chessMove.getEndPosition().getRow() + ", " + chessMove.getEndPosition().getColumn());
             }
         }
         chessMoves.removeAll(invalidChessMoves);
@@ -89,10 +89,10 @@ public class Chess_Game implements ChessGame{
         }
 
 
-        System.out.println("Valid moves for piece at row: " + startPosition.getRow() + ", column: " + startPosition.getColumn());
-        for (ChessMove chessMove : chessMoves) {
-            System.out.println("Row: " + chessMove.getEndPosition().getRow() + ", Column: " +chessMove.getEndPosition().getColumn());
-        }
+//        System.out.println("Valid moves for piece at row: " + startPosition.getRow() + ", column: " + startPosition.getColumn());
+//        for (ChessMove chessMove : chessMoves) {
+//            System.out.println("Row: " + chessMove.getEndPosition().getRow() + ", Column: " +chessMove.getEndPosition().getColumn());
+//        }
         return chessMoves;
     }
 
