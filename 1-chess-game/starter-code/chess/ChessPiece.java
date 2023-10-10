@@ -15,6 +15,8 @@ public interface ChessPiece {
     //NOT IN OG INTERFACE
     void setHasMoved(boolean hasMoved);
 
+    Collection<ChessMove> kingMoves(ChessBoard board, ChessPosition myPosition, boolean tempTest);
+
     /**
      * The various different chess piece options
      */

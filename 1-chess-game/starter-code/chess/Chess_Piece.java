@@ -2,7 +2,6 @@ package chess;
 
 import java.util.Collection;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Chess_Piece implements ChessPiece{
     private final ChessPiece.PieceType PieceType;
@@ -74,6 +73,9 @@ public class Chess_Piece implements ChessPiece{
      */
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+        if(board.getPiece(myPosition) == null)
+            return null;
+
         if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.PAWN)
             return pawnMoves(board, myPosition, board.getLastMove());
         else if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.ROOK)
@@ -86,13 +88,14 @@ public class Chess_Piece implements ChessPiece{
             return queenMoves(board, myPosition);
         else if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.KING) {
 //            board.setOpponentValidEndPositions(board.getPiece(myPosition).getTeamColor());
-            return kingMoves(board, myPosition);
+            return kingMoves(board, myPosition, false);
         }
         else
             return null;
     }
 
-    private Collection<ChessMove> kingMoves(ChessBoard board, ChessPosition myPosition) {
+    @Override
+    public Collection<ChessMove> kingMoves(ChessBoard board, ChessPosition myPosition, boolean tempTest) {
         Collection<ChessMove> chessMoves = new ArrayList<>();
         ChessGame.TeamColor opponentTeam;
         if(board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE)
@@ -140,28 +143,68 @@ public class Chess_Piece implements ChessPiece{
                 chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), myPosition.getColumn() + 1)));
         }
 
-        System.out.println(board.getPiece(myPosition).getHasMoved());
-//        ArrayList opponentEndPositions = (ArrayList) board.getOpponentValidEndPositions();
         // Check if the king can castle
-        // TODO Make sure that all the positions between the king and rook are not in check
-        if(!board.getPiece(myPosition).getHasMoved() && myPosition.getColumn() == 5){
-            // Check if the king can castle kingside
-            if(board.getPiece(new Chess_Position(myPosition.getRow(), 8)) != null){
-                if(board.getPiece(new Chess_Position(myPosition.getRow(), 7)) == null && board.getPiece(new Chess_Position(myPosition.getRow(), 6)) == null){
-//                    if(opponentEndPositions.contains(new Chess_Position(myPosition.getRow(), 6)) || opponentEndPositions.contains(new Chess_Position(myPosition.getRow(), 7))){
-                        chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), 7)));
-//                    }
+        if(board.getPiece(myPosition).getHasMoved() || board.getPiece(myPosition).getPosition().getColumn() != 5)
+            return chessMoves;
+
+        if(!tempTest) {
+            // Create duplicate game and board and move the king along the castling path and see if he is in check
+            ChessBoard tempBoard = board;
+            ChessGame tempGame = new Chess_Game();
+            tempGame.setBoard(tempBoard);
+            Collection<ChessPiece> opponentPieces = new ArrayList<>();
+            opponentPieces = tempGame.getBoard().getOpponentPieces(board.getPiece(myPosition).getTeamColor());
+            boolean canCastleKing = true;
+            boolean canCastleQueen = true;
+
+            for (ChessPiece piece : opponentPieces) {
+
+                // If the piece is a king, run the kingMoves method to get the valid moves
+                if (piece.getPieceType() == ChessPiece.PieceType.KING) {
+                    if(piece.kingMoves(tempBoard, piece.getPosition(), true).contains(new Chess_Move(piece.getPosition(), new Chess_Position(myPosition.getRow(), 6))) || piece.kingMoves(tempBoard, piece.getPosition(), true).contains(new Chess_Move(piece.getPosition(), new Chess_Position(myPosition.getRow(), 7)))) {
+                        canCastleKing = false;
+                    }
+                    if(piece.kingMoves(tempBoard, piece.getPosition(), true).contains(new Chess_Move(piece.getPosition(), new Chess_Position(myPosition.getRow(), 4))) || piece.kingMoves(tempBoard, piece.getPosition(), true).contains(new Chess_Move(piece.getPosition(), new Chess_Position(myPosition.getRow(), 3))))
+                        canCastleQueen = false;
+
+                    continue;
+                }
+
+                if (piece.pieceMoves(tempBoard, piece.getPosition()).contains(new Chess_Move(piece.getPosition(), new Chess_Position(myPosition.getRow(), 6))) || piece.pieceMoves(tempBoard, piece.getPosition()).contains(new Chess_Move(piece.getPosition(), new Chess_Position(myPosition.getRow(), 7)))) {
+                    canCastleKing = false;
+                }
+
+                if (piece.pieceMoves(tempBoard, piece.getPosition()).contains(new Chess_Move(piece.getPosition(), new Chess_Position(myPosition.getRow(), 4))) || piece.pieceMoves(tempBoard, piece.getPosition()).contains(new Chess_Move(piece.getPosition(), new Chess_Position(myPosition.getRow(), 3)))) {
+                    canCastleQueen = false;
+                }
+                // Check to see if the king is in check
+                if (piece.pieceMoves(tempBoard, piece.getPosition()).contains(new Chess_Move(piece.getPosition(), myPosition))) {
+                    return chessMoves;
                 }
             }
-            // Check if the king can castle queenside
-            if(board.getPiece(new Chess_Position(myPosition.getRow(), 1)) != null){
-                if(board.getPiece(new Chess_Position(myPosition.getRow(), 2)) == null && board.getPiece(new Chess_Position(myPosition.getRow(), 3)) == null && board.getPiece(new Chess_Position(myPosition.getRow(), 4)) == null){
-//                    if(opponentEndPositions.contains(new Chess_Position(myPosition.getRow(), 2)) || opponentEndPositions.contains(new Chess_Position(myPosition.getRow(), 3))){
+
+            // If the booleans are still true, add the castling moves to the list of valid moves
+            if (canCastleKing) {
+                // Make sure the spaces are null between the king and the rook
+                if(board.getPiece(new Chess_Position(myPosition.getRow(), 6)) == null && board.getPiece(new Chess_Position(myPosition.getRow(), 7)) == null)
+                    // Make sure that the rook hasn't moved on that side
+                    if(board.getPiece(new Chess_Position(myPosition.getRow(), 8)) != null && !board.getPiece(new Chess_Position(myPosition.getRow(), 8)).getHasMoved())
+                        chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), 7)));
+                    else{
+                        System.out.println("Rook has moved");
+                    }
+            }
+            if (canCastleQueen) {
+                // Same thing here
+                if(board.getPiece(new Chess_Position(myPosition.getRow(), 4)) == null && board.getPiece(new Chess_Position(myPosition.getRow(), 3)) == null)
+                    if(board.getPiece(new Chess_Position(myPosition.getRow(), 1)) != null && !board.getPiece(new Chess_Position(myPosition.getRow(), 1)).getHasMoved())
                         chessMoves.add(new Chess_Move(myPosition, new Chess_Position(myPosition.getRow(), 3)));
-//                    }
-                }
+                    else{
+                        System.out.println("Rook has moved");
+                    }
             }
         }
+
 
         return chessMoves;
     }
@@ -433,7 +476,7 @@ public class Chess_Piece implements ChessPiece{
             ChessPiece movedPiece = board.getPiece(lastMove.getEndPosition());
             if (movedPiece != null
                     && movedPiece.getPieceType() == ChessPiece.PieceType.PAWN
-                    && !movedPiece.getHasMoved()
+                    && movedPiece.getHasMoved()
                     && Math.abs(lastMove.getEndPosition().getRow() - lastMove.getStartPosition().getRow()) == 2) {
 
                 // Check for left edge pawn trying to capture a pawn on its right
@@ -499,6 +542,7 @@ public class Chess_Piece implements ChessPiece{
         if(myPosition.getColumn() != 1)
             leftEdge = false;
 
+        // If pawn is on the edge and about to promote itself
         boolean edgy = false;
         if(board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE && (myPosition.getRow() == 7))
             edgy = true;

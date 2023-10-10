@@ -47,10 +47,24 @@ public class Chess_Game implements ChessGame{
         if(board.getPiece(startPosition) == null){
             return null;
         }
+        boolean castleKingSideTried = false;
+        boolean castleQueenSideTried = false;
 
         Collection<ChessMove> chessMoves = board.getPiece(startPosition).pieceMoves(board, startPosition);
         Collection<ChessMove> invalidChessMoves = new ArrayList<ChessMove>();
 
+        if(board.getPiece(startPosition).getPieceType() == ChessPiece.PieceType.KING){
+            if(startPosition.getColumn()<7) {
+                if (chessMoves.contains(new Chess_Move(startPosition, new Chess_Position(startPosition.getRow(), startPosition.getColumn() + 2)))) {
+                    castleKingSideTried = true;
+                }
+            }
+            if(startPosition.getColumn()>2) {
+                if (chessMoves.contains(new Chess_Move(startPosition, new Chess_Position(startPosition.getRow(), startPosition.getColumn() - 2)))) {
+                    castleQueenSideTried = true;
+                }
+            }
+        }
 
         for (ChessMove chessMove : chessMoves) {
             Chess_Game tempGame = new Chess_Game(this);
@@ -64,6 +78,16 @@ public class Chess_Game implements ChessGame{
         }
         chessMoves.removeAll(invalidChessMoves);
         this.board.getPiece(startPosition).setPosition(startPosition);
+        // If a castle was tried, reset the position in the rook to the original position
+        if(castleKingSideTried){
+            ChessPosition rookStart = new Chess_Position(startPosition.getRow(), 8);
+            this.board.getPiece(rookStart).setPosition(rookStart);
+        }
+        if(castleQueenSideTried){
+            ChessPosition rookStart = new Chess_Position(startPosition.getRow(), 1);
+            this.board.getPiece(rookStart).setPosition(rookStart);
+        }
+
 
         System.out.println("Valid moves for piece at row: " + startPosition.getRow() + ", column: " + startPosition.getColumn());
         for (ChessMove chessMove : chessMoves) {
@@ -109,12 +133,29 @@ public class Chess_Game implements ChessGame{
                 ChessPosition rookStart = new Chess_Position(move.getStartPosition().getRow(), 8);
                 ChessPosition rookEnd = new Chess_Position(move.getStartPosition().getRow(), 6);
                 castleMove(move, rookStart, rookEnd, tempGame);
+                return;
 
             } else if(move.getEndPosition().getColumn() - move.getStartPosition().getColumn() == -2){
                 // Castle queenside
                 ChessPosition rookStart = new Chess_Position(move.getStartPosition().getRow(), 1);
                 ChessPosition rookEnd = new Chess_Position(move.getStartPosition().getRow(), 4);
                 castleMove(move, rookStart, rookEnd, tempGame);
+                return;
+            }
+        }
+
+        // Check if move is an en passant
+        if(board.getPiece(move.getStartPosition()).getPieceType() == ChessPiece.PieceType.PAWN){
+            if(move.getEndPosition().getColumn() != move.getStartPosition().getColumn()){
+                if(board.getPiece(move.getEndPosition()) == null){
+                    ChessPosition enPassantPosition;
+                    if(board.getPiece(move.getStartPosition()).getTeamColor() == ChessGame.TeamColor.WHITE){
+                        enPassantPosition = new Chess_Position(move.getEndPosition().getRow() - 1, move.getEndPosition().getColumn());
+                    } else {
+                        enPassantPosition = new Chess_Position(move.getEndPosition().getRow() + 1, move.getEndPosition().getColumn());
+                    }
+                    board.addPiece(enPassantPosition, null);
+                }
             }
         }
 
