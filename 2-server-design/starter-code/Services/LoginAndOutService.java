@@ -1,10 +1,14 @@
 package Services;
 
-import Models.LoginRequest;
-import Models.LoginResult;
-import Models.LogoutResult;
+import Requests.LoginRequest;
+import Results.LoginResult;
+import Results.LogoutResult;
 
-public class LoginService {
+/**
+ * LoginService logs a user into the server
+ * Also logs a user out of the server
+ */
+public class LoginAndOutService {
     /**
      * Logs a user into the server
      * @param request the LoginRequest object to convert

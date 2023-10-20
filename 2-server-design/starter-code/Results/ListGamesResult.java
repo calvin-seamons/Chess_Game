@@ -1,5 +1,10 @@
-package Models;
+package Results;
 
+import Models.Game;
+
+/**
+ * ListGamesResult contains the list of games that the list games service returns
+ */
 public class ListGamesResult {
     private Game[] games;
 

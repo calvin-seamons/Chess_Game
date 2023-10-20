@@ -1,8 +1,11 @@
 package Services;
 
-import Models.JoinGameRequest;
-import Models.JoinGameResult;
+import Requests.JoinGameRequest;
+import Results.JoinGameResult;
 
+/**
+ * JoinGameService allows a user to join a game either as a player or as an observer
+ */
 public class JoinGameService {
     /**
      * Allows a user to join a game either as a player or as an observer

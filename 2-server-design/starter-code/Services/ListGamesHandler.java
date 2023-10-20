@@ -1,7 +1,10 @@
 package Services;
 
-import Models.ListGamesResult;
+import Results.ListGamesResult;
 
+/**
+ * ListGamesHandler returns a list of games
+ */
 public class ListGamesHandler {
 
     /**

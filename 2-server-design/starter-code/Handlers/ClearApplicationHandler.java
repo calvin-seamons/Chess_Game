@@ -1,7 +1,10 @@
 package Handlers;
 
-import Models.ClearApplicationResult;
+import Results.ClearApplicationResult;
 
+/**
+ * ClearApplicationHandler class that has a constructor and methods
+ */
 public class ClearApplicationHandler {
     public ClearApplicationHandler(){}
 

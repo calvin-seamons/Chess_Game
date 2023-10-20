@@ -1,7 +1,11 @@
 package Handlers;
 
-import Models.ListGamesResult;
+import Results.ListGamesResult;
 
+/**
+ * This class is responsible for handling the list games request
+ * It will convert a list games request to an HTTP request and an HTTP response to a list games result
+ */
 public class ListGamesHandler {
 
     /**

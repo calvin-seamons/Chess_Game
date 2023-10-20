@@ -1,8 +1,13 @@
 package Handlers;
 
-import Models.JoinGameRequest;
-import Models.JoinGameResult;
+import Requests.JoinGameRequest;
+import Results.JoinGameResult;
 
+/**
+ * The handler for the joinGame request
+ * Converts a JoinGameRequest object into a JSON string
+ * Converts a JSON string into a JoinGameRequest object
+ */
 public class JoinGameHandler {
     public JoinGameHandler() {}
 

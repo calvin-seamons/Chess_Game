@@ -1,5 +1,8 @@
 package Server;
 
+/**
+ * ServerClass is the class that handles the HTTP requests and calls the correct Handler method
+ */
 public class ServerClass {
     public ServerClass() {}
 

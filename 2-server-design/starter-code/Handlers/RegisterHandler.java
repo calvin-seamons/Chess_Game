@@ -1,7 +1,12 @@
 package Handlers;
 
-import Models.RegisterRequest;
+import Requests.RegisterRequest;
 
+/**
+ * The handler for the register request
+ * Converts a RegisterRequest object into a JSON string
+ * Converts a JSON string into a RegisterRequest object
+ */
 public class RegisterHandler {
     public RegisterHandler() {}
 

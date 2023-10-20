@@ -1,7 +1,10 @@
 package Services;
 
-import Models.CreateGameResult;
+import Results.CreateGameResult;
 
+/**
+ * CreateGameService creates a new game
+ */
 public class CreateGameService {
 
     /**

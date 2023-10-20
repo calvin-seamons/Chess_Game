@@ -1,5 +1,8 @@
-package Models;
+package Results;
 
+/**
+ * LogoutResult contains the message that the logout service returns
+ */
 public class LogoutResult {
     private String message;
 

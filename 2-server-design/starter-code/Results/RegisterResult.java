@@ -1,5 +1,8 @@
-package Models;
+package Results;
 
+/**
+ * RegisterResult contains the username and authToken that the register service returns
+ */
 public class RegisterResult {
     private String username;
     private String authToken;

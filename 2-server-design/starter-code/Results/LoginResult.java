@@ -1,5 +1,8 @@
-package Models;
+package Results;
 
+/**
+ * LoginResult contains the message, authToken, and username that the login service returns
+ */
 public class LoginResult {
     private String message;
     private String authToken;

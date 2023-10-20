@@ -1,5 +1,8 @@
-package Models;
+package Results;
 
+/**
+ * JoinGameResult contains the message that the join game service returns
+ */
 public class JoinGameResult {
     private String message;
 

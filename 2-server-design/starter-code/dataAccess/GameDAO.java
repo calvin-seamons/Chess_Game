@@ -4,6 +4,9 @@ import Models.Game;
 
 import java.util.Collection;
 
+/**
+ * GameDAO class that has methods to create, read, update, and delete games
+ */
 public class GameDAO {
     /**
      * Creates a new game

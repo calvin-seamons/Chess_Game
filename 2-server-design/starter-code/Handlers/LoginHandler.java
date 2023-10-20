@@ -1,7 +1,12 @@
 package Handlers;
 
-import Models.LoginRequest;
+import Requests.LoginRequest;
 
+/**
+ * The handler for the login request
+ * Converts a LoginRequest object into a JSON string
+ * Converts a JSON string into a LoginRequest object
+ */
 public class LoginHandler {
     public LoginHandler() {}
 

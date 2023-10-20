@@ -1,5 +1,8 @@
-package Models;
+package Requests;
 
+/**
+ * JoinGameRequest object that has authToken, gameID, and team stored in it
+ */
 public class JoinGameRequest {
     private String authToken;
     private String gameID;

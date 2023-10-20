@@ -2,6 +2,9 @@ package dataAccess;
 
 import Models.User;
 
+/**
+ * UserDAO class that stores the user
+ */
 public class UserDAO {
     /**
      * Creates a new user

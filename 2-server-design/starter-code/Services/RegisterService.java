@@ -1,8 +1,11 @@
 package Services;
 
-import Models.RegisterRequest;
-import Models.RegisterResult;
+import Requests.RegisterRequest;
+import Results.RegisterResult;
 
+/**
+ * RegisterService allows a user to register a new account
+ */
 public class RegisterService {
     /**
      * Allows a user to register a new account

@@ -1,7 +1,12 @@
 package Handlers;
 
-import Models.LogoutResult;
+import Results.LogoutResult;
 
+/**
+ * Handles the Logout request
+ * Converts a JSON string into a LogoutRequest object
+ * Converts a LogoutRequest object into a JSON string
+ */
 public class LogoutHandler {
 public LogoutHandler() {}
 

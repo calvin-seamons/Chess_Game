@@ -1,8 +1,11 @@
 package Handlers;
 
-import Models.CreateGameRequest;
-import Models.CreateGameResult;
+import Requests.CreateGameRequest;
+import Results.CreateGameResult;
 
+/**
+ * This class is responsible for converting CreateGameRequests to HTTP requests and HTTP responses to CreateGameResults
+ */
 public class CreateGameHandler {
 
     /**

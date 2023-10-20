@@ -2,6 +2,9 @@ package dataAccess;
 
 import Models.Authtoken;
 
+/**
+ * AuthDAO class that stores the authtoken
+ */
 public class AuthDAO {
 
     /**

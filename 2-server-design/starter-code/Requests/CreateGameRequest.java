@@ -1,5 +1,8 @@
-package Models;
+package Requests;
 
+/**
+ * CreateGameRequest object that has gameName stored in it
+ */
 public class CreateGameRequest {
     String gameName;
 
