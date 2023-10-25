@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="passoff-dependencies">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/passoff-dependencies.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
