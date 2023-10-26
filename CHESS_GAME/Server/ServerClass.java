@@ -1,7 +1,10 @@
 import Handlers.*;
 import Requests.*;
 import Results.ListGamesResult;
+import com.google.gson.Gson;
 import spark.Spark;
+
+import static spark.Spark.halt;
 
 /**
  * ServerClass is the class that handles the HTTP requests and calls the correct Handler method
@@ -32,6 +35,17 @@ public class ServerClass {
      * Creates the routes for the server
      */
     private static void createRoutes() {
+        Spark.before((req, res) -> {
+            boolean authenticated = false;
+
+            // ... check if authenticated
+
+            if (!authenticated) {
+                halt(401, "You are not welcome here");
+            }
+
+        });
+
         Spark.post("/user", (req, res) -> {
             RegisterRequest RR = new RegisterRequest();
             RR = new RegisterHandler().HTTPToRegisterResult(req.body());
