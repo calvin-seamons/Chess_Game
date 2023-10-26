@@ -2,20 +2,13 @@ package dataAccess;
 
 import Models.Authtoken;
 
+import java.util.List;
+
 /**
  * AuthDAO class that stores the authtoken
  */
 public class AuthDAO {
-
-    /**
-     * Creates a new authtoken
-     * @param username This is the username of the user
-     * @return Created authtoken
-     * @throws DataAccessException
-     */
-    public Authtoken createAuthToken(String username) throws DataAccessException {
-        return null;
-    }
+    private List<Authtoken> databaseAuthtokens;
 
     /**
      * Reads the authtoken from the database
@@ -24,16 +17,27 @@ public class AuthDAO {
      * @return Authtoken
      */
     public boolean readAuthToken(String authToken) throws DataAccessException{
-        return true;
+        for (Authtoken a : databaseAuthtokens) {
+            if (a.getAuthToken().equals(authToken)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
      * Updates the authtoken in the database
-     * @param authToken This is your authtoken
-     * @throws DataAccessException
+     * @param oldAuthToken This is your authtoken you want to change
+     * @param newAuthtoken This is your authtoken you change the old one with
+     * @throws DataAccessException If there is an error updating the database
      */
-    public void updateAuthToken(String authToken) throws DataAccessException{
-
+    public void updateAuthToken(String oldAuthToken, String newAuthtoken) throws DataAccessException{
+        for(Authtoken a : databaseAuthtokens) {
+            if (a.getAuthToken().equals(oldAuthToken)) {
+                a.setAuthToken(newAuthtoken);
+                break;
+            }
+        }
     }
 
     /**
@@ -41,7 +45,14 @@ public class AuthDAO {
      * @param authToken This is your authtoken
      * @throws DataAccessException
      */
-    public void deleteAuthToken(String authToken) throws DataAccessException{}
+    public void deleteAuthToken(String authToken) throws DataAccessException{
+        for(Authtoken a : databaseAuthtokens){
+            if(a.getAuthToken().equals(authToken)){
+                databaseAuthtokens.remove(a);
+                break;
+            }
+        }
+    }
 
 
 }

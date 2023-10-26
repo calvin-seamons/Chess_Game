@@ -17,7 +17,6 @@ public class ClearApplicationHandler {
         Gson gson = new Gson();
         clearApplicationDatabase();
         ClearApplicationResult result = new ClearApplicationResult();
-        result.setMessage("Clear succeeded");
         return gson.toJson(result);
     }
 

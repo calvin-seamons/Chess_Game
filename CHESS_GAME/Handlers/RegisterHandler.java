@@ -23,7 +23,7 @@ public class RegisterHandler extends BaseHandler {
         if(duplicateInDatabase()){
             result.setUsername(null);
             result.setAuthToken(null);
-            result.setMessage("ERROR 403: already taken ");
+            result.setMessage("Error: Already Taken");
             return gson.toJson(result);
         }
 
@@ -51,7 +51,7 @@ public class RegisterHandler extends BaseHandler {
      * @param responseBody the JSON string to convert
      * @return a RegisterRequest object
      */
-    public RegisterRequest HTTPToRegisterResult(String responseBody) {
+    public RegisterRequest HTTPToRegisterRequest(String responseBody) {
         Gson gson = new Gson();
         return gson.fromJson(responseBody, RegisterRequest.class);
     }

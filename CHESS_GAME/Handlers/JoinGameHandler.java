@@ -24,14 +24,20 @@ public class JoinGameHandler extends BaseHandler{
         if(!validateAuthToken(request.getAuthToken())) {
             result.setMessage("Error: Unauthorized");
         }
+        //TODO: Check for valid gameID
         else if(request.getGameID() == null){
-            result.setMessage("Error: bad request");
+            result.setMessage("Error: Bad Request");
+        }
+        else if(teamAlreadyTaken(request)){
+            result.setMessage("Error: Already Taken");
         }
         else {
             result.setMessage(null);
         }
         return gson.toJson(result);
     }
+
+
 
     /**
      * Converts a JoinGameRequest object into a JSON string
@@ -41,5 +47,10 @@ public class JoinGameHandler extends BaseHandler{
     public JoinGameRequest HTTPToJoinGameRequest (String responseBody) {
         Gson gson = new Gson();
         return gson.fromJson(responseBody, JoinGameRequest.class);
+    }
+
+    private boolean teamAlreadyTaken(JoinGameRequest request) {
+        //TODO: Check to see if team is already taken
+        return false;
     }
 }

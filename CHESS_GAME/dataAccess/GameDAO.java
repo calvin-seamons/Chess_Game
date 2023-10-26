@@ -2,17 +2,32 @@ package dataAccess;
 
 import Models.Game;
 
+import java.util.List;
+
 /**
  * GameDAO class that has methods to create, read, update, and delete games
  */
 public class GameDAO {
+    private List<Game> databaseGames;
     /**
      * Creates a new game
      * @throws DataAccessException
      * @return gameID
      */
-    public String createGame(String gameName) throws DataAccessException{
-        return null;
+    public String createGame(String gameName, String whiteUsername, String blackUsername, String gameImplementation) throws DataAccessException{
+        Game game = new Game();
+        game.setGameName(gameName);
+        game.setGameId(getNewGameID());
+        game.setWhiteUsername(whiteUsername);
+        game.setBlackUsername(blackUsername);
+        game.setGameImplementation(gameImplementation);
+        databaseGames.add(game);
+
+        return game.getGameId();
+    }
+
+    public int getNewGameID() {
+        return "1234";
     }
 
     /**

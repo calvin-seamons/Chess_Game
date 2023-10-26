@@ -6,13 +6,13 @@ package Models;
  * for gameId, whiteUsername, blackUsername, gameName, and gameImplementation
  */
 public class Game {
-    private int gameId;
+    private String gameId;
     private String whiteUsername;
     private String blackUsername;
     private String gameName;
     private String gameImplementation;
 
-    public int getGameId() {
+    public String getGameId() {
         return gameId;
     }
 

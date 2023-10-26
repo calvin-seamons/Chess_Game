@@ -23,7 +23,7 @@ public class ListGamesHandler extends BaseHandler{
         ListGamesResult listGamesResult = new ListGamesResult();
 
         if(!validateAuthToken(request.getAuthToken())){
-            listGamesResult.setMessage("Error: unauthorized");
+            listGamesResult.setMessage("Error: Unauthorized");
             listGamesResult.setGames(null);
             return gson.toJson(listGamesResult);
         }

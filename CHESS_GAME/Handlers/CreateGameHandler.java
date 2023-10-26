@@ -17,11 +17,11 @@ public class CreateGameHandler extends BaseHandler{
      * @param request the CreateGameRequest
      * @return the HTTP request
      */
-    public String createGameToHTTP (CreateGameRequest request) throws DataAccessException {
+    public String createGameToHTTP (CreateGameRequest request, GameDAO gameDatabase) throws DataAccessException {
         Gson gson = new Gson();
         CreateGameResult result;
         if(!validateAuthToken(request.getAuthToken())){
-            result = new CreateGameResult(null, "Error: unauthorized");
+            result = new CreateGameResult(null, "Error: Unauthorized");
         }
         else{
             result = new CreateGameResult(null, null);
@@ -31,7 +31,7 @@ public class CreateGameHandler extends BaseHandler{
             result = new CreateGameResult(null, "Error: Bad Request");
         }
         else{
-            result = new CreateGameResult(getNewGameID(), null);
+            result = new CreateGameResult(gameDatabase.getNewGameID(), null);
         }
         return gson.toJson(result);
     }
@@ -48,7 +48,9 @@ public class CreateGameHandler extends BaseHandler{
 
     private boolean validateGameName(String gameName) throws DataAccessException {
         GameDAO gameDAO = new GameDAO();
-        gameDAO.createGame(gameName);
+        if(gameDAO.readGame(gameName) != null){
+            return false;
+        }
         return true;
     }
 

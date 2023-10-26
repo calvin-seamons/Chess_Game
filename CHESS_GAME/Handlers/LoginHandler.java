@@ -35,21 +35,13 @@ public class LoginHandler extends BaseHandler{
         if(unauthorizedLogin()){
             result.setUsername(null);
             result.setAuthToken(null);
-            result.setMessage("ERROR 401: Unauthorized");
+            result.setMessage("Error: Unauthorized");
             return gson.toJson(result);
         }
-        
-        if(request.getUsername() != null && request.getPassword() != null){
-            result.setUsername(request.getUsername());
-            result.setAuthToken(createAuthToken());
-            result.setMessage(null);
-        }
-        else {
-            result.setUsername(null);
-            result.setAuthToken(null);
-            result.setMessage("ERROR 400: Bad Request");
-        }
 
+        result.setUsername(request.getUsername());
+        result.setAuthToken(createAuthToken());
+        result.setMessage(null);
         return gson.toJson(result);
     }
 
