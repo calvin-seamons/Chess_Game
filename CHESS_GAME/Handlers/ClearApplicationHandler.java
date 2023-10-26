@@ -1,6 +1,7 @@
 package Handlers;
 
 import Results.ClearApplicationResult;
+import com.google.gson.Gson;
 
 /**
  * ClearApplicationHandler class that has a constructor and methods
@@ -13,15 +14,14 @@ public class ClearApplicationHandler {
      * @return a clearApplication HTTP string
      */
     public String clearApplicationRequestToHTTP() {
-        return null;
+        Gson gson = new Gson();
+        clearApplicationDatabase();
+        ClearApplicationResult result = new ClearApplicationResult();
+        return gson.toJson(result);
     }
 
-    /**
-     * Converts a clearApplication HTTP string into a ClearApplicationResult object
-     * @param responseBody the clearApplication HTTP string to convert
-     * @return a ClearApplicationResult object
-     */
-    public ClearApplicationResult HTTPToClearApplicationResult(String responseBody) {
-        return null;
+    private void clearApplicationDatabase() {
+        //TODO: Clear the database
     }
+
 }

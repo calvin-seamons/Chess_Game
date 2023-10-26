@@ -1,15 +1,7 @@
-import Handlers.LoginHandler;
-import Handlers.LogoutHandler;
-import Handlers.RegisterHandler;
-import Requests.LoginRequest;
-import Requests.RegisterRequest;
-import Requests.LogoutRequest;
-import Results.RegisterResult;
-import com.google.gson.Gson;
+import Handlers.*;
+import Requests.*;
+import Results.ListGamesResult;
 import spark.Spark;
-import java.io.File;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 /**
  * ServerClass is the class that handles the HTTP requests and calls the correct Handler method
@@ -18,6 +10,11 @@ public class ServerClass {
 
     public ServerClass() {}
 
+    /**
+     * Main method that starts the server
+     * @param args the port number
+     * Example: 8080
+     */
     public static void main(String[] args) {
         try {
             int port = Integer.parseInt(args[0]);
@@ -31,6 +28,9 @@ public class ServerClass {
         }
     }
 
+    /**
+     * Creates the routes for the server
+     */
     private static void createRoutes() {
         Spark.post("/user", (req, res) -> {
             RegisterRequest RR = new RegisterRequest();
@@ -49,21 +49,41 @@ public class ServerClass {
         });
 
         Spark.delete("/session", (req, res) -> {
-            LogoutRequest logoutRequest = new LogoutHandler().HTTPToLogoutRequest(req.body());
+            AuthTokenRequest logoutRequest = new LogoutHandler().HTTPToLogoutRequest(req.body());
             String result = new LogoutHandler().logoutRequestToHTTP(logoutRequest);
             res.type("application/json");
             return result;
         });
-    }
 
-    /**
-     * This method calls the correct Handler method based on the HTTP request type
-     * @param requestBody the HTTP request body
-     * @return the HTTP response body
-     */
-    public String handle(String requestBody) {
-        Spark.externalStaticFileLocation("path/to/web/folder");
+        Spark.get("/game", (req, res) -> {
+            AuthTokenRequest listGamesRequest = new AuthTokenRequest();
+            String authToken = req.headers("Authorization");
+            listGamesRequest.setAuthToken(authToken);
+            String result = new ListGamesHandler().authTokenTolistGamesHTTP(listGamesRequest);
+            res.type("application/json");
+            return result;
+        });
 
-        return null;
+        Spark.post("/game", (req, res) -> {
+            CreateGameRequest createGameRequest = new CreateGameHandler().HTTPToCreateGameRequest(req.body());
+            createGameRequest.setAuthToken(req.headers("Authorization"));
+            String result = new CreateGameHandler().createGameToHTTP(createGameRequest);
+            res.type("application/json");
+            return result;
+        });
+
+        Spark.put("/game", (req, res) -> {
+            JoinGameRequest joinGameRequest = new JoinGameHandler().HTTPToJoinGameRequest(req.body());
+            joinGameRequest.setAuthToken(req.headers("Authorization"));
+            String result = new JoinGameHandler().joinGameRequestToHTTP(joinGameRequest);
+            res.type("application/json");
+            return result;
+        });
+
+        Spark.delete("/db", (req, res) -> {
+            String result = new ClearApplicationHandler().clearApplicationRequestToHTTP();
+            res.type("application/json");
+            return result;
+        });
     }
 }

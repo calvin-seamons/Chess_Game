@@ -1,6 +1,6 @@
 package Requests;
 
-public class LogoutRequest {
+public class AuthTokenRequest {
     private String authToken;
 
     public String getAuthToken() {

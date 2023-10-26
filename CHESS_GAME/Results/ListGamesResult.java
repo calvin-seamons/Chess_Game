@@ -7,6 +7,7 @@ import Models.Game;
  */
 public class ListGamesResult {
     private Game[] games;
+    private String message;
 
     public ListGamesResult() {}
 
@@ -16,6 +17,14 @@ public class ListGamesResult {
 
     public void setGames(Game[] games) {
         this.games = games;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+    	this.message = message;
     }
 
 }

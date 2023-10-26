@@ -23,8 +23,8 @@ public class AuthDAO {
      * @throws DataAccessException
      * @return Authtoken
      */
-    public Authtoken readAuthToken(String authToken) throws DataAccessException{
-        return null;
+    public boolean readAuthToken(String authToken) throws DataAccessException{
+        return true;
     }
 
     /**

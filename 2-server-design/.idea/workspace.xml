@@ -4,425 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="177bb9bd-22b9-437d-b9fe-ccfb35073aab" name="Changes" comment="Completed Javadoc">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/slf4j_simple.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/sparkjava_spark_core.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/2-server-design.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/BaseHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/ClearApplicationHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/CreateGameHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/JoinGameHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/ListGamesHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/LoginHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/LogoutHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/RegisterHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Authtoken.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Game.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/User.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Requests/CreateGameRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Requests/JoinGameRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Requests/LoginRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Requests/LogoutRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Requests/RegisterRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Results/ClearApplicationResult.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Results/CreateGameResult.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Results/JoinGameResult.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Results/ListGamesResult.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Results/LoginResult.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Results/LogoutResult.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Results/RegisterResult.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/ServerClass.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/ClearApplicationService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/CreateGameService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/JoinGameService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/ListGamesHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/LoginAndOutService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/RegisterService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess/ChessBoard.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess/ChessGame.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess/ChessMove.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess/ChessPiece.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess/ChessPosition.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess/Chess_Board.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess/Chess_Game.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess/Chess_Move.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess/Chess_Piece.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess/Chess_Position.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess/InvalidMoveException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess/main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataAccess/AuthDAO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataAccess/DataAccessException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataAccess/GameDAO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataAccess/UserDAO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/apiguardian-api-1.1.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/junit-jupiter-5.8.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/junit-jupiter-api-5.8.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/junit-jupiter-engine-5.8.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/junit-jupiter-params-5.8.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/junit-platform-commons-1.8.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/junit-platform-engine-1.8.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/opentest4j-1.2.0.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/gson-2.10.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/passoff-dependencies.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/tyrus-standalone-client-1.15.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/.idea/libraries/slf4j_simple.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/.idea/libraries/sparkjava_spark_core.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/2-server-design.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Handlers/BaseHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Handlers/ClearApplicationHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Handlers/CreateGameHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Handlers/JoinGameHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Handlers/ListGamesHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Handlers/LoginHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Handlers/LogoutHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Handlers/RegisterHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Models/Authtoken.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Models/Game.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Models/User.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Requests/CreateGameRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Requests/JoinGameRequest$playerColor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Requests/JoinGameRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Requests/LoginRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Requests/LogoutRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Requests/RegisterRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Results/ClearApplicationResult.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Results/CreateGameResult.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Results/JoinGameResult.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Results/ListGamesResult.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Results/LoginResult.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Results/LogoutResult.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Results/RegisterResult.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/ServerClass.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Services/ClearApplicationService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Services/CreateGameService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Services/JoinGameService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Services/ListGamesHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Services/LoginAndOutService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/Services/RegisterService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/chess/ChessBoard.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/chess/ChessGame$TeamColor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/chess/ChessGame.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/chess/ChessMove.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/chess/ChessPiece$PieceType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/chess/ChessPiece$Team.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/chess/ChessPiece.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/chess/ChessPosition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/chess/Chess_Board.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/chess/Chess_Game.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/chess/Chess_Move.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/chess/Chess_Piece.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/chess/Chess_Position.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/chess/InvalidMoveException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/chess/main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/dataAccess/AuthDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/dataAccess/DataAccessException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/dataAccess/GameDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/dataAccess/UserDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/lib/apiguardian-api-1.1.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/lib/junit-jupiter-5.8.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/lib/junit-jupiter-api-5.8.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/lib/junit-jupiter-engine-5.8.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/lib/junit-jupiter-params-5.8.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/lib/junit-platform-commons-1.8.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/lib/junit-platform-engine-1.8.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/lib/opentest4j-1.2.0.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/libs/gson-2.10.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/libs/passoff-dependencies.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/libs/tyrus-standalone-client-1.15.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/passoffTests/TestFactory.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/passoffTests/chessTests/ChessBoardTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/passoffTests/chessTests/ChessGameTests$ValidMoveTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/passoffTests/chessTests/ChessGameTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/passoffTests/chessTests/chessExtraCredit/CastlingTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/passoffTests/chessTests/chessExtraCredit/EnPassantTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/passoffTests/chessTests/chessPieceTests/BishopMoveTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/passoffTests/chessTests/chessPieceTests/KingMoveTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/passoffTests/chessTests/chessPieceTests/KnightMoveTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/passoffTests/chessTests/chessPieceTests/PawnMoveTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/passoffTests/chessTests/chessPieceTests/QueenMoveTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/passoffTests/chessTests/chessPieceTests/RookMoveTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/passoffTests/serverTests/StandardAPITests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/web/favicon.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/web/index.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/web/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/2-server-design/web/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/passoffTests/TestFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/passoffTests/chessTests/ChessBoardTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/passoffTests/chessTests/ChessGameTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/passoffTests/chessTests/chessExtraCredit/CastlingTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/passoffTests/chessTests/chessExtraCredit/EnPassantTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/passoffTests/chessTests/chessPieceTests/BishopMoveTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/passoffTests/chessTests/chessPieceTests/KingMoveTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/passoffTests/chessTests/chessPieceTests/KnightMoveTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/passoffTests/chessTests/chessPieceTests/PawnMoveTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/passoffTests/chessTests/chessPieceTests/QueenMoveTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/passoffTests/chessTests/chessPieceTests/RookMoveTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/passoffTests/serverTests/StandardAPITests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/favicon.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/index.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../3-web-api/starter-code/serverTests/StandardAPITests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../CHESS_GAME/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/CHESS_GAME.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../CHESS_GAME/CHESS_GAME.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Handlers/ClearApplicationHandler.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Handlers/CreateGameHandler.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Handlers/JoinGameHandler.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Handlers/ListGamesHandler.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Handlers/LoginHandler.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Handlers/LogoutHandler.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Handlers/RegisterHandler.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Handlers/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Handlers/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Handlers/ClearApplicationHandler.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Handlers/CreateGameHandler.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Handlers/JoinGameHandler.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Handlers/ListGamesHandler.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Handlers/LoginHandler.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Handlers/LogoutHandler.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Handlers/RegisterHandler.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Handlers/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Handlers/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Javadoc.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Models/Authtoken.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Models/Game.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Models/User.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Models/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Models/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Requests/CreateGameRequest.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Requests/JoinGameRequest.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Requests/LoginRequest.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Requests/RegisterRequest.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Requests/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Requests/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Results/ClearApplicationResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Results/CreateGameResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Results/JoinGameResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Results/ListGamesResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Results/LoginResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Results/LogoutResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Results/RegisterResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Results/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Results/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Server/ServerClass.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Server/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Server/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Services/ClearApplicationService.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Services/CreateGameService.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Services/JoinGameService.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Services/ListGamesHandler.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Services/LoginAndOutService.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Services/RegisterService.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Services/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/Services/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/allclasses-index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/allpackages-index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/dataAccess/AuthDAO.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/dataAccess/DataAccessException.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/dataAccess/GameDAO.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/dataAccess/UserDAO.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/dataAccess/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/dataAccess/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/element-list" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/help-doc.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/index-files/index-1.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/index-files/index-10.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/index-files/index-11.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/index-files/index-12.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/index-files/index-13.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/index-files/index-2.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/index-files/index-3.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/index-files/index-4.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/index-files/index-5.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/index-files/index-6.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/index-files/index-7.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/index-files/index-8.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/index-files/index-9.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/jquery-ui.overrides.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/legal/COPYRIGHT" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/legal/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/legal/jquery.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/legal/jqueryUI.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/member-search-index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/module-search-index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/overview-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/overview-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/package-search-index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/resources/glass.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/resources/x.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/script-dir/jquery-3.6.1.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/script-dir/jquery-ui.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/script-dir/jquery-ui.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/script.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/search.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/serialized-form.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/stylesheet.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/tag-search-index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Javadoc/type-search-index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Models/Authtoken.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Models/ClearApplicationResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Models/CreateGameRequest.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Models/CreateGameResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Models/Game.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Models/JoinGameRequest.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Models/JoinGameResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Models/ListGamesResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Models/LoginRequest.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Models/LoginResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Models/LogoutResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Models/RegisterRequest.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Models/RegisterResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Models/User.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Models/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Models/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Requests/CreateGameRequest.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Requests/JoinGameRequest.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Requests/LoginRequest.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Requests/RegisterRequest.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Requests/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Requests/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Results/ClearApplicationResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Results/CreateGameResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Results/JoinGameResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Results/ListGamesResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Results/LoginResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Results/LogoutResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Results/RegisterResult.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Results/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Results/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Server/ServerClass.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Server/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Server/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Handlers/ClearApplicationHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Handlers/CreateGameHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Handlers/JoinGameHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Handlers/ListGamesHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Handlers/LoginHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Handlers/LogoutHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Handlers/RegisterHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Models/Authtoken.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Models/Game.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Models/User.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Requests/CreateGameRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Requests/JoinGameRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Requests/LoginRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Requests/RegisterRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Results/ClearApplicationResult.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Results/CreateGameResult.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Results/JoinGameResult.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Results/ListGamesResult.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Results/LoginResult.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Results/LogoutResult.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Results/RegisterResult.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Server/ServerClass.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Services/ClearApplicationService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Services/CreateGameService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Services/JoinGameService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Services/ListGamesHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Services/LoginAndOutService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/Services/RegisterService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/dataAccess/AuthDAO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/dataAccess/DataAccessException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/dataAccess/GameDAO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/ServerCode/dataAccess/UserDAO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Services/CreateGameService.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Services/JoinGameService.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Services/ListGamesHandler.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Services/LoginService.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Services/RegisterService.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Services/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/Services/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/1-chess-game.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/chess-board.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/chess-game.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/chess/ChessBoard.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/chess/ChessGame.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/chess/ChessMove.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/chess/ChessPiece.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/chess/ChessPosition.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/chess/Chess_Board.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/chess/Chess_Game.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/chess/Chess_Move.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/chess/Chess_Piece.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/chess/Chess_Position.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/chess/InvalidMoveException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/chess/main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/class-structure.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/getting-started.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/chess/ChessBoard.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/chess/ChessGame$TeamColor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/chess/ChessGame.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/chess/ChessMove.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/chess/ChessPiece$PieceType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/chess/ChessPiece$Team.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/chess/ChessPiece.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/chess/ChessPosition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/chess/Chess_Board.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/chess/Chess_Game.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/chess/Chess_Move.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/chess/Chess_Piece.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/chess/Chess_Position.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/chess/InvalidMoveException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/chess/main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/passoffTests/TestFactory.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/passoffTests/chessTests/ChessBoardTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/passoffTests/chessTests/ChessGameTests$ValidMoveTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/passoffTests/chessTests/ChessGameTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/passoffTests/chessTests/chessExtraCredit/CastlingTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/passoffTests/chessTests/chessExtraCredit/EnPassantTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/passoffTests/chessTests/chessPieceTests/BishopMoveTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/passoffTests/chessTests/chessPieceTests/KingMoveTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/passoffTests/chessTests/chessPieceTests/KnightMoveTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/passoffTests/chessTests/chessPieceTests/PawnMoveTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/passoffTests/chessTests/chessPieceTests/QueenMoveTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/out/production/1-chess-game/passoffTests/chessTests/chessPieceTests/RookMoveTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/test-run-button.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/chessGameCode/test-run-menu.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/dataAccess/AuthDAO.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/dataAccess/DataAccessException.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/dataAccess/GameDAO.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/dataAccess/UserDAO.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/dataAccess/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/dataAccess/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/index-files/index-1.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/index-files/index-10.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/index-files/index-11.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/index-files/index-12.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/index-files/index-13.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/index-files/index-2.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/index-files/index-3.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/index-files/index-4.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/index-files/index-5.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/index-files/index-6.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/index-files/index-7.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/index-files/index-8.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/index-files/index-9.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/legal/COPYRIGHT" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/legal/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/legal/jquery.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/legal/jqueryUI.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/resources/glass.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/resources/x.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/script-dir/jquery-3.6.1.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/script-dir/jquery-ui.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CHESS_GAME/script-dir/jquery-ui.min.js" beforeDir="false" />
-    </list>
+    <list default="true" id="66250fa1-b54e-4b15-8edf-5e8ee6d50b80" name="Changes" comment="Working on the Webpage API's" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -452,31 +34,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Users/calvi/Gnolaum/CS240/Chess_Game/CHESS_GAME",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
-    <configuration name="ServerClass" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="ServerClass" />
-      <module name="CHESS_GAME" />
-      <option name="PROGRAM_PARAMETERS" value="8080" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="DjangoTestsConfigurationType">
       <module name="CHESS_GAME" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -496,19 +71,6 @@
       <option name="USE_OPTIONS" value="false" />
       <option name="OPTIONS" value="" />
       <method v="2" />
-    </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="CHESS_GAME" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="CHESS_GAME" />
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
     </configuration>
     <configuration default="true" type="PyBehaveRunConfigurationType" factoryName="Behave">
       <module name="CHESS_GAME" />
@@ -603,6 +165,27 @@
       <option name="PATTERN" value="" />
       <option name="USE_PATTERN" value="false" />
       <method v="2" />
+    </configuration>
+    <configuration name="ServerClass" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ServerClass" />
+      <module name="CHESS_GAME" />
+      <option name="PROGRAM_PARAMETERS" value="8080" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="CHESS_GAME" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="CHESS_GAME" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <recent_temporary>
       <list>

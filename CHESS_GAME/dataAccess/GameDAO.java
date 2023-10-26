@@ -2,8 +2,6 @@ package dataAccess;
 
 import Models.Game;
 
-import java.util.Collection;
-
 /**
  * GameDAO class that has methods to create, read, update, and delete games
  */
@@ -11,9 +9,9 @@ public class GameDAO {
     /**
      * Creates a new game
      * @throws DataAccessException
-     * @return Created game
+     * @return gameID
      */
-    public Game createGame() throws DataAccessException{
+    public String createGame(String gameName) throws DataAccessException{
         return null;
     }
 
@@ -21,7 +19,7 @@ public class GameDAO {
      * Reads the game from the database
      * @param id This is the id of the game to be read
      * @return Game with the given id
-     * @throws DataAccessException
+     * @throws DataAccessException If there is an error reading from the database
      */
     public Game readGame(int id) throws DataAccessException{
         return null;
@@ -53,10 +51,11 @@ public class GameDAO {
 
     /**
      * Finds all games in the database
+     *
      * @return Collection of games
      * @throws DataAccessException
      */
-    public Collection<Game> findAll() throws DataAccessException{
+    public Game[] findAll() throws DataAccessException{
         return null;
     }
 
