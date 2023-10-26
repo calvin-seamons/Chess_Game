@@ -35,16 +35,16 @@ public class ServerClass {
      * Creates the routes for the server
      */
     private static void createRoutes() {
-        Spark.before((req, res) -> {
-            boolean authenticated = false;
-
-            // ... check if authenticated
-
-            if (!authenticated) {
-                halt(401, "You are not welcome here");
-            }
-
-        });
+//        Spark.before((req, res) -> {
+//            boolean authenticated = false;
+//
+//            // ... check if authenticated
+//
+//            if (!authenticated) {
+//                halt(401, "You are not welcome here");
+//            }
+//
+//        });
 
         Spark.post("/user", (req, res) -> {
             RegisterRequest RR = new RegisterRequest();
@@ -72,6 +72,11 @@ public class ServerClass {
         Spark.get("/game", (req, res) -> {
             AuthTokenRequest listGamesRequest = new AuthTokenRequest();
             String authToken = req.headers("Authorization");
+            if(authToken == null){
+                // Set the server status to 401
+                res.status(401);
+                return "Error: Unauthorized";
+            }
             listGamesRequest.setAuthToken(authToken);
             String result = new ListGamesHandler().authTokenTolistGamesHTTP(listGamesRequest);
             res.type("application/json");
