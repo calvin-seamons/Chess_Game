@@ -183,7 +183,7 @@ public class StandardAPITests {
         TestModels.TestLoginRegisterResult registerResult = serverFacade.register(registerRequest);
 
         Assertions.assertEquals(HTTP_FORBIDDEN, serverFacade.getStatusCode(),
-                "Server response code was not 401 Forbidden");
+                "Server response code was not 403 Forbidden");
         Assertions.assertFalse(registerResult.success, "Response didn't return not successful");
         Assertions.assertTrue(registerResult.message.toLowerCase(Locale.ROOT).contains("error"),
                 "Response missing error message");
@@ -672,6 +672,16 @@ public class StandardAPITests {
         Assertions.assertEquals(HTTP_OK, serverFacade.getStatusCode(), "Server response code was not 200 OK");
         Collection<TestModels.TestListResult.TestListEntry> returnedList =
                 new HashSet<>(Arrays.asList(listResult.games));
+
+        //Print out expected and returned lists
+        System.out.println("Expected List:");
+        for (TestModels.TestListResult.TestListEntry expectedEntry : expectedList) {
+            System.out.println(expectedEntry);
+        }
+        System.out.println("Returned List:");
+        for (TestModels.TestListResult.TestListEntry returnedEntry : returnedList) {
+            System.out.println(returnedEntry);
+        }
 
         //check
         Assertions.assertEquals(expectedList, returnedList, "Returned Games list was incorrect");

@@ -2,20 +2,23 @@ package Results;
 
 import Models.Game;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * ListGamesResult contains the list of games that the list games service returns
  */
 public class ListGamesResult {
-    private Game[] games;
+    private List<Game> games = new ArrayList<>();
     private String message;
 
     public ListGamesResult() {}
 
-    public Game[] getGames() {
+    public List<Game> getGames() {
         return games;
     }
 
-    public void setGames(Game[] games) {
+    public void setGames(List<Game> games) {
         this.games = games;
     }
 

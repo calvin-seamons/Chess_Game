@@ -1,8 +1,11 @@
 package Handlers;
 
+import Models.User;
 import Requests.RegisterRequest;
 import Results.RegisterResult;
 import com.google.gson.Gson;
+import dataAccess.DataAccessException;
+import dataAccess.UserDAO;
 
 /**
  * The handler for the register request
@@ -17,10 +20,11 @@ public class RegisterHandler extends BaseHandler {
      * @param request the RegisterRequest object to convert
      * @return a JSON string
      */
-    public String registerRequestToHTTP(RegisterRequest request){
+    public String registerRequestToHTTP(RegisterRequest request, UserDAO userDatabase) throws DataAccessException {
         Gson gson = new Gson();
         RegisterResult result = new RegisterResult();
-        if(duplicateInDatabase()){
+
+        if(duplicateInDatabase(userDatabase, request)){
             result.setUsername(null);
             result.setAuthToken(null);
             result.setMessage("Error: Already Taken");
@@ -35,15 +39,21 @@ public class RegisterHandler extends BaseHandler {
         else {
             result.setUsername(null);
             result.setAuthToken(null);
-            result.setMessage("ERROR 400: Bad Request");
+            result.setMessage("Error: Bad Request");
         }
 
         return gson.toJson(result);
     }
 
-    private boolean duplicateInDatabase() {
-        //TODO: check if username or email is already in database
-        return false;
+    private boolean duplicateInDatabase(UserDAO userDAO, RegisterRequest request) throws DataAccessException {
+        Gson gson = new Gson();
+        User user = new User();
+        user = gson.fromJson(gson.toJson(request), user.getClass());
+
+        if(userDAO.readUser(user) != null)
+            return true;
+        else
+            return false;
     }
 
     /**

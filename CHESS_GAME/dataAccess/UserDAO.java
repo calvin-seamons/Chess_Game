@@ -1,38 +1,44 @@
 package dataAccess;
 
 import Models.User;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * UserDAO class that stores the user
  */
 public class UserDAO {
-    private List<User> databaseUsers;
+    private List<User> databaseUsers = new ArrayList<>();
     /**
      * Creates a new user
+     *
      * @throws DataAccessException
-     * @return Created user
      */
-    public User createUser(User user) throws DataAccessException{
+    public void createUser(String username, String password, String email) throws DataAccessException{
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setEmail(email);
         databaseUsers.add(user);
-        return user;
+        System.out.println("User created");
+        // Print out the user from the database
+        System.out.println(databaseUsers.get(databaseUsers.size() - 1).getUsername());
     }
 
     /**
      * Reads the user from the database
-     * @param username This is the username of the user to be read
+     * @param user This is the user to be read
      * @return User with the given id
      * @throws DataAccessException
      */
-    public User readUser(String username) throws DataAccessException{
-        User user = null;
+    public User readUser(User user) throws DataAccessException{
         for (User u : databaseUsers) {
-            if (u.getUsername().equals(username)) {
-                user = u;
-                break;
+            if (u.getUsername().equals(user.getUsername()) && u.getPassword().equals(user.getPassword())) {
+                return u;
             }
         }
-        return user;
+        return null;
     }
 
     /**
@@ -62,6 +68,7 @@ public class UserDAO {
                 break;
             }
         }
+        System.out.println("Deleted user");
     }
 
     /**
@@ -69,6 +76,10 @@ public class UserDAO {
      * @throws DataAccessException If there is an error clearing the database
      */
     public void clearUsers() throws DataAccessException{
+        this.databaseUsers.clear();
+    }
+
+    public void clearUserDatabase() {
         this.databaseUsers.clear();
     }
 }

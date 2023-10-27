@@ -2,32 +2,43 @@ package dataAccess;
 
 import Models.Game;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * GameDAO class that has methods to create, read, update, and delete games
  */
 public class GameDAO {
-    private List<Game> databaseGames;
+    private List<Game> databaseGames = new ArrayList<>();
     /**
      * Creates a new game
-     * @throws DataAccessException
+     * @throws DataAccessException If there is an error creating the game
      * @return gameID
      */
-    public String createGame(String gameName, String whiteUsername, String blackUsername, String gameImplementation) throws DataAccessException{
-        Game game = new Game();
-        game.setGameName(gameName);
-        game.setGameId(getNewGameID());
-        game.setWhiteUsername(whiteUsername);
-        game.setBlackUsername(blackUsername);
-        game.setGameImplementation(gameImplementation);
+    public String createGame(Game game) throws DataAccessException{
+        // Check to see if the game name is already taken
+        for (Game g : databaseGames) {
+            if (g.getGameName().equals(game.getGameName())) {
+                return null;
+            }
+        }
         databaseGames.add(game);
+
+        // Print out all the games in the database
+        for (Game g : databaseGames) {
+            System.out.println(g.getGameName());
+        }
 
         return game.getGameId();
     }
 
-    public int getNewGameID() {
-        return "1234";
+    public String getNewGameID() {
+        // Create a 4 number random gameID
+        String gameID = "";
+        for (int i = 0; i < 4; i++) {
+            gameID += (int) (Math.random() * 10);
+        }
+        return gameID;
     }
 
     /**
@@ -36,8 +47,13 @@ public class GameDAO {
      * @return Game with the given id
      * @throws DataAccessException If there is an error reading from the database
      */
-    public Game readGame(int id) throws DataAccessException{
-        return null;
+    public boolean readGame(String id) throws DataAccessException{
+        for(Game g : databaseGames){
+            if(g.getGameId().equals(id)){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -70,8 +86,8 @@ public class GameDAO {
      * @return Collection of games
      * @throws DataAccessException
      */
-    public Game[] findAll() throws DataAccessException{
-        return null;
+    public List<Game> findAll() throws DataAccessException{
+        return List.of(databaseGames.toArray(new Game[databaseGames.size()]));
     }
 
     /**
@@ -83,5 +99,16 @@ public class GameDAO {
     public void claimSpot (int gameID, String username) throws DataAccessException{}
 
 
+    public void clearGameDatabase() {
+        this.databaseGames.clear();
+    }
 
+    public boolean checkDuplicateName(String gameName) {
+        for(Game g : databaseGames){
+            if(g.getGameName().equals(gameName)){
+                return true;
+            }
+        }
+        return false;
+    }
 }

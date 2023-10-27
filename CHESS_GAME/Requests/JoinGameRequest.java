@@ -1,19 +1,20 @@
 package Requests;
 
+
+
+import chess.ChessGame;
+import chess.ChessGame.TeamColor;
+
 /**
  * JoinGameRequest object that has authToken, gameID, and team stored in it
  */
 public class JoinGameRequest {
     private String authToken;
     private String gameID;
-    private playerColor team;
+    private ChessGame.TeamColor playerColor = TeamColor.SPECTATOR;
 
     public JoinGameRequest() {}
 
-    private enum playerColor{
-        WHITE,
-        BLACK
-    }
 
     public String getAuthToken() {
         return authToken;
@@ -23,8 +24,8 @@ public class JoinGameRequest {
         return gameID;
     }
 
-    public playerColor getTeam() {
-        return team;
+    public ChessGame.TeamColor getTeam() {
+        return playerColor;
     }
 
     public void setAuthToken(String authToken) {
@@ -35,7 +36,13 @@ public class JoinGameRequest {
         this.gameID = gameID;
     }
 
-    public void setTeam(playerColor team) {
-        this.team = team;
+    public void setTeam(String teamString) {
+        if ("WHITE".equalsIgnoreCase(teamString)) {
+            this.playerColor = ChessGame.TeamColor.WHITE;
+        } else if ("BLACK".equalsIgnoreCase(teamString)) {
+            this.playerColor = ChessGame.TeamColor.BLACK;
+        } else {
+            this.playerColor = ChessGame.TeamColor.SPECTATOR;
+        }
     }
 }

@@ -18,21 +18,21 @@ public class ListGamesHandler extends BaseHandler{
      * @param request the AuthTokenRequest object
      * @return the HTTP response body
      */
-    public String authTokenTolistGamesHTTP (AuthTokenRequest request) throws DataAccessException {
+    public String authTokenTolistGamesHTTP (AuthTokenRequest request, AuthDAO authDatabase, GameDAO gameDatabase) throws DataAccessException {
         Gson gson = new Gson();
         ListGamesResult listGamesResult = new ListGamesResult();
+        request.setUsername(authDatabase.getUserName(request.getAuthToken()));
 
-        if(!validateAuthToken(request.getAuthToken())){
+        if(!validateAuthToken(request, authDatabase)){
             listGamesResult.setMessage("Error: Unauthorized");
             listGamesResult.setGames(null);
             return gson.toJson(listGamesResult);
         }
 
-        // listGamesResult.setGames(new GameDAO().findAll());
-        listGamesResult.setGames(null);
-
+        listGamesResult.setGames(gameDatabase.findAll());
         listGamesResult.setMessage(null);
-
+        String message = gson.toJson(listGamesResult);
+        System.out.println(message);
         return gson.toJson(listGamesResult);
     }
 

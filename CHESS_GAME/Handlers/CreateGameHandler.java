@@ -1,5 +1,6 @@
 package Handlers;
 
+import Requests.AuthTokenRequest;
 import Requests.CreateGameRequest;
 import Results.CreateGameResult;
 import com.google.gson.Gson;
@@ -17,22 +18,24 @@ public class CreateGameHandler extends BaseHandler{
      * @param request the CreateGameRequest
      * @return the HTTP request
      */
-    public String createGameToHTTP (CreateGameRequest request, GameDAO gameDatabase) throws DataAccessException {
+    public String createGameToHTTP (CreateGameRequest request, GameDAO gameDatabase, AuthDAO authDatabase) throws DataAccessException {
         Gson gson = new Gson();
         CreateGameResult result;
-        if(!validateAuthToken(request.getAuthToken())){
+
+        AuthTokenRequest authTokenRequest = new AuthTokenRequest();
+        authTokenRequest.setAuthToken(request.getAuthToken());
+        authTokenRequest.setUsername(authDatabase.getUserName(request.getAuthToken()));
+
+        if(!validateAuthToken(authTokenRequest, authDatabase)){
             result = new CreateGameResult(null, "Error: Unauthorized");
         }
-        else{
-            result = new CreateGameResult(null, null);
-        }
-
-        if(!validateGameName(request.getGameName())){
+        else if(!validateGameName(request.getGameName(), gameDatabase)){
             result = new CreateGameResult(null, "Error: Bad Request");
         }
         else{
             result = new CreateGameResult(gameDatabase.getNewGameID(), null);
         }
+
         return gson.toJson(result);
     }
 
@@ -46,15 +49,10 @@ public class CreateGameHandler extends BaseHandler{
         return gson.fromJson(responseBody, CreateGameRequest.class);
     }
 
-    private boolean validateGameName(String gameName) throws DataAccessException {
-        GameDAO gameDAO = new GameDAO();
-        if(gameDAO.readGame(gameName) != null){
+    private boolean validateGameName(String gameName, GameDAO databaseGames) throws DataAccessException {
+        if(databaseGames.checkDuplicateName(gameName)){
             return false;
         }
         return true;
-    }
-
-    private String getNewGameID() {
-        return "1234";
     }
 }
