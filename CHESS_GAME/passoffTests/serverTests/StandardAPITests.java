@@ -673,16 +673,6 @@ public class StandardAPITests {
         Collection<TestModels.TestListResult.TestListEntry> returnedList =
                 new HashSet<>(Arrays.asList(listResult.games));
 
-        //Print out expected and returned lists
-        System.out.println("Expected List:");
-        for (TestModels.TestListResult.TestListEntry expectedEntry : expectedList) {
-            System.out.println(expectedEntry);
-        }
-        System.out.println("Returned List:");
-        for (TestModels.TestListResult.TestListEntry returnedEntry : returnedList) {
-            System.out.println(returnedEntry);
-        }
-
         //check
         Assertions.assertEquals(expectedList, returnedList, "Returned Games list was incorrect");
     }
