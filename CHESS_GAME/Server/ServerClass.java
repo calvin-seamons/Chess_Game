@@ -4,9 +4,7 @@ import Models.Game;
 import Requests.*;
 import Results.CreateGameResult;
 import com.google.gson.Gson;
-import dataAccess.AuthDAO;
-import dataAccess.GameDAO;
-import dataAccess.UserDAO;
+import dataAccess.*;
 import spark.Spark;
 
 import static spark.Spark.halt;
@@ -28,6 +26,8 @@ public class ServerClass {
      */
     public static void main(String[] args) {
         try {
+            Database db = new Database();
+            db.getConnection();
             int port = Integer.parseInt(args[0]);
             Spark.port(port);
             Spark.externalStaticFileLocation("web");
@@ -36,6 +36,8 @@ public class ServerClass {
             System.out.println("Listening on port " + port);
         } catch(ArrayIndexOutOfBoundsException | NumberFormatException ex) {
             System.err.println("Specify the port number as a command line parameter");
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 
