@@ -1,14 +1,17 @@
 package Services;
 
-import Results.ClearApplicationResult;
+import dataAccess.AuthDAO;
+import dataAccess.GameDAO;
+import dataAccess.UserDAO;
 
 public class ClearApplicationService {
 
     /**
      * Clears all data from the database (just like the /clear API)
-     * @return a ClearApplicationResult object
      */
-    public ClearApplicationResult clearApplication() {
-        return null;
+    public void clearApplication(AuthDAO authDatabase, GameDAO gameDatabase, UserDAO userDatabase) {
+        authDatabase.clearAuthDatabase();
+        gameDatabase.clearGameDatabase();
+        userDatabase.clearUserDatabase();
     }
 }

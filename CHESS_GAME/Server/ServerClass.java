@@ -3,9 +3,11 @@ import Models.Authtoken;
 import Models.Game;
 import Requests.*;
 import Results.CreateGameResult;
+import Services.ClearApplicationService;
 import com.google.gson.Gson;
 import dataAccess.*;
 import spark.Spark;
+import Services.*;
 
 import static spark.Spark.halt;
 
@@ -26,8 +28,8 @@ public class ServerClass {
      */
     public static void main(String[] args) {
         try {
-            Database db = new Database();
-            db.getConnection();
+//            Database db = new Database();
+//            db.getConnection();
             int port = Integer.parseInt(args[0]);
             Spark.port(port);
             Spark.externalStaticFileLocation("web");
@@ -36,9 +38,10 @@ public class ServerClass {
             System.out.println("Listening on port " + port);
         } catch(ArrayIndexOutOfBoundsException | NumberFormatException ex) {
             System.err.println("Specify the port number as a command line parameter");
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
         }
+//        catch (DataAccessException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     /**
@@ -144,7 +147,7 @@ public class ServerClass {
                 return result;
             }
         });
-
+// NEEDS TO BE UPDATED
         Spark.post("/game", (req, res) -> {
             CreateGameRequest createGameRequest = new CreateGameHandler().HTTPToCreateGameRequest(req.body());
             createGameRequest.setAuthToken(req.headers("Authorization"));
@@ -169,12 +172,15 @@ public class ServerClass {
                 return result;
             }
         });
-
+// NEEDS TO BE FIXED
         Spark.put("/game", (req, res) -> {
             JoinGameRequest joinGameRequest = new JoinGameHandler().HTTPToJoinGameRequest(req.body());
             joinGameRequest.setAuthToken(req.headers("Authorization"));
-            String result = new JoinGameHandler().joinGameRequestToHTTP(joinGameRequest, authDatabase, gameDatabase);
+            String errorMessage = new JoinGameService().joinGame(joinGameRequest, authDatabase, gameDatabase);
             res.type("application/json");
+
+            String result = new JoinGameHandler().joinGameRequestToHTTP(joinGameRequest, errorMessage);
+
 
             if(result.contains("Error: Unauthorized")){
                 res.status(401);
@@ -193,16 +199,11 @@ public class ServerClass {
                 return result;
             }
         });
-
+// UPDATED
         Spark.delete("/db", (req, res) -> {
-            String result = new ClearApplicationHandler().clearApplicationRequestToHTTP(authDatabase, gameDatabase, userDatabase);
-
-            // Print out the rest of the auth tokens
-            System.out.println("Remaining auth tokens:");
-            for (Authtoken token : authDatabase.getDatabaseAuthtokens()) {
-                System.out.println(token.getAuthToken());
-            }
-
+            ClearApplicationService clearApplicationService = new ClearApplicationService();
+            clearApplicationService.clearApplication(authDatabase, gameDatabase, userDatabase);
+            String result = new ClearApplicationHandler().clearApplicationRequestToHTTP();
             res.type("application/json");
             res.status(200);
             return result;

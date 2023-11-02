@@ -5,7 +5,7 @@ import Results.ListGamesResult;
 /**
  * ListGamesHandler returns a list of games
  */
-public class ListGamesHandler {
+public class ListGamesService {
 
     /**
      * This method will take in an authToken and return a ListGamesResult object

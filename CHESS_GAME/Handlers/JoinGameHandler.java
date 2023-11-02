@@ -25,30 +25,12 @@ public class JoinGameHandler extends BaseHandler{
      * @param request the JSON string to convert
      * @return a JoinGameRequest object
      */
-    public String joinGameRequestToHTTP(JoinGameRequest request, AuthDAO authDatabase, GameDAO gameDatabase) throws DataAccessException {
+    public String joinGameRequestToHTTP(JoinGameRequest request, String errorMessage) throws DataAccessException {
         Gson gson = new Gson();
         JoinGameResult result = new JoinGameResult();
-        AuthTokenRequest authTokenRequest = new AuthTokenRequest();
-        authTokenRequest.setAuthToken(request.getAuthToken());
-        authTokenRequest.setUsername(authDatabase.getUserName(request.getAuthToken()));
-
-        if(!validateAuthToken(authTokenRequest, authDatabase)) {
-            result.setMessage("Error: Unauthorized");
-        }
-        else if(!validateGameID(request.getGameID(), gameDatabase)){
-            result.setMessage("Error: Bad Request");
-        }
-        else if(teamAlreadyTaken(request, authDatabase, gameDatabase)){
-            result.setMessage("Error: Already Taken");
-        }
-        else {
-            result.setMessage(null);
-        }
+        result.setMessage(errorMessage);
         return gson.toJson(result);
     }
-
-
-
 
     /**
      * Converts a JoinGameRequest object into a JSON string
@@ -58,37 +40,5 @@ public class JoinGameHandler extends BaseHandler{
     public JoinGameRequest HTTPToJoinGameRequest (String responseBody) {
         Gson gson = new Gson();
         return gson.fromJson(responseBody, JoinGameRequest.class);
-    }
-
-    private boolean teamAlreadyTaken(JoinGameRequest request, AuthDAO authDatabase, GameDAO gameDatabase) throws DataAccessException {
-        Game game = new Game();
-        String authToken = request.getAuthToken();
-        for(Game g : gameDatabase.findAll()){
-            if(g.getGameId().equals(request.getGameID())){
-                game = g;
-            }
-        }
-
-        if(request.getTeam().equals(ChessGame.TeamColor.WHITE)){
-            if(game.getWhiteUsername() == null){
-                game.setWhiteUsername(authDatabase.getUserName(authToken));
-                return false;
-            }
-            else{
-                return true;
-            }
-        }
-        else if(request.getTeam().equals(ChessGame.TeamColor.BLACK)){
-            if(game.getBlackUsername() == null){
-                game.setBlackUsername(authDatabase.getUserName(authToken));
-                return false;
-            }
-            else{
-                return true;
-            }
-        }
-        else{
-            return false;
-        }
     }
 }
