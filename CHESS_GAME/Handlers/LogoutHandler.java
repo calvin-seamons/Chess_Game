@@ -1,12 +1,11 @@
 package Handlers;
 
-import Models.User;
 import Results.LogoutResult;
 import Requests.AuthTokenRequest;
 import com.google.gson.Gson;
 import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
-import dataAccess.UserDAO;
+import dataAccess.Database;
 
 /**
  * Handles the Logout request
@@ -21,11 +20,11 @@ public LogoutHandler() {}
      * @param authToken the JSON string to convert
      * @return a LogoutRequest object
      */
-    public AuthTokenRequest HTTPToLogoutRequest(String authToken, AuthDAO authDatabase) throws DataAccessException {
+    public AuthTokenRequest HTTPToLogoutRequest(String authToken, AuthDAO authDatabase, Database db) throws DataAccessException {
         AuthTokenRequest request = new AuthTokenRequest();
         request.setAuthToken(authToken);
         //TODO: You're grabbing the username from the database, which doesn't entirely make sense but that's the best you can do for now
-        request.setUsername(authDatabase.getUserName(request.getAuthToken()));
+        request.setUsername(authDatabase.getUserName(request.getAuthToken(),db ));
         return request;
     }
 
@@ -34,25 +33,11 @@ public LogoutHandler() {}
      * @param request the LogoutRequest object to convert
      * @return a JSON string
      */
-    public String logoutRequestToHTTP(AuthTokenRequest request, AuthDAO authDatabase) throws DataAccessException {
+    public String logoutRequestToHTTP(AuthTokenRequest request, String errorMessage) throws DataAccessException {
+        Gson gson = new Gson();
         LogoutResult result = new LogoutResult();
+        result.setMessage(errorMessage);
 
-        if(!databaseAuthMatches(request, authDatabase)){
-            result.setMessage("Error: Unauthorized");
-            Gson gson = new Gson();
-            return gson.toJson(result);
-        }
-        else{
-            result.setMessage(null);
-            Gson gson = new Gson();
-            return gson.toJson(result);
-        }
-    }
-
-    private boolean databaseAuthMatches(AuthTokenRequest request, AuthDAO authDatabase) throws DataAccessException {
-        if(!authDatabase.readAuthToken(request)){
-            return false;
-        }
-        return true;
+        return gson.toJson(result);
     }
 }

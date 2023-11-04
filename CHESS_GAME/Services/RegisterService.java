@@ -1,18 +1,35 @@
 package Services;
 
+import Handlers.BaseChecker;
+import Models.User;
 import Requests.RegisterRequest;
-import Results.RegisterResult;
+import com.google.gson.Gson;
+import dataAccess.DataAccessException;
+import dataAccess.Database;
+import dataAccess.UserDAO;
 
 /**
  * RegisterService allows a user to register a new account
  */
-public class RegisterService {
+public class RegisterService extends BaseChecker {
+
     /**
-     * Allows a user to register a new account
-     * @param request the RegisterRequest object to convert
-     * @return a RegisterResult object
+     * Checks for valid input and returns an errorMessage String
+     * @param request the RegisterRequest object
+     * @param userDatabase the UserDAO database
+     * @return an errorMessage String
+     * @throws DataAccessException if there is an error accessing the database
      */
-    public RegisterResult register(RegisterRequest request) {
-        return null;
+    public String register(RegisterRequest request, UserDAO userDatabase, Database db) throws DataAccessException {
+        if(duplicateInDatabase(userDatabase, request, db)){
+            return "Error: Already Taken";
+        }
+
+        if(request.getUsername() != null & request.getEmail() != null & request.getPassword() != null) {
+            return null;
+        }
+        else {
+            return "Error: Bad Request";
+        }
     }
 }

@@ -5,34 +5,31 @@ import Results.ListGamesResult;
 import com.google.gson.Gson;
 import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
+import dataAccess.Database;
 import dataAccess.GameDAO;
 
 /**
  * This class is responsible for handling the list games request
  * It will convert a list games request to an HTTP request and an HTTP response to a list games result
  */
-public class ListGamesHandler extends BaseHandler{
+public class ListGamesHandler extends BaseChecker {
 
     /**
      * This method will take in a ListGamesResult object and return an HTTP response body
      * @param request the AuthTokenRequest object
      * @return the HTTP response body
      */
-    public String authTokenTolistGamesHTTP (AuthTokenRequest request, AuthDAO authDatabase, GameDAO gameDatabase) throws DataAccessException {
+    public String authTokenTolistGamesHTTP (AuthTokenRequest request, String errorMessage, AuthDAO authDatabase, GameDAO gameDatabase, Database db) throws DataAccessException {
         Gson gson = new Gson();
         ListGamesResult listGamesResult = new ListGamesResult();
-        request.setUsername(authDatabase.getUserName(request.getAuthToken()));
-
-        if(!validateAuthToken(request, authDatabase)){
-            listGamesResult.setMessage("Error: Unauthorized");
-            listGamesResult.setGames(null);
+        listGamesResult.setMessage(errorMessage);
+        if(listGamesResult.getMessage() != null){
+            listGamesResult.setMessage(errorMessage);
             return gson.toJson(listGamesResult);
         }
 
+        request.setUsername(authDatabase.getUserName(request.getAuthToken(),db ));
         listGamesResult.setGames(gameDatabase.findAll());
-        listGamesResult.setMessage(null);
-        String message = gson.toJson(listGamesResult);
-        System.out.println(message);
         return gson.toJson(listGamesResult);
     }
 

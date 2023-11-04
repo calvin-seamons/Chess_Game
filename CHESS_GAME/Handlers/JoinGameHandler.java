@@ -1,23 +1,16 @@
 package Handlers;
 
-import Models.Game;
-import Requests.AuthTokenRequest;
 import Requests.JoinGameRequest;
 import Results.JoinGameResult;
-import chess.ChessGame;
 import com.google.gson.Gson;
-import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
-import dataAccess.GameDAO;
-
-import static chess.ChessPiece.Team.WHITE;
 
 /**
  * The handler for the joinGame request
  * Converts a JoinGameRequest object into a JSON string
  * Converts a JSON string into a JoinGameRequest object
  */
-public class JoinGameHandler extends BaseHandler{
+public class JoinGameHandler extends BaseChecker {
     public JoinGameHandler() {}
 
     /**

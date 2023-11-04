@@ -8,6 +8,18 @@ public class User {
     private String password;
     private String email;
 
+    public User(String username, String password, String email) {
+        setUsername(username);
+        setPassword(password);
+        setEmail(email);
+    }
+
+    public User() {
+        setUsername("");
+        setPassword("");
+        setEmail("");
+    }
+
     public String getUsername() {
         return username;
     }

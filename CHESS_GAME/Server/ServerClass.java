@@ -15,9 +15,9 @@ import static spark.Spark.halt;
  * ServerClass is the class that handles the HTTP requests and calls the correct Handler method
  */
 public class ServerClass {
-    private static GameDAO gameDatabase = new GameDAO();
-    private static AuthDAO authDatabase = new AuthDAO();
-    private static UserDAO userDatabase = new UserDAO();
+    private static final GameDAO gameDatabase = new GameDAO();
+    private static final AuthDAO authDatabase = new AuthDAO();
+    private static final UserDAO userDatabase = new UserDAO();
 
     public ServerClass() {}
 
@@ -28,26 +28,27 @@ public class ServerClass {
      */
     public static void main(String[] args) {
         try {
-//            Database db = new Database();
-//            db.getConnection();
+            Database db = new Database();
+            db.getConnection();
             int port = Integer.parseInt(args[0]);
             Spark.port(port);
             Spark.externalStaticFileLocation("web");
-            createRoutes();
+            createRoutes(db);
             Spark.awaitInitialization();
             System.out.println("Listening on port " + port);
+//            userDatabase.updateUser(new User("calvin", "sv164889", "calvinseamons35@gmail.com"), new User("calvin", "hellothere", "iloveyou.com"), db);
         } catch(ArrayIndexOutOfBoundsException | NumberFormatException ex) {
             System.err.println("Specify the port number as a command line parameter");
         }
-//        catch (DataAccessException e) {
-//            throw new RuntimeException(e);
-//        }
+        catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
      * Creates the routes for the server
      */
-    private static void createRoutes() {
+    private static void createRoutes(Database db) {
         Spark.before((req, res) -> {
             boolean authenticated = true;
 
@@ -59,15 +60,16 @@ public class ServerClass {
 
         });
 
-// THIS WORKS
+// UPDATED
         Spark.post("/user", (req, res) -> {
             Gson gson = new Gson();
-            RegisterRequest RR = new RegisterRequest();
+            RegisterRequest RR;
             RR = new RegisterHandler().HTTPToRegisterRequest(req.body());
+            String errorMessage = new RegisterService().register(RR, userDatabase, db);
             res.type("application/json");
 
             String result;
-            result = new RegisterHandler().registerRequestToHTTP(RR, userDatabase);
+            result = new RegisterHandler().registerRequestToHTTP(RR, errorMessage);
 
             if(result.contains("Error: Already Taken")){
                 res.status(403);
@@ -80,78 +82,72 @@ public class ServerClass {
             else{
                 Authtoken auth = new Authtoken();
                 auth = gson.fromJson(result, auth.getClass());
-                userDatabase.createUser(RR.getUsername(), RR.getPassword(), RR.getEmail());
-                authDatabase.createAuth(auth);
+                userDatabase.createUser(RR.getUsername(), RR.getPassword(), RR.getEmail(), db);
+                authDatabase.createAuth(auth, db);
                 res.status(200);
                 return result;
             }
         });
 
-// THIS WORKS
+// UPDATED
         Spark.post("/session", (req, res) -> {
             LoginRequest LR = new LoginHandler().HTTPToLoginRequest(req.body());
-            String result = new LoginHandler().loginRequestToHTTP(LR, userDatabase, authDatabase);
+            String errorMessage = new LoginService().login(LR, userDatabase, authDatabase, db);
+            String result = new LoginHandler().loginRequestToHTTP(LR, authDatabase, errorMessage, db);
 
             res.type("application/json");
 
             if(result.contains("Error: Unauthorized")){
                 res.status(401);
-                return result;
             }
             else{
                 res.status(200);
-                return result;
             }
+            return result;
         });
 
-    // THIS WORKS
+    // UPDATED
         Spark.delete("/session", (req, res) -> {
             String authToken = req.headers("Authorization");
-            AuthTokenRequest logoutRequest = new LogoutHandler().HTTPToLogoutRequest(authToken, authDatabase);
-            String result = new LogoutHandler().logoutRequestToHTTP(logoutRequest, authDatabase);
+            AuthTokenRequest logoutRequest = new LogoutHandler().HTTPToLogoutRequest(authToken, authDatabase, db);
+            String errorMessage = new LogoutService().logout(logoutRequest, authDatabase, db);
+            String result = new LogoutHandler().logoutRequestToHTTP(logoutRequest, errorMessage);
             res.type("application/json");
 
             if(result.contains("Error: Unauthorized")){
                 res.status(401);
-                return result;
             }
             else{
-                userDatabase.deleteUser(logoutRequest.getUsername());
-                authDatabase.deleteAuthToken(logoutRequest.getAuthToken());
-
-                // Print out the rest of the auth tokens
-                System.out.println("Remaining auth tokens:");
-                for (Authtoken token : authDatabase.getDatabaseAuthtokens()) {
-                    System.out.println(token.getAuthToken());
-                }
-
+                authDatabase.deleteAuthToken(logoutRequest.getAuthToken(),db );
                 res.status(200);
-                return result;
             }
+            return result;
         });
 
-    // Pretty Sure this Works
+    // UPDATED
         Spark.get("/game", (req, res) -> {
             AuthTokenRequest listGamesRequest = new AuthTokenRequest();
             String authToken = req.headers("Authorization");
             listGamesRequest.setAuthToken(authToken);
-            String result = new ListGamesHandler().authTokenTolistGamesHTTP(listGamesRequest, authDatabase, gameDatabase);
+            String errorMessage = new ListGamesService().listGames(listGamesRequest, authDatabase, gameDatabase, db);
+            String result = new ListGamesHandler().authTokenTolistGamesHTTP(listGamesRequest, errorMessage, authDatabase, gameDatabase, db);
             res.type("application/json");
 
             if(result.contains("Error: Unauthorized")){
                 res.status(401);
-                return result;
             }
             else{
                 res.status(200);
-                return result;
             }
+            return result;
         });
-// NEEDS TO BE UPDATED
+
+// UPDATED
         Spark.post("/game", (req, res) -> {
             CreateGameRequest createGameRequest = new CreateGameHandler().HTTPToCreateGameRequest(req.body());
             createGameRequest.setAuthToken(req.headers("Authorization"));
-            String result = new CreateGameHandler().createGameToHTTP(createGameRequest, gameDatabase, authDatabase);
+            String errorMessage = new CreateGameService().createGame(createGameRequest, gameDatabase, authDatabase, db);
+            String result = new CreateGameHandler().createGameToHTTP(createGameRequest, gameDatabase, errorMessage);
             res.type("application/json");
 
             if(result.contains("Error: Unauthorized")){
@@ -172,11 +168,11 @@ public class ServerClass {
                 return result;
             }
         });
-// NEEDS TO BE FIXED
+// UPDATED
         Spark.put("/game", (req, res) -> {
             JoinGameRequest joinGameRequest = new JoinGameHandler().HTTPToJoinGameRequest(req.body());
             joinGameRequest.setAuthToken(req.headers("Authorization"));
-            String errorMessage = new JoinGameService().joinGame(joinGameRequest, authDatabase, gameDatabase);
+            String errorMessage = new JoinGameService().joinGame(joinGameRequest, authDatabase, gameDatabase, db);
             res.type("application/json");
 
             String result = new JoinGameHandler().joinGameRequestToHTTP(joinGameRequest, errorMessage);
@@ -202,7 +198,7 @@ public class ServerClass {
 // UPDATED
         Spark.delete("/db", (req, res) -> {
             ClearApplicationService clearApplicationService = new ClearApplicationService();
-            clearApplicationService.clearApplication(authDatabase, gameDatabase, userDatabase);
+            clearApplicationService.clearApplication(authDatabase, gameDatabase, userDatabase, db);
             String result = new ClearApplicationHandler().clearApplicationRequestToHTTP();
             res.type("application/json");
             res.status(200);
