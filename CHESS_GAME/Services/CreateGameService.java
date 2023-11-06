@@ -31,7 +31,7 @@ public class CreateGameService extends BaseChecker {
         if(invalidAuthToken(authTokenRequest, authDatabase, db)){
             result = "Error: Unauthorized";
         }
-        else if(!validateGameName(request.getGameName(), gameDatabase)){
+        else if(!validateGameName(request.getGameName(), gameDatabase, db)){
             result = "Error: Bad Request";
         }
         else{

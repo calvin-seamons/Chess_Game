@@ -10,7 +10,7 @@ import chess.ChessGame.TeamColor;
  */
 public class JoinGameRequest {
     private String authToken;
-    private String gameID;
+    private int gameID;
     private ChessGame.TeamColor playerColor = TeamColor.SPECTATOR;
 
     public JoinGameRequest() {}
@@ -20,7 +20,7 @@ public class JoinGameRequest {
         return authToken;
     }
 
-    public String getGameID() {
+    public int getGameID() {
         return gameID;
     }
 
@@ -32,7 +32,7 @@ public class JoinGameRequest {
         this.authToken = authToken;
     }
 
-    public void setGameID(String gameID) {
+    public void setGameID(int gameID) {
         this.gameID = gameID;
     }
 

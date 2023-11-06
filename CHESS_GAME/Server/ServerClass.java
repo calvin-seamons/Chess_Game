@@ -163,7 +163,7 @@ public class ServerClass {
                 Game newGame = new Game();
                 newGame.setGameID(createGameResult.getGameID());
                 newGame.setGameName(createGameRequest.getGameName());
-                gameDatabase.createGame(newGame);
+                gameDatabase.createGame(newGame, db);
                 res.status(200);
                 return result;
             }

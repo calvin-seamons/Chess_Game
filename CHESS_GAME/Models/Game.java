@@ -6,18 +6,18 @@ package Models;
  * for gameId, whiteUsername, blackUsername, gameName, and gameImplementation
  */
 public class Game {
-    private String gameID;
+    private int gameID;
     private String whiteUsername;
     private String blackUsername;
     private String gameName;
     private String gameImplementation;
 
-    public String getGameId() {
+    public int getGameID() {
         return gameID;
     }
 
-    public void setGameID(String gameId) {
-        this.gameID = gameId;
+    public void setGameID(int gameID) {
+        this.gameID = gameID;
     }
 
     public String getWhiteUsername() {

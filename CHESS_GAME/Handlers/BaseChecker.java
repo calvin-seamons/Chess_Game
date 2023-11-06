@@ -18,12 +18,12 @@ public abstract class BaseChecker {
         return !authDAO.readAuthToken(authToken, db);
     }
 
-    protected boolean validateGameID(String gameID, GameDAO gameDAO) throws DataAccessException {
-        return gameDAO.readGame(gameID);
+    protected boolean validateGameID(int gameID, GameDAO gameDAO, Database db) throws DataAccessException {
+        return gameDAO.readGame(gameID, db);
     }
 
-    protected boolean validateGameName(String gameName, GameDAO databaseGames) throws DataAccessException {
-        return !databaseGames.checkDuplicateName(gameName);
+    protected boolean validateGameName(String gameName, GameDAO databaseGames, Database db) throws DataAccessException {
+        return !databaseGames.gameExists(gameName, db);
     }
 
     protected boolean duplicateInDatabase(UserDAO userDAO, RegisterRequest request, Database db) throws DataAccessException {

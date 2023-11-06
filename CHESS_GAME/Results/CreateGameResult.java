@@ -5,19 +5,19 @@ package Results;
  * and the gameID of the game that was created
  */
 public class CreateGameResult {
-    String gameID;
+    Integer gameID; // Changed from int to Integer to allow null
     String message;
 
-    public CreateGameResult(String gameID, String message) {
+    public CreateGameResult(Integer gameID, String message) {
         this.gameID = gameID;
         this.message = message;
     }
 
-    public String getGameID() {
+    public Integer getGameID() {
         return gameID;
     }
 
-    public void setGameID(String gameID) {
+    public void setGameID(Integer gameID) { // Parameter type changed to Integer
         this.gameID = gameID;
     }
 

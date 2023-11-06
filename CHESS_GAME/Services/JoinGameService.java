@@ -28,7 +28,7 @@ public class JoinGameService extends BaseChecker {
         if(invalidAuthToken(authTokenRequest, authDatabase, db)) {
             errorMessage = "Error: Unauthorized";
         }
-        else if(!validateGameID(request.getGameID(), gameDatabase)){
+        else if(!validateGameID(request.getGameID(), gameDatabase, db)){
             errorMessage = "Error: Bad Request";
         }
         else if(teamAlreadyTaken(request, authDatabase, gameDatabase, db)){
@@ -36,6 +36,7 @@ public class JoinGameService extends BaseChecker {
         }
         else {
             errorMessage = null;
+            gameDatabase.claimSpot(request.getGameID(), request.getTeam(), authTokenRequest.getUsername(), db);
         }
         return errorMessage;
     }
@@ -43,10 +44,14 @@ public class JoinGameService extends BaseChecker {
     private boolean teamAlreadyTaken(JoinGameRequest request, AuthDAO authDatabase, GameDAO gameDatabase, Database db) throws DataAccessException {
         Game game = new Game();
         String authToken = request.getAuthToken();
-        for(Game g : gameDatabase.findAll()){
-            if(g.getGameId().equals(request.getGameID())){
+        for(Game g : gameDatabase.findAll(db)){
+            if(g.getGameID() == request.getGameID()){
                 game = g;
             }
+        }
+
+        if(request.getTeam() == null){
+            return false;
         }
 
         if(request.getTeam().equals(ChessGame.TeamColor.WHITE)){

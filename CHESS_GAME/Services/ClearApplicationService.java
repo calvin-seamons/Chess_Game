@@ -9,7 +9,7 @@ public class ClearApplicationService {
      */
     public void clearApplication(AuthDAO authDatabase, GameDAO gameDatabase, UserDAO userDatabase, Database db) throws DataAccessException {
         authDatabase.clearAuthDatabase(db);
-        gameDatabase.clearGameDatabase();
+        gameDatabase.clearGameDatabase(db);
         userDatabase.clearUserDatabase(db);
     }
 }

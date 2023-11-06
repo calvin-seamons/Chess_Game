@@ -25,11 +25,12 @@ public class ListGamesHandler extends BaseChecker {
         listGamesResult.setMessage(errorMessage);
         if(listGamesResult.getMessage() != null){
             listGamesResult.setMessage(errorMessage);
+            listGamesResult.setGames(null);
             return gson.toJson(listGamesResult);
         }
 
         request.setUsername(authDatabase.getUserName(request.getAuthToken(),db ));
-        listGamesResult.setGames(gameDatabase.findAll());
+        listGamesResult.setGames(gameDatabase.findAll(db));
         return gson.toJson(listGamesResult);
     }
 
