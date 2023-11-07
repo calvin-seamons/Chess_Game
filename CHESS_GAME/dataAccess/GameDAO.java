@@ -136,11 +136,11 @@ public class GameDAO {
      * @param gameID This is the id of the game to be deleted
      * @throws DataAccessException
      */
-    public void deleteGame(String gameID, Database db) throws DataAccessException{
+    public void deleteGame(int gameID, Database db) throws DataAccessException{
         try (Connection conn = db.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(DELETE_GAME_SQL)) {
 
-            pstmt.setString(1, gameID);
+            pstmt.setInt(1, gameID);
 
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows == 0) {
@@ -158,6 +158,10 @@ public class GameDAO {
      * @throws DataAccessException If there is an error inserting the game into the database
      */
     public void insertGame(Game game, Database db) throws DataAccessException{
+        if(gameExists(game.getGameName(), db)){
+            throw new DataAccessException("Game already exists in the database");
+        }
+
         try (Connection conn = db.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(INSERT_GAME_SQL)) {
 
@@ -264,7 +268,7 @@ public class GameDAO {
         }
     }
 
-    public String gameToJSON(Chess_Game game) {
+    private String gameToJSON(Chess_Game game) {
         ObjectMapper mapper = new ObjectMapper();
         try{
             String json = mapper.writeValueAsString(game);
@@ -274,7 +278,7 @@ public class GameDAO {
         }
     }
 
-    public Chess_Game JSONToGame(String json) {
+    private Chess_Game JSONToGame(String json) {
         return new Gson().fromJson(json, Chess_Game.class);
     }
 }

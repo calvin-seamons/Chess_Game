@@ -116,6 +116,7 @@ public class UserDAO {
                 System.out.println("User updated successfully!");
             } else {
                 System.out.println("No user was updated.");
+                throw new DataAccessException("Error updating user in the database");
             }
         } catch (SQLException e) {
             // Handle SQL exceptions

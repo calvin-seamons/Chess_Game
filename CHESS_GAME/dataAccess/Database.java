@@ -25,11 +25,10 @@ import java.util.LinkedList;
  */
 public class Database {
 
-    // FIXME: Change these fields, if necessary, to match your database configuration
+    //Change these fields, if necessary, to match your database configuration
     public static final String DB_NAME = "chess";
     private static final String DB_USERNAME = "root";
     private static final String DB_PASSWORD = "sv164889";
-
     private static final String CONNECTION_URL = "jdbc:mysql://localhost:3306";
 
     private final LinkedList<Connection> connections = new LinkedList<>();
