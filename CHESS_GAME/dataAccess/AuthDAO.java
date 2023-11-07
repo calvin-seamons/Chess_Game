@@ -33,6 +33,10 @@ public class AuthDAO {
      * @throws DataAccessException If there is an error creating the authtoken
      */
     public void createAuth(Authtoken auth, Database db) throws DataAccessException{
+        if(auth == null) {
+            throw new DataAccessException("Error creating the authtoken");
+        }
+
         try (Connection conn = db.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(INSERT_AUTH_SQL)) {
 

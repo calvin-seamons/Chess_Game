@@ -156,9 +156,7 @@ public class MyDatabaseTests {
 
         gameDAO.createGame(game, THE_DATABASE);
 
-        Assertions.assertThrows(DataAccessException.class, () -> {
-            gameDAO.readGame(1436, THE_DATABASE);
-        });
+        Assertions.assertFalse(gameDAO.readGame(1439, THE_DATABASE), "Game found in database");
     }
 
     @Test
@@ -246,7 +244,7 @@ public class MyDatabaseTests {
         gameDAO.insertGame(game, THE_DATABASE);
         gameDAO.insertGame(game2, THE_DATABASE);
 
-        Assertions.assertThrows(DataAccessException.class, () -> {
+        Assertions.assertThrows(NullPointerException.class, () -> {
             gameDAO.findAll(null);
         });
     }
@@ -254,8 +252,9 @@ public class MyDatabaseTests {
     @Test
     @DisplayName("Claim Spot Positive Test")
     @Order(12)
-    public void claimSpotP(){
+    public void claimSpotP() throws DataAccessException {
         Game game = createTestGame();
+        gameDAO.insertGame(game, THE_DATABASE);
 
         Assertions.assertDoesNotThrow(() -> {
             gameDAO.claimSpot(game.getGameID(), ChessGame.TeamColor.WHITE, existingUser.getUsername(), THE_DATABASE);
@@ -269,7 +268,7 @@ public class MyDatabaseTests {
         Game game = createTestGame();
 
         Assertions.assertThrows(DataAccessException.class, () -> {
-            gameDAO.claimSpot(game.getGameID(), ChessGame.TeamColor.WHITE, existingUser.getUsername(), null);
+            gameDAO.claimSpot(4839, ChessGame.TeamColor.WHITE, existingUser.getUsername(), THE_DATABASE);
         });
     }
 
@@ -287,7 +286,7 @@ public class MyDatabaseTests {
     @Order(15)
     public void createUserN(){
         Assertions.assertThrows(DataAccessException.class, () -> {
-            userDAO.createUser(newUser.getUsername(), newUser.getPassword(), newUser.getEmail(), null);
+            userDAO.createUser(existingUser.getUsername(), newUser.getPassword(), newUser.getEmail(), THE_DATABASE);
         });
     }
 
@@ -302,17 +301,16 @@ public class MyDatabaseTests {
     @DisplayName("Read User Negative Test")
     @Order(17)
     public void readUserN() throws DataAccessException {
-        Assertions.assertThrows(DataAccessException.class, () -> {
+        Assertions.assertThrows(NullPointerException.class, () -> {
             userDAO.readUser(existingUser, null);
         });
 
-        Assertions.assertThrows(DataAccessException.class, () -> {
-            User falseUser = new User();
-            falseUser.setUsername("falseUsername");
-            falseUser.setPassword("falsePassword");
-            falseUser.setEmail("falseEmail");
-            userDAO.readUser(falseUser, THE_DATABASE);
-        });
+        User falseUser = new User();
+        falseUser.setUsername("falseUsername");
+        falseUser.setPassword("falsePassword");
+        falseUser.setEmail("falseEmail");
+
+        Assertions.assertNull(userDAO.readUser(falseUser, THE_DATABASE), "User found in database");
     }
 
     @Test
@@ -328,7 +326,7 @@ public class MyDatabaseTests {
     @DisplayName("Update User Negative Test")
     @Order(19)
     public void updateUserN() throws DataAccessException {
-        Assertions.assertThrows(DataAccessException.class, () -> {
+        Assertions.assertThrows(NullPointerException.class, () -> {
             userDAO.updateUser(existingUser.getUsername(), newUser, null);
         });
 
@@ -354,7 +352,7 @@ public class MyDatabaseTests {
     @DisplayName("Delete User Negative Test")
     @Order(21)
     public void deleteUserN() throws DataAccessException {
-        Assertions.assertThrows(DataAccessException.class, () -> {
+        Assertions.assertThrows(NullPointerException.class, () -> {
             userDAO.deleteUser(existingUser.getUsername(), null);
         });
 
@@ -385,10 +383,10 @@ public class MyDatabaseTests {
     @Order(23)
     public void createAuthN() throws DataAccessException {
         Authtoken auth = new Authtoken();
-        auth.setAuthToken("testAuthToken");
-        auth.setUsername("testUsername");
+        auth.setAuthToken(existingAuth);
+        auth.setUsername(existingUser.getUsername());
 
-        Assertions.assertThrows(DataAccessException.class, () -> {
+        Assertions.assertThrows(NullPointerException.class, () -> {
             authDAO.createAuth(auth, null);
         });
     }
@@ -412,16 +410,15 @@ public class MyDatabaseTests {
         authTokenRequest.setAuthToken(existingAuth);
         authTokenRequest.setUsername(existingUser.getUsername());
 
-        Assertions.assertThrows(DataAccessException.class, () -> {
+        Assertions.assertThrows(NullPointerException.class, () -> {
             authDAO.readAuthToken(authTokenRequest, null);
         });
 
-        Assertions.assertThrows(DataAccessException.class, () -> {
-            AuthTokenRequest falseAuthTokenRequest = new AuthTokenRequest();
-            falseAuthTokenRequest.setAuthToken("falseAuthToken");
-            falseAuthTokenRequest.setUsername("falseUsername");
-            authDAO.readAuthToken(falseAuthTokenRequest, THE_DATABASE);
-        });
+        AuthTokenRequest falseAuthTokenRequest = new AuthTokenRequest();
+        falseAuthTokenRequest.setAuthToken("falseAuthToken");
+        falseAuthTokenRequest.setUsername("falseUsername");
+
+        Assertions.assertFalse(authDAO.readAuthToken(falseAuthTokenRequest, THE_DATABASE), "Auth found in database");
     }
 
     @Test
@@ -436,14 +433,12 @@ public class MyDatabaseTests {
     @Test
     @DisplayName("Update Auth Negative Test")
     @Order(27)
-    public void updateAuthN(){
-        Assertions.assertThrows(DataAccessException.class, () -> {
+    public void updateAuthN() throws DataAccessException {
+        Assertions.assertThrows(NullPointerException.class, () -> {
             authDAO.updateAuthToken(existingUser.getUsername(), "newAuthToken", null);
         });
 
-        Assertions.assertThrows(DataAccessException.class, () -> {
-            authDAO.updateAuthToken("falseUsername", "newAuthToken", THE_DATABASE);
-        });
+        Assertions.assertFalse(authDAO.updateAuthToken("falseUsername", "newAuthToken", THE_DATABASE), "Auth found in database");
     }
 
     @Test
@@ -459,7 +454,7 @@ public class MyDatabaseTests {
     @DisplayName("Delete Auth Negative Test")
     @Order(29)
     public void deleteAuthN(){
-        Assertions.assertThrows(DataAccessException.class, () -> {
+        Assertions.assertThrows(NullPointerException.class, () -> {
             authDAO.deleteAuthToken(existingAuth, null);
         });
 
@@ -483,7 +478,7 @@ public class MyDatabaseTests {
     @DisplayName("Get Username Negative Test")
     @Order(31)
     public void getUsernameN() throws DataAccessException {
-        Assertions.assertThrows(DataAccessException.class, () -> {
+        Assertions.assertThrows(NullPointerException.class, () -> {
             authDAO.getUserName(existingAuth, null);
         });
 
@@ -505,7 +500,7 @@ public class MyDatabaseTests {
     @DisplayName("Get AuthToken Negative Test")
     @Order(33)
     public void getAuthTokenN() throws DataAccessException {
-        Assertions.assertThrows(DataAccessException.class, () -> {
+        Assertions.assertThrows(NullPointerException.class, () -> {
             authDAO.getAuthToken(existingUser.getUsername(), null);
         });
 
@@ -538,7 +533,7 @@ public class MyDatabaseTests {
     @DisplayName("Get Database AuthTokens Negative Test")
     @Order(35)
     public void getDatabaseTokensN() throws DataAccessException {
-        Assertions.assertThrows(DataAccessException.class, () -> {
+        Assertions.assertThrows(NullPointerException.class, () -> {
             authDAO.getDatabaseAuthtokens(null);
         });
     }

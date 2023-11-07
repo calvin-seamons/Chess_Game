@@ -31,14 +31,12 @@ public class UserDAO {
      * @throws DataAccessException If there is an error creating the user
      */
     public void createUser(String username, String password, String email, Database db) throws DataAccessException{
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setEmail(email);
-        databaseUsers.add(user);
-        System.out.println("User created");
-        // Print out the user from the database
-        System.out.println(databaseUsers.get(databaseUsers.size() - 1).getUsername());
+        if(readUser(new User(username, password, email), db) != null) {
+            throw new DataAccessException("Duplicate User");
+        }
+        else if(username == null || password == null || email == null) {
+            throw new DataAccessException("Null values for user");
+        }
 
         // Obtain a connection from the database pool
         try (Connection conn = db.getConnection(); PreparedStatement pstmt = conn.prepareStatement(INSERT_USER_SQL)) {
@@ -85,7 +83,7 @@ public class UserDAO {
         System.out.println("User read");
 
         for (User u : userList) {
-            if (u.getUsername().equals(user.getUsername()) && u.getPassword().equals(user.getPassword())) {
+            if (u.getUsername().equals(user.getUsername())) {
                 return u;
             }
         }
@@ -142,6 +140,7 @@ public class UserDAO {
                 System.out.println("User deleted successfully.");
             } else {
                 System.out.println("No user was deleted. User may not exist.");
+                throw new DataAccessException("Error deleting user from the database");
             }
         } catch (SQLException e) {
             throw new DataAccessException("Error deleting user from the database");

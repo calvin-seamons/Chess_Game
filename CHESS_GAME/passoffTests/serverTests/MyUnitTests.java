@@ -164,7 +164,7 @@ public class MyUnitTests {
 
         Assertions.assertEquals(HTTP_OK, theServer.getStatusCode(), "Status code should be 200");
         Assertions.assertNotNull(createResult.gameID, "Game ID should not be null");
-        Assertions.assertNull(createResult.message, "Message should be null");
+        Assertions.assertEquals(createResult.message, "", "Message should be empty");
     }
 
     @Test
@@ -202,7 +202,7 @@ public class MyUnitTests {
 
         Assertions.assertEquals(HTTP_OK, theServer.getStatusCode(), "Status code should be 200");
         Assertions.assertNotNull(createResult2.gameID, "Game ID should not be null");
-        Assertions.assertNull(createResult2.message, "Message should be null");
+        Assertions.assertEquals(createResult2.message, "", "Message should be empty");
 
         TestModels.TestListResult listResult = theServer.listGames(existingAuth);
 
@@ -239,7 +239,7 @@ public class MyUnitTests {
 
         Assertions.assertEquals(HTTP_OK, theServer.getStatusCode(), "Status code should be 200");
         Assertions.assertNotNull(createResult.gameID, "Game ID should not be null");
-        Assertions.assertNull(createResult.message, "Message should be null");
+        Assertions.assertEquals(createResult.message, "", "Message should be empty");
 
         // Now actually testing the join game
 

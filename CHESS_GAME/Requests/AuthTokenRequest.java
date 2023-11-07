@@ -5,6 +5,16 @@ public class AuthTokenRequest {
 
     private String username;
 
+    public AuthTokenRequest() {
+        this.authToken = null;
+        this.username = null;
+    }
+
+    public AuthTokenRequest(String authToken, String username) {
+        this.authToken = authToken;
+        this.username = username;
+    }
+
     public String getAuthToken() {
         return authToken;
     }

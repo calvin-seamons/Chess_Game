@@ -39,7 +39,7 @@ public class GameDAO {
      */
     public void createGame(Game game, Database db) throws DataAccessException{
         if (gameExists(game.getGameName(), db)) {
-            return;
+            throw new DataAccessException("Game already exists in the database");
         }
 
         try (Connection conn = db.getConnection();
@@ -159,7 +159,7 @@ public class GameDAO {
      */
     public void insertGame(Game game, Database db) throws DataAccessException{
         if(gameExists(game.getGameName(), db)){
-            throw new DataAccessException("Game already exists in the database");
+            throw new DataAccessException("Gamwe already exists in the database");
         }
 
         try (Connection conn = db.getConnection();
