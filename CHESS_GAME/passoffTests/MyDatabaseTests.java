@@ -1,3 +1,5 @@
+package passoffTests;
+
 import Handlers.RegisterHandler;
 import Models.Authtoken;
 import Models.Game;
