@@ -2,9 +2,6 @@ package Handlers;
 
 import Results.ClearApplicationResult;
 import com.google.gson.Gson;
-import dataAccess.AuthDAO;
-import dataAccess.GameDAO;
-import dataAccess.UserDAO;
 
 /**
  * ClearApplicationHandler class that has a constructor and methods

@@ -2,7 +2,6 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class Chess_Board implements ChessBoard {
     private final ChessPiece[][] board;
