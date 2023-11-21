@@ -2,6 +2,7 @@ import Requests.RegisterRequest;
 import chess.*;
 import ui.EscapeSequences;
 import com.google.gson.Gson;
+import ui.HTTPClient;
 
 import java.util.Scanner;
 
@@ -12,6 +13,8 @@ public class ChessClient {
     private enum AppState {
         PRE_LOGIN, POST_LOGIN
     }
+
+    private final HTTPClient client = new HTTPClient();
 
     private AppState currentState = AppState.PRE_LOGIN;
 
@@ -138,11 +141,10 @@ public class ChessClient {
         // Implementation for register
         System.out.println("Registering user " + username + " with password " + password + " and email " + email + "\n");
 
-        Gson gson = new Gson();
-        RegisterRequest request = new RegisterRequest(username, password, email);
         // Check if username is already taken
         // If not, create user
         // On successful registration, change state to POST_LOGIN
+        System.out.println(client.register(username, password, email));
         currentState = AppState.POST_LOGIN;
     }
 
