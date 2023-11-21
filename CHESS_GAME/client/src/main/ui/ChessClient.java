@@ -1,22 +1,58 @@
 package ui;
 
+import java.util.Scanner;
+
 public class ChessClient {
-    // TODO: Deal with all the command line arguments
-    // This will call "ServerFacade which calls your own database
-    public ChessClient() {
-        System.out.println("Introduction to Chess");
-        System.out.println(EscapeSequences.WHITE_QUEEN + " " + EscapeSequences.BLACK_QUEEN);
+
+    private enum AppState {
+        PRE_LOGIN, POST_LOGIN
     }
 
-    public void help() {
-        System.out.println("Commands:");
-        System.out.println("help - Displays this help message");
-        System.out.println("login <username> <password> - Logs the user in");
-        System.out.println("register <username> <password> - Registers the user");
-        System.out.println("create <gameName> - Creates a new game");
-        System.out.println("join <gameName> - Joins a game");
-        System.out.println("move <from> <to> - Moves a piece");
-        System.out.println("resign - Resigns from the game");
-        System.out.println("quit - Quits the game");
+    private final AppState currentState = AppState.PRE_LOGIN;
+
+    public static void main(String[] args) {
+        ChessClient client = new ChessClient();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println(EscapeSequences.BLACK_KING + " Welcome to the Chess Application " + EscapeSequences.WHITE_KING);
+
+        while (true) {
+            client.displayMenu();
+            String input = scanner.nextLine();
+            client.processInput(input);
+        }
     }
+
+    private void displayMenu() {
+        if (currentState == AppState.PRE_LOGIN) {
+            // Display pre-login menu
+            System.out.println("Register <username> <password><email> - To create an account");
+            System.out.println("Login <username> <password> - To play chess");
+            System.out.println("Quit - To quit playing chess");
+            System.out.println("Help - To display this menu");
+
+        } else {
+            System.out.println("Create <gameName> - To create a game");
+            System.out.println("List - To list all games");
+            System.out.println("Join <gameID> [WHITE|BLACK|<empty>] - To join a game");
+        }
+    }
+
+    private void processInput(String input) {
+        switch (input.toLowerCase()) {
+            case "login":
+                System.out.println("Enter username: ");
+                handleLogin();
+                break;
+            // Handle other cases
+        }
+    }
+
+    private void handleLogin() {
+        // Implementation for login
+        // On successful login, change state to POST_LOGIN
+    }
+
+    // Other methods for different commands
 }
+

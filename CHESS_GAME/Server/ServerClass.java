@@ -1,3 +1,5 @@
+package Server;
+
 import Handlers.*;
 import Models.Authtoken;
 import Models.Game;
