@@ -1,4 +1,6 @@
-package ui;
+import Requests.RegisterRequest;
+import ui.EscapeSequences;
+import com.google.gson.Gson;
 
 import java.util.Scanner;
 
@@ -13,6 +15,7 @@ public class ChessClient {
     public static void main(String[] args) {
         ChessClient client = new ChessClient();
         Scanner scanner = new Scanner(System.in);
+
 
         System.out.println(EscapeSequences.BLACK_KING + " Welcome to the Chess Application " + EscapeSequences.WHITE_KING);
 
@@ -44,8 +47,27 @@ public class ChessClient {
                 System.out.println("Enter username: ");
                 handleLogin();
                 break;
-            // Handle other cases
+            case "register":
+                System.out.println("Enter username: ");
+                String username = new Scanner(System.in).nextLine();
+                System.out.println("Enter password: ");
+                String password = new Scanner(System.in).nextLine();
+                System.out.println("Enter email: ");
+                String email = new Scanner(System.in).nextLine();
+                handleRegister(username, password, email);
+                break;
         }
+    }
+
+    private void handleRegister(String username, String password, String email) {
+        // Implementation for register
+        Gson gson = new Gson();
+        RegisterRequest request = new RegisterRequest(username, password, email);
+        // Check if username is already taken
+        // If not, create user
+
+
+
     }
 
     private void handleLogin() {

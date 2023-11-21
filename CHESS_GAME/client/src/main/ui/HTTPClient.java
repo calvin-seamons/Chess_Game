@@ -1,9 +1,8 @@
-import ui.ChessClient;
+package ui;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Scanner;
 
 public class HTTPClient {
     //Takes the command line arguments and passes them into the Chess Client
@@ -40,10 +39,5 @@ public class HTTPClient {
         } catch (Exception ex) {
             System.out.printf("ERROR: %s\n", ex);
         }
-    }
-
-    public static void main(String[] args) {
-        ChessClient.main(args);
-
     }
 }

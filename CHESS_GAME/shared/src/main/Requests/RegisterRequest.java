@@ -10,6 +10,12 @@ public class RegisterRequest {
 
     public RegisterRequest() {}
 
+    public RegisterRequest(String username, String password, String email) {
+        setUsername(username);
+        setPassword(password);
+        setEmail(email);
+    }
+
     public String getUsername() {
         return username;
     }
