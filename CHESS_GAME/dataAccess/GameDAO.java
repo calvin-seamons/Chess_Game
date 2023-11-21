@@ -271,8 +271,7 @@ public class GameDAO {
     private String gameToJSON(Chess_Game game) {
         ObjectMapper mapper = new ObjectMapper();
         try{
-            String json = mapper.writeValueAsString(game);
-            return json;
+            return mapper.writeValueAsString(game);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
