@@ -7,11 +7,6 @@ public class Chess_Board implements ChessBoard {
     private final ChessPiece[][] board;
     private ChessMove lastMove;
 
-//    public Chess_Board() {
-//        board = new ChessPiece[8][8];
-//        resetBoard();
-//    }
-
     public Chess_Board() {
         board = new ChessPiece[8][8];
     }
@@ -19,10 +14,10 @@ public class Chess_Board implements ChessBoard {
     public Chess_Board(Chess_Board board) {
         this.board = new ChessPiece[8][8];
         for(int i = 0; i < 8; i++){
-            for(int j = 0; j < 8; j++) {
-                this.board[i][j] = board.board[i][j];
-            }
+            System.arraycopy(board.board[i], 0, this.board[i], 0, 8);
         }
+        // TODO: This could be a problem
+        this.lastMove = board.lastMove;
     }
 
     // NOT IN OG INTERFACE
