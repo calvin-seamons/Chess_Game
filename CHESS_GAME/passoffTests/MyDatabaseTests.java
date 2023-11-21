@@ -10,12 +10,8 @@ import Results.RegisterResult;
 import Services.ClearApplicationService;
 import chess.ChessGame;
 import com.google.gson.Gson;
-import com.sun.source.doctree.AuthorTree;
 import dataAccess.*;
-import org.eclipse.jetty.server.Server;
 import org.junit.jupiter.api.*;
-
-import java.util.Scanner;
 
 public class MyDatabaseTests {
     private static User existingUser;

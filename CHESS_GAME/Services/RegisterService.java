@@ -1,9 +1,7 @@
 package Services;
 
 import Handlers.BaseChecker;
-import Models.User;
 import Requests.RegisterRequest;
-import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import dataAccess.Database;
 import dataAccess.UserDAO;
