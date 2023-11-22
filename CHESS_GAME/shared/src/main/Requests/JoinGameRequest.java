@@ -9,7 +9,7 @@ import chess.ChessGame.TeamColor;
  * JoinGameRequest object that has authToken, gameID, and team stored in it
  */
 public class JoinGameRequest {
-    private String authToken;
+    private String authToken = null;
     private int gameID;
     private ChessGame.TeamColor playerColor = TeamColor.SPECTATOR;
 
