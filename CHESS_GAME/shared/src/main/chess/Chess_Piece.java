@@ -607,20 +607,38 @@ public class Chess_Piece implements ChessPiece{
     }
 
 
-    public String getSymbol(ChessPiece.PieceType PieceType) {
-        if (this.PieceType == ChessPiece.PieceType.PAWN)
-            return "P";
-        else if (this.PieceType == ChessPiece.PieceType.ROOK)
-            return "R";
-        else if (this.PieceType == ChessPiece.PieceType.KNIGHT)
-            return "N";
-        else if (this.PieceType == ChessPiece.PieceType.BISHOP)
-            return "B";
-        else if (this.PieceType == ChessPiece.PieceType.QUEEN)
-            return "Q";
-        else if (this.PieceType == ChessPiece.PieceType.KING)
-            return "K";
-        else
+    public String getSymbol(ChessPiece.PieceType PieceType, ChessGame.TeamColor teamColor) {
+        if (this.PieceType == ChessPiece.PieceType.PAWN) {
+            if (teamColor == ChessGame.TeamColor.BLACK)
+                return OtherEscapeSequences.BLACK_PAWN;
+            else
+                return OtherEscapeSequences.WHITE_PAWN;
+        } else if (this.PieceType == ChessPiece.PieceType.ROOK) {
+            if (teamColor == ChessGame.TeamColor.BLACK)
+                return OtherEscapeSequences.BLACK_ROOK;
+            else
+                return OtherEscapeSequences.WHITE_ROOK;
+        } else if (this.PieceType == ChessPiece.PieceType.KNIGHT) {
+            if (teamColor == ChessGame.TeamColor.BLACK)
+                return OtherEscapeSequences.BLACK_KNIGHT;
+            else
+                return OtherEscapeSequences.WHITE_KNIGHT;
+        } else if (this.PieceType == ChessPiece.PieceType.BISHOP) {
+            if (teamColor == ChessGame.TeamColor.BLACK)
+                return OtherEscapeSequences.BLACK_BISHOP;
+            else
+                return OtherEscapeSequences.WHITE_BISHOP;
+        } else if (this.PieceType == ChessPiece.PieceType.QUEEN) {
+            if (teamColor == ChessGame.TeamColor.BLACK)
+                return OtherEscapeSequences.BLACK_QUEEN;
+            else
+                return OtherEscapeSequences.WHITE_QUEEN;
+        } else if (this.PieceType == ChessPiece.PieceType.KING) {
+            if (teamColor == ChessGame.TeamColor.BLACK)
+                return OtherEscapeSequences.BLACK_KING;
+            else
+                return OtherEscapeSequences.WHITE_KING;
+        } else
             return " ";
     }
 }

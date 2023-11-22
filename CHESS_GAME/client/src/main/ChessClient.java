@@ -1,4 +1,6 @@
 import Requests.RegisterRequest;
+import Results.LoginResult;
+import Results.RegisterResult;
 import chess.*;
 import ui.EscapeSequences;
 import com.google.gson.Gson;
@@ -144,15 +146,35 @@ public class ChessClient {
         // Check if username is already taken
         // If not, create user
         // On successful registration, change state to POST_LOGIN
-        System.out.println(client.register(username, password, email));
-        currentState = AppState.POST_LOGIN;
+        RegisterResult result = client.register(username, password, email);
+        if (result == null) {
+            System.out.println("Error: Could not register user");
+            return;
+        }
+
+        if(result.getMessage() == null){
+            currentState = AppState.POST_LOGIN;
+        } else if (result.getMessage().equals("Error: Already Taken")) {
+            System.out.println("Error: Username already taken");
+        } else if (result.getMessage().equals("Error: Bad Request")) {
+            System.out.println("Error: Bad request");
+        }
     }
 
     private void handleLogin(String username, String password) {
         // Implementation for login
         // On successful login, change state to POST_LOGIN
         System.out.println("Logging in user " + username + " with password " + password + "\n");
-        currentState = AppState.POST_LOGIN;
+        LoginResult result = client.login(username, password);
+
+        if (result == null) {
+            System.out.println("Error: Could not login user");
+        } else if(result.getMessage() == null){
+            System.out.println("Success");
+            currentState = AppState.POST_LOGIN;
+        } else if (result.getMessage().equals("Error: Unauthorized")) {
+            System.out.println("Error: Unauthorized");
+        }
     }
 
     private void showBoard(String color, ChessBoard board) {
@@ -191,7 +213,7 @@ public class ChessClient {
                     System.out.print(EscapeSequences.EMPTY); // Use the constant for an empty tile
                 } else {
                     String pieceColor = piece.getTeamColor() == ChessGame.TeamColor.WHITE ? whitePieceColor : blackPieceColor;
-                    System.out.print(pieceColor + " " + piece.getSymbol(piece.getPieceType()) +  " " + EscapeSequences.RESET_BG_COLOR);
+                    System.out.print(pieceColor +  piece.getSymbol(piece.getPieceType(), piece.getTeamColor()) +  EscapeSequences.RESET_BG_COLOR);
                 }
                 System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY); // Reset background color after each tile
             }

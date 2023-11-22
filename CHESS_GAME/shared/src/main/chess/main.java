@@ -18,7 +18,7 @@ public class main {
                 if (piece == null) {
                     System.out.print("| ");
                 } else {
-                    System.out.print("|" + piece.getSymbol(piece.getPieceType()));
+                    System.out.print("|" + piece.getSymbol(piece.getPieceType(), piece.getTeamColor()));
                 }
             }
             System.out.println("|");
