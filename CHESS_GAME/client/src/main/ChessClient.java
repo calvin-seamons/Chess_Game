@@ -1,15 +1,11 @@
 import Models.Game;
-import Requests.RegisterRequest;
 import Results.*;
 import chess.*;
 import ui.EscapeSequences;
-import com.google.gson.Gson;
 import ui.HTTPClient;
-
 import java.util.Objects;
 import java.util.Scanner;
 
-import static chess.main.printBoard;
 
 public class ChessClient {
 
