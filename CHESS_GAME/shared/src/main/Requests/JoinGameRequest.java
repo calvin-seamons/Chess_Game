@@ -4,6 +4,7 @@ package Requests;
 
 import chess.ChessGame;
 import chess.ChessGame.TeamColor;
+import chess.ChessPiece;
 
 /**
  * JoinGameRequest object that has authToken, gameID, and team stored in it
@@ -11,9 +12,19 @@ import chess.ChessGame.TeamColor;
 public class JoinGameRequest {
     private String authToken = null;
     private int gameID;
-    private ChessGame.TeamColor playerColor = TeamColor.SPECTATOR;
+    private ChessGame.TeamColor playerColor = null;
 
     public JoinGameRequest() {}
+
+    public JoinGameRequest(int gameID){
+        this.gameID = gameID;
+    }
+
+    public JoinGameRequest(String authToken, int gameID, String teamString) {
+        this.authToken = authToken;
+        this.gameID = gameID;
+        setTeam(teamString);
+    }
 
 
     public String getAuthToken() {
@@ -41,8 +52,8 @@ public class JoinGameRequest {
             this.playerColor = ChessGame.TeamColor.WHITE;
         } else if ("BLACK".equalsIgnoreCase(teamString)) {
             this.playerColor = ChessGame.TeamColor.BLACK;
-        } else {
-            this.playerColor = ChessGame.TeamColor.SPECTATOR;
+//        } else {
+//            this.playerColor = ChessGame.TeamColor.SPECTATOR;
         }
     }
 }

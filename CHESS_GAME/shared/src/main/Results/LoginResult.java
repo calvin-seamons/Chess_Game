@@ -8,6 +8,9 @@ public class LoginResult {
     private String authToken;
     private String message;
     public LoginResult() {}
+    public LoginResult(String message) {
+        this.message = message;
+    }
 
     public String getMessage() {
         return message;

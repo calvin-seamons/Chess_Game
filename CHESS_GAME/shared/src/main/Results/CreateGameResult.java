@@ -13,6 +13,10 @@ public class CreateGameResult {
         this.message = message;
     }
 
+    public CreateGameResult(String message) {
+        this.message = message;
+    }
+
     public Integer getGameID() {
         return gameID;
     }

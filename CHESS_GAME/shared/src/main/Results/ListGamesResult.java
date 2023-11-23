@@ -13,6 +13,9 @@ public class ListGamesResult {
     private String message;
 
     public ListGamesResult() {}
+    public ListGamesResult(String message) {
+        this.message = message;
+    }
 
     public List<Game> getGames() {
         return games;

@@ -1,11 +1,10 @@
 package ui;
 
 import Requests.CreateGameRequest;
+import Requests.JoinGameRequest;
 import Requests.LoginRequest;
 import Requests.RegisterRequest;
-import Results.CreateGameResult;
-import Results.LoginResult;
-import Results.RegisterResult;
+import Results.*;
 import com.google.gson.Gson;
 
 import java.io.*;
@@ -23,7 +22,7 @@ public class HTTPClient {
 
         try {
             var url = new URL(BASE_URL + "/user");
-            HttpURLConnection conn = getHttpURLConnection(jsonRequest, url);
+            HttpURLConnection conn = getHttpURLConnection(jsonRequest, url, "POST", null);
 
             try (BufferedReader br = new BufferedReader(
                     new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
@@ -37,8 +36,7 @@ public class HTTPClient {
                 return gson.fromJson(response.toString(), RegisterResult.class);
             }
         } catch (Exception ex) {
-            System.out.printf("ERROR: %s\n", ex);
-            return null;
+            return new RegisterResult("ERROR: " + ex);
         }
     }
 
@@ -48,7 +46,7 @@ public class HTTPClient {
 
         try {
             var url = new URL(BASE_URL + "/session");
-            HttpURLConnection conn = getHttpURLConnection(jsonRequest, url);
+            HttpURLConnection conn = getHttpURLConnection(jsonRequest, url, "POST", null);
 
             try (BufferedReader br = new BufferedReader(
                     new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
@@ -60,19 +58,17 @@ public class HTTPClient {
                 return gson.fromJson(response.toString(), LoginResult.class);
             }
         } catch (Exception ex) {
-            System.out.printf("ERROR: %s\n", ex);
-            return null;
+            return new LoginResult("ERROR: " + ex);
         }
     }
 
-    public CreateGameResult createGame(String gameName) {
+    public CreateGameResult createGame(String gameName, String currentUserAuthToken) {
         CreateGameRequest createGameRequest = new CreateGameRequest(gameName);
         String jsonRequest = gson.toJson(createGameRequest);
 
         try {
-            var url = new URL(BASE_URL + "/games/" + gameName);
-            HttpURLConnection conn = getHttpURLConnection(jsonRequest, url);
-
+            var url = new URL(BASE_URL + "/game");
+            HttpURLConnection conn = getHttpURLConnection(jsonRequest, url, "POST", currentUserAuthToken);
             try (BufferedReader br = new BufferedReader(
                     new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
                 StringBuilder response = new StringBuilder();
@@ -83,23 +79,91 @@ public class HTTPClient {
                 return gson.fromJson(response.toString(), CreateGameResult.class);
             }
         } catch (Exception ex) {
-            System.out.printf("ERROR: %s\n", ex);
-            return null;
+            return new CreateGameResult("ERROR: " + ex);
         }
     }
 
-    private static HttpURLConnection getHttpURLConnection(String jsonRequest, URL url) throws IOException {
-        HttpURLConnection conn;
-        conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type", "application/json; utf-8");
-        conn.setRequestProperty("Accept", "application/json");
-        conn.setDoOutput(true);
-
-        try (OutputStream os = conn.getOutputStream()) {
-            byte[] input = jsonRequest.getBytes(StandardCharsets.UTF_8);
-            os.write(input, 0, input.length);
+    public ListGamesResult listGames(String currentUserAuthToken) {
+        try {
+            var url = new URL(BASE_URL + "/game");
+            HttpURLConnection conn = getHttpURLConnection(null, url, "GET", currentUserAuthToken);
+            try (BufferedReader br = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine);
+                }
+                return gson.fromJson(response.toString(), ListGamesResult.class);
+            }
+        } catch (Exception ex) {
+            return new ListGamesResult("ERROR: " + ex);
         }
+    }
+
+    public JoinGameResult joinGame(int gameID, String teamColor, String currentUserAuthToken) {
+        JoinGameRequest joinGameRequest = new JoinGameRequest(null, gameID, teamColor);
+        String jsonRequest = gson.toJson(joinGameRequest);
+
+        try {
+            var url = new URL(BASE_URL + "/game");
+            HttpURLConnection conn = getHttpURLConnection(jsonRequest, url, "PUT", currentUserAuthToken);
+            try (BufferedReader br = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine);
+                }
+                return gson.fromJson(response.toString(), JoinGameResult.class);
+            }
+        } catch (Exception ex) {
+            return new JoinGameResult("ERROR: " + ex);
+        }
+    }
+
+    public LogoutResult logout(String currentUserAuthToken) {
+        try {
+            var url = new URL(BASE_URL + "/session");
+            HttpURLConnection conn = getHttpURLConnection(null, url, "DELETE", currentUserAuthToken);
+            try (BufferedReader br = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine);
+                }
+                return gson.fromJson(response.toString(), LogoutResult.class);
+            }
+        } catch (Exception ex) {
+            return new LogoutResult("Error: Unauthorized\n");
+        }
+    }
+
+    private static HttpURLConnection getHttpURLConnection(String jsonRequest, URL url, String method, String currentUserAuthToken) throws IOException {
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod(method);
+
+        // Set common headers
+        conn.setRequestProperty("Accept", "application/json");
+
+        // Add Authorization header only if authToken is provided
+        if (currentUserAuthToken != null && !currentUserAuthToken.isEmpty()) {
+            conn.setRequestProperty("Authorization", currentUserAuthToken);
+        }
+
+        // For POST and PUT requests, set content type and write the request body
+        if ("POST".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method)) {
+            conn.setRequestProperty("Content-Type", "application/json; utf-8");
+            conn.setDoOutput(true); // Required to send a request body
+
+            try (OutputStream os = conn.getOutputStream()) {
+                byte[] input = jsonRequest.getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
+            }
+        }
+
         return conn;
     }
+
 }

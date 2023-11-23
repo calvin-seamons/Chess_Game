@@ -1,11 +1,12 @@
+import Models.Game;
 import Requests.RegisterRequest;
-import Results.LoginResult;
-import Results.RegisterResult;
+import Results.*;
 import chess.*;
 import ui.EscapeSequences;
 import com.google.gson.Gson;
 import ui.HTTPClient;
 
+import java.util.Objects;
 import java.util.Scanner;
 
 import static chess.main.printBoard;
@@ -15,6 +16,9 @@ public class ChessClient {
     private enum AppState {
         PRE_LOGIN, POST_LOGIN
     }
+
+    private String currentUserAuthToken;
+
 
     private final HTTPClient client = new HTTPClient();
 
@@ -83,7 +87,7 @@ public class ChessClient {
                 break;
             case "join":
                 System.out.print("Enter game ID: ");
-                String gameID = new Scanner(System.in).nextLine();
+                int gameID = Integer.parseInt(new Scanner(System.in).nextLine());
                 System.out.print("[WHITE|BLACK] ?");
                 String team = new Scanner(System.in).nextLine();
                 handleJoin(gameID, team);
@@ -110,38 +114,110 @@ public class ChessClient {
 
     private void handleLogout() {
         // Implementation for logout
-        System.out.println("Logging out\n");
+        System.out.print("Logging out: ");
+        LogoutResult result = client.logout(currentUserAuthToken);
+
+        if(result == null){
+            System.out.println("Error: Could not logout");
+            return;
+        }
+
+        if(result.getMessage() == null){
+            System.out.println("Success\n");
+            currentState = AppState.PRE_LOGIN;
+            currentUserAuthToken = null;
+        } else {
+            System.out.println(result.getMessage() + "\n");
+        }
     }
 
     private void handleObserve(String observeGameID) {
-        System.out.println("Observing game " + observeGameID + "\n");
-        ChessBoard board = new Chess_Board();
-        board.resetBoard();
-        showBoard("white", board);
-        showBoard("black", board);
+        System.out.print("Observing game " + observeGameID + ": ");
+        JoinGameResult result = client.joinGame(Integer.parseInt(observeGameID), "SPECTATOR", currentUserAuthToken);
+
+        if(result == null) {
+            System.out.println("Error: Could not observe game");
+            return;
+        }
+
+        if(result.getMessage() == null){
+            System.out.println("Success\n");
+            ChessBoard board = new Chess_Board();
+            board.resetBoard();
+            showBoard("white", board);
+            showBoard("black", board);
+        } else {
+            System.out.println(result.getMessage()+ "\n");
+        }
     }
 
-    private void handleJoin(String gameID, String team) {
-        System.out.println("Joining game " + gameID + " as " + team + "\n");
-        ChessBoard board = new Chess_Board();
-        board.resetBoard();
-        showBoard("white", board);
-        showBoard("black", board);
+    private void handleJoin(int gameID, String team) {
+        System.out.println("Joining game " + gameID + " as " + team + ": ");
+        if(!team.equalsIgnoreCase("white") && !team.equalsIgnoreCase("black")){
+            System.out.println("Error: Invalid team color");
+            return;
+        }
+
+        JoinGameResult result = client.joinGame(gameID, team, currentUserAuthToken);
+
+        if(result == null) {
+            System.out.println("Error: Could not join game");
+            return;
+        }
+
+        if(result.getMessage() == null){
+            System.out.println("Success\n");
+            ChessBoard board = new Chess_Board();
+            board.resetBoard();
+            showBoard("white", board);
+            showBoard("black", board);
+        } else {
+            System.out.println(result.getMessage()+ "\n");
+        }
     }
 
     private void handleList() {
         // Implementation for list
-        System.out.println("Listing games\n");
+        System.out.print("Listing games: ");
+        ListGamesResult result = client.listGames(currentUserAuthToken);
+
+        if(result == null) {
+            System.out.println("Error: Could not list games");
+            return;
+        }
+
+        if(result.getMessage() == null){
+            System.out.println("Success\n");
+            for (Game game : result.getGames()) {
+                System.out.println("Game ID: " + game.getGameID() + " Game Name: " + game.getGameName());
+            }
+            System.out.println();
+        } else {
+            System.out.println(result.getMessage()+ "\n");
+        }
     }
 
     private void handleCreate(String gameName) {
         // Implementation for create
-        System.out.println("Creating game " + gameName + "\n");
+        System.out.print("Creating game " + gameName + ": ");
+        CreateGameResult result = client.createGame(gameName, currentUserAuthToken);
+
+        if(result == null) {
+            System.out.println("Error: Could not create game");
+            return;
+        }
+
+        if(Objects.equals(result.getMessage(), "")){
+            System.out.println("Success, your game ID is: " + result.getGameID() + "\n");
+        } else {
+            System.out.println(result.getMessage()+ "\n");
+        }
+
     }
 
     private void handleRegister(String username, String password, String email) {
         // Implementation for register
-        System.out.println("Registering user " + username + " with password " + password + " and email " + email + "\n");
+        System.out.print("Registering user " + username + " with password " + password + " and email " + email + ": ");
 
         // Check if username is already taken
         // If not, create user
@@ -154,26 +230,27 @@ public class ChessClient {
 
         if(result.getMessage() == null){
             currentState = AppState.POST_LOGIN;
-        } else if (result.getMessage().equals("Error: Already Taken")) {
-            System.out.println("Error: Username already taken");
-        } else if (result.getMessage().equals("Error: Bad Request")) {
-            System.out.println("Error: Bad request");
+            System.out.println("Success\n");
+            currentUserAuthToken = result.getAuthToken();
+        } else {
+            System.out.println(result.getMessage()+ "\n");
         }
     }
 
     private void handleLogin(String username, String password) {
         // Implementation for login
         // On successful login, change state to POST_LOGIN
-        System.out.println("Logging in user " + username + " with password " + password + "\n");
+        System.out.print("Logging in user: ");
         LoginResult result = client.login(username, password);
 
         if (result == null) {
             System.out.println("Error: Could not login user");
         } else if(result.getMessage() == null){
-            System.out.println("Success");
+            System.out.println("Success\n");
             currentState = AppState.POST_LOGIN;
-        } else if (result.getMessage().equals("Error: Unauthorized")) {
-            System.out.println("Error: Unauthorized");
+            currentUserAuthToken = result.getAuthToken();
+        } else {
+            System.out.println(result.getMessage()+ "\n");
         }
     }
 

@@ -31,7 +31,8 @@ public interface ChessPiece {
 
     enum Team{
         WHITE,
-        BLACK
+        BLACK,
+        SPECTATOR
     }
 
     /**

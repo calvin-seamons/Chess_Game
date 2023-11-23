@@ -9,6 +9,7 @@ public class CreateGameRequest {
 
     public CreateGameRequest(String gameName) {
         this.gameName = gameName;
+        this.authToken = null;
     }
 
     public String getGameName() {

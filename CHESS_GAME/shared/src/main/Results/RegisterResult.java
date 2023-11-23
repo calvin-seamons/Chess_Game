@@ -10,6 +10,9 @@ public class RegisterResult {
     private String message;
 
     public RegisterResult() {}
+    public RegisterResult(String message) {
+        this.message = message;
+    }
 
     public String getUsername() {
         return username;
