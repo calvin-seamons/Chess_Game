@@ -140,6 +140,26 @@ public class HTTPClient {
         }
     }
 
+    public String clear() {
+        try {
+            var url = new URL(BASE_URL + "/db");
+            HttpURLConnection conn = getHttpURLConnection(null, url, "DELETE", null);
+            try (BufferedReader br = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine);
+                }
+                System.out.println(response.toString());
+                return null;
+            }
+        } catch (Exception ex) {
+            System.out.println("ERROR: " + ex);
+            return "ERROR: " + ex;
+        }
+    }
+
     private static HttpURLConnection getHttpURLConnection(String jsonRequest, URL url, String method, String currentUserAuthToken) throws IOException {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod(method);

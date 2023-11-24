@@ -3,6 +3,9 @@ import Results.*;
 import chess.*;
 import ui.EscapeSequences;
 import ui.HTTPClient;
+
+import java.sql.Array;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -14,6 +17,8 @@ public class ChessClient {
     }
 
     private String currentUserAuthToken;
+    // Create a game array that stores all the games
+    private ArrayList<Game> games = new ArrayList<>();
 
 
     private final HTTPClient client = new HTTPClient();
@@ -82,19 +87,19 @@ public class ChessClient {
                 handleList();
                 break;
             case "join":
-                System.out.print("Enter game ID: ");
-                int gameID = Integer.parseInt(new Scanner(System.in).nextLine());
-                System.out.print("[WHITE|BLACK] ?");
+                System.out.print("Enter Game Number: ");
+                int gameNumber = Integer.parseInt(new Scanner(System.in).nextLine());
+                System.out.print("White or Black? ");
                 String team = new Scanner(System.in).nextLine();
-                handleJoin(gameID, team);
+                handleJoin(gameNumber, team);
                 break;
             case "logout":
                 handleLogout();
                 break;
             case "observe":
-                System.out.print("Enter game ID: ");
-                String observeGameID = new Scanner(System.in).nextLine();
-                handleObserve(observeGameID);
+                System.out.print("Enter Game Number: ");
+                String observeGameNumber = new Scanner(System.in).nextLine();
+                handleObserve(observeGameNumber);
                 break;
             case "help":
                 displayMenu();
@@ -123,16 +128,23 @@ public class ChessClient {
             currentState = AppState.PRE_LOGIN;
             currentUserAuthToken = null;
         } else {
-            System.out.println(result.getMessage() + "\n");
+            errorMessageHandler(result.getMessage());
         }
     }
 
-    private void handleObserve(String observeGameID) {
-        System.out.print("Observing game " + observeGameID + ": ");
-        JoinGameResult result = client.joinGame(Integer.parseInt(observeGameID), "SPECTATOR", currentUserAuthToken);
+    private void handleObserve(String observeGameNumber) {
+        System.out.print("Observing game " + observeGameNumber + ": ");
+        // Check to see if the game number is valid
+        if(Integer.parseInt(observeGameNumber) > games.size() || Integer.parseInt(observeGameNumber) < 1){
+            System.out.println(EscapeSequences.SET_TEXT_COLOR_RED + "Error: Invalid game number\n*Don't forget to list the games first*\n" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            return;
+        }
+        int gameID = games.get(Integer.parseInt(observeGameNumber) - 1).getGameID();
+
+        JoinGameResult result = client.joinGame(gameID, "SPECTATOR", currentUserAuthToken);
 
         if(result == null) {
-            System.out.println("Error: Could not observe game");
+            System.out.println(EscapeSequences.SET_TEXT_COLOR_RED + "Error: Could not observe game\n" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
             return;
         }
 
@@ -143,17 +155,24 @@ public class ChessClient {
             showBoard("white", board);
             showBoard("black", board);
         } else {
-            System.out.println(result.getMessage()+ "\n");
+            errorMessageHandler(result.getMessage());
         }
     }
 
-    private void handleJoin(int gameID, String team) {
-        System.out.println("Joining game " + gameID + " as " + team + ": ");
+    private void handleJoin(int gameNumber, String team) {
+        System.out.println("Joining game " + gameNumber + " as " + team + ": ");
         if(!team.equalsIgnoreCase("white") && !team.equalsIgnoreCase("black")){
             System.out.println("Error: Invalid team color");
             return;
         }
 
+        //Check if game number is valid
+        if(gameNumber > games.size() || gameNumber < 1){
+            System.out.println(EscapeSequences.SET_TEXT_COLOR_RED + "Error: Invalid game number\n*Don't forget to list the games first*\n" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            return;
+        }
+
+        int gameID = games.get(gameNumber - 1).getGameID();
         JoinGameResult result = client.joinGame(gameID, team, currentUserAuthToken);
 
         if(result == null) {
@@ -161,6 +180,7 @@ public class ChessClient {
             return;
         }
 
+        //TODO: This will change
         if(result.getMessage() == null){
             System.out.println("Success\n");
             ChessBoard board = new Chess_Board();
@@ -168,7 +188,7 @@ public class ChessClient {
             showBoard("white", board);
             showBoard("black", board);
         } else {
-            System.out.println(result.getMessage()+ "\n");
+            errorMessageHandler(result.getMessage());
         }
     }
 
@@ -184,12 +204,17 @@ public class ChessClient {
 
         if(result.getMessage() == null){
             System.out.println("Success\n");
+            int i = 1;
             for (Game game : result.getGames()) {
-                System.out.println("Game ID: " + game.getGameID() + " Game Name: " + game.getGameName());
+                System.out.println(i + ") " + "Game Name: " + game.getGameName() +
+                        " | White Player: " + game.getWhiteUsername() +
+                        " | Black Player: " + game.getBlackUsername());
+                games.add(game);
+                i++;
             }
             System.out.println();
         } else {
-            System.out.println(result.getMessage()+ "\n");
+            errorMessageHandler(result.getMessage());
         }
     }
 
@@ -206,7 +231,7 @@ public class ChessClient {
         if(Objects.equals(result.getMessage(), "")){
             System.out.println("Success, your game ID is: " + result.getGameID() + "\n");
         } else {
-            System.out.println(result.getMessage()+ "\n");
+            errorMessageHandler(result.getMessage());
         }
 
     }
@@ -229,7 +254,7 @@ public class ChessClient {
             System.out.println("Success\n");
             currentUserAuthToken = result.getAuthToken();
         } else {
-            System.out.println(result.getMessage()+ "\n");
+            errorMessageHandler(result.getMessage());
         }
     }
 
@@ -246,7 +271,7 @@ public class ChessClient {
             currentState = AppState.POST_LOGIN;
             currentUserAuthToken = result.getAuthToken();
         } else {
-            System.out.println(result.getMessage()+ "\n");
+            errorMessageHandler(result.getMessage());
         }
     }
 
@@ -305,6 +330,28 @@ public class ChessClient {
             System.out.println("   h  g  f  e  d  c  b  a\n");
         }
         System.out.print(EscapeSequences.RESET_BG_COLOR);
+    }
+
+    public String errorMessageHandler(String message) {
+        // Check to see if the message contains the number 400
+        if (message.contains("400")) {
+            message = "Error: Bad Request\n";
+            System.out.println(EscapeSequences.SET_TEXT_COLOR_RED + message + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            return message;
+        } else if(message.contains("401")){
+            message = "Error: Unauthorized\n";
+            System.out.println(EscapeSequences.SET_TEXT_COLOR_RED + message + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            return message;
+        } else if(message.contains("403")){
+            message = "Error: Already Taken\n";
+            System.out.println(EscapeSequences.SET_TEXT_COLOR_RED + message + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            return message;
+        }
+        else{
+            message = "Error: Server Problem (Or something else)\n";
+            System.out.println(EscapeSequences.SET_TEXT_COLOR_RED + message + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            return message;
+        }
     }
 
 }
