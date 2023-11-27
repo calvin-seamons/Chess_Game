@@ -87,11 +87,16 @@ public class ChessClient {
                 handleList();
                 break;
             case "join":
-                System.out.print("Enter Game Number: ");
-                int gameNumber = Integer.parseInt(new Scanner(System.in).nextLine());
-                System.out.print("White or Black? ");
-                String team = new Scanner(System.in).nextLine();
-                handleJoin(gameNumber, team);
+                try {
+                    System.out.print("Enter Game Number: ");
+                    int gameNumber = Integer.parseInt(new Scanner(System.in).nextLine());
+                    System.out.print("White or Black? ");
+                    String team = new Scanner(System.in).nextLine();
+                    handleJoin(gameNumber, team);
+                }
+                catch(Exception e){
+                    System.out.println("Error: Invalid game number\n*Don't forget to list the games first*\n");
+                }
                 break;
             case "logout":
                 handleLogout();
@@ -102,7 +107,7 @@ public class ChessClient {
                 handleObserve(observeGameNumber);
                 break;
             case "help":
-                displayMenu();
+//                displayMenu();
                 break;
             case "quit":
                 System.exit(0);
@@ -205,6 +210,7 @@ public class ChessClient {
         if(result.getMessage() == null){
             System.out.println("Success\n");
             int i = 1;
+            games.clear();
             for (Game game : result.getGames()) {
                 System.out.println(i + ") " + "Game Name: " + game.getGameName() +
                         " | White Player: " + game.getWhiteUsername() +
