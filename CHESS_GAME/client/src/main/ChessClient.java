@@ -293,9 +293,9 @@ public class ChessClient {
         // Print the column labels
         System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
         if (color.equalsIgnoreCase("white")) {
-            System.out.println("   a  b  c  d  e  f  g  h");
+            System.out.println("   a   b   c  d   e  f   g   h");
         } else {
-            System.out.println("   h  g  f  e  d  c  b  a");
+            System.out.println("   h   g   f  e   d  c   b   a");
         }
 
         for (int i = 0; i < 8; i++) {
@@ -331,9 +331,9 @@ public class ChessClient {
         // Print the column labels again
         System.out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
         if (color.equalsIgnoreCase("white")) {
-            System.out.println("   a  b  c  d  e  f  g  h\n");
+            System.out.println("   a   b   c  d   e  f   g   h\n");
         } else {
-            System.out.println("   h  g  f  e  d  c  b  a\n");
+            System.out.println("   h   g   f  e   d  c   b   a\n");
         }
         System.out.print(EscapeSequences.RESET_BG_COLOR);
     }
