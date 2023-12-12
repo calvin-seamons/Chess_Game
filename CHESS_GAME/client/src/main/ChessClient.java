@@ -3,29 +3,43 @@ import Results.*;
 import chess.*;
 import ui.EscapeSequences;
 import ui.HTTPClient;
+import ui.NotificationHandler;
+import ui.WebsocketClient;
+import webSocketMessages.userCommands.JoinPlayerCommand;
 
+import java.io.IOException;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
 
-public class ChessClient {
+public class ChessClient implements NotificationHandler {
 
     private enum AppState {
-        PRE_LOGIN, POST_LOGIN
+        PRE_LOGIN, POST_LOGIN, IN_GAME
     }
 
     private String currentUserAuthToken;
+    private String currentUsername;
     // Create a game array that stores all the games
     private ArrayList<Game> games = new ArrayList<>();
 
-
-    private final HTTPClient client = new HTTPClient();
+    public WebsocketClient websocketClient;
+    public HTTPClient client;
 
     private AppState currentState = AppState.PRE_LOGIN;
+    private Chess_Game game;
+    static String URL = "http://localhost:8080";
+    NotificationHandler notificationHandler;
 
-    public static void main(String[] args) {
+    public ChessClient() throws Exception{
+        client = new HTTPClient(URL);
+        websocketClient = new WebsocketClient("ws://localhost:8080/connect", this);
+    }
+
+
+    public static void main(String[] args) throws Exception {
         ChessClient client = new ChessClient();
         Scanner scanner = new Scanner(System.in);
 
@@ -48,7 +62,7 @@ public class ChessClient {
             System.out.println("Quit - " + EscapeSequences.SET_TEXT_COLOR_YELLOW  + "To quit playing chess" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
             System.out.println("Help - " + EscapeSequences.SET_TEXT_COLOR_YELLOW + "To display this menu" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
 
-        } else {
+        } else if (currentState == AppState.POST_LOGIN) {
             System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
             System.out.println(EscapeSequences.SET_TEXT_COLOR_MAGENTA + "Create - " + EscapeSequences.SET_TEXT_COLOR_YELLOW +  "To create a game" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
             System.out.println("List - " + EscapeSequences.SET_TEXT_COLOR_YELLOW  + "To list all games" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
@@ -56,6 +70,14 @@ public class ChessClient {
             System.out.println("Observe - " + EscapeSequences.SET_TEXT_COLOR_YELLOW  + "To observe a game" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
             System.out.println("Logout - " + EscapeSequences.SET_TEXT_COLOR_YELLOW  + "To logout" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
             System.out.println("Quit - " + EscapeSequences.SET_TEXT_COLOR_YELLOW  + "To quit playing chess" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            System.out.println("Help - " + EscapeSequences.SET_TEXT_COLOR_YELLOW + "To display this menu" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+        }
+        else{
+            System.out.println(EscapeSequences.SET_TEXT_COLOR_MAGENTA + "Redraw Chess Board - " + EscapeSequences.SET_TEXT_COLOR_YELLOW + "To redraw the chess board" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            System.out.println("Make Move - " + EscapeSequences.SET_TEXT_COLOR_YELLOW  + "To make a move" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            System.out.println("Highlight Legal Moves - " + EscapeSequences.SET_TEXT_COLOR_YELLOW  + "To highlight legal moves" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            System.out.println("Resign - " + EscapeSequences.SET_TEXT_COLOR_YELLOW  + "To resign" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            System.out.println("Leave - " + EscapeSequences.SET_TEXT_COLOR_YELLOW  + "To leave the game" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
             System.out.println("Help - " + EscapeSequences.SET_TEXT_COLOR_YELLOW + "To display this menu" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
         }
     }
@@ -107,11 +129,11 @@ public class ChessClient {
                 handleObserve(observeGameNumber);
                 break;
             case "help":
-//                displayMenu();
                 break;
             case "quit":
                 System.exit(0);
                 break;
+// TODO: Implement Make move with websockets, Resign, Leave, and Highlight legal moves
             default:
                 System.out.println("Invalid command\n");
                 break;
@@ -132,12 +154,14 @@ public class ChessClient {
             System.out.println("Success\n");
             currentState = AppState.PRE_LOGIN;
             currentUserAuthToken = null;
+            currentUsername = null;
         } else {
             errorMessageHandler(result.getMessage());
         }
     }
 
     private void handleObserve(String observeGameNumber) {
+        // TODO: Websockets
         System.out.print("Observing game " + observeGameNumber + ": ");
         // Check to see if the game number is valid
         if(Integer.parseInt(observeGameNumber) > games.size() || Integer.parseInt(observeGameNumber) < 1){
@@ -164,7 +188,8 @@ public class ChessClient {
         }
     }
 
-    private void handleJoin(int gameNumber, String team) {
+    private void handleJoin(int gameNumber, String team) throws IOException {
+        // TODO: Websockets
         System.out.println("Joining game " + gameNumber + " as " + team + ": ");
         if(!team.equalsIgnoreCase("white") && !team.equalsIgnoreCase("black")){
             System.out.println("Error: Invalid team color");
@@ -192,6 +217,13 @@ public class ChessClient {
             board.resetBoard();
             showBoard("white", board);
             showBoard("black", board);
+
+            team = team.toUpperCase();
+            ChessGame.TeamColor teamColor = team.equalsIgnoreCase("white") ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
+            JoinPlayerCommand command = new JoinPlayerCommand(gameID, teamColor, currentUsername, currentUserAuthToken);
+            websocketClient.send(command);
+            System.out.println("\n You should've joined game " + gameID + " as " + teamColor + "\n");
+
         } else {
             errorMessageHandler(result.getMessage());
         }
@@ -259,6 +291,7 @@ public class ChessClient {
             currentState = AppState.POST_LOGIN;
             System.out.println("Success\n");
             currentUserAuthToken = result.getAuthToken();
+            currentUsername = username;
         } else {
             errorMessageHandler(result.getMessage());
         }
@@ -276,6 +309,7 @@ public class ChessClient {
             System.out.println("Success\n");
             currentState = AppState.POST_LOGIN;
             currentUserAuthToken = result.getAuthToken();
+            currentUsername = username;
         } else {
             errorMessageHandler(result.getMessage());
         }
@@ -357,6 +391,25 @@ public class ChessClient {
             message = "Error: Server Problem (Or something else)\n";
             System.out.println(EscapeSequences.SET_TEXT_COLOR_RED + message + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
             return message;
+        }
+    }
+
+    @Override
+    public void message(String message) {
+        if (message != null){
+            System.out.println(message);
+        }
+    }
+
+    @Override
+    public void updateBoard(ChessBoard board) {
+        this.game.setBoard(board);
+    }
+
+    @Override
+    public void error(String error) {
+        if (error != null){
+            System.out.println(error);
         }
     }
 

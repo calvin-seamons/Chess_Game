@@ -3,6 +3,7 @@ import Results.*;
 import org.junit.jupiter.api.*;
 import ui.HTTPClient;
 
+
 import javax.swing.*;
 
 public class HTTPClientTester {
@@ -20,7 +21,7 @@ public class HTTPClientTester {
 
     @BeforeAll
     public static void init() {
-        serverFacade = new HTTPClient();
+        serverFacade = new HTTPClient("http://localhost:8080");
 
         existingUser = new User();
         existingUser.setUsername("Calvin");
@@ -39,7 +40,7 @@ public class HTTPClientTester {
         serverFacade.clear();
 
         //one user already logged in
-        RegisterResult result = serverFacade.register(existingUser.getUsername(), existingUser.getPassword(), existingUser.getEmail());
+        Results.RegisterResult result = serverFacade.register(existingUser.getUsername(), existingUser.getPassword(), existingUser.getEmail());
 //        LoginResult result = serverFacade.login(existingUser.getUsername(), existingUser.getPassword());
         existingAuth = result.getAuthToken();
     }

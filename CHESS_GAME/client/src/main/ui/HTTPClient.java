@@ -13,8 +13,12 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class HTTPClient {
-    private static final String BASE_URL = "http://localhost:8080";
+    private static String BASE_URL;
     private static final Gson gson = new Gson();
+
+    public HTTPClient(String URL) {
+        BASE_URL = URL;
+    }
 
     public RegisterResult register(String username, String password, String email) {
         RegisterRequest request = new RegisterRequest(username, password, email);

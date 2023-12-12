@@ -110,9 +110,6 @@ public class Chess_Game implements ChessGame{
         if(!validMoves(move.getStartPosition()).contains(move)){
             throw new InvalidMoveException("Invalid move");
         }
-//        if(board.getPiece(move.getStartPosition()).getTeamColor() != board.getPiece(board.getLastMove().getEndPosition()).getTeamColor()){
-//            throw new InvalidMoveException("Not your turn");
-//        }
         if(board.getPiece(move.getStartPosition()).getTeamColor() != teamTurn){
             throw new InvalidMoveException("Not your turn");
         }
