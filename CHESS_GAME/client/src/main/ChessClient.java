@@ -84,7 +84,7 @@ public class ChessClient implements NotificationHandler {
         else{
             System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
             System.out.println(EscapeSequences.SET_TEXT_COLOR_MAGENTA + "Redraw Chess Board - " + EscapeSequences.SET_TEXT_COLOR_YELLOW + "To redraw the chess board ('redraw')" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
-            System.out.println("Make Move - " + EscapeSequences.SET_TEXT_COLOR_YELLOW  + "To make a move" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            System.out.println("Make Move - " + EscapeSequences.SET_TEXT_COLOR_YELLOW  + "To make a move ('move')" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
             System.out.println("Highlight Legal Moves - " + EscapeSequences.SET_TEXT_COLOR_YELLOW  + "To highlight legal moves ('legal moves')" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
             System.out.println("Resign - " + EscapeSequences.SET_TEXT_COLOR_YELLOW  + "To resign" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
             System.out.println("Leave - " + EscapeSequences.SET_TEXT_COLOR_YELLOW  + "To leave the game" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
@@ -117,27 +117,21 @@ public class ChessClient implements NotificationHandler {
                 break;
             case "legal moves":
                 System.out.println("What piece do you want to move? ");
-                System.out.print("Enter row: ");
-                int theRow = Integer.parseInt(new Scanner(System.in).nextLine());
-                System.out.print("Enter column: ");
-                int theCol = Integer.parseInt(new Scanner(System.in).nextLine());
-                handleLegalMoves(theRow, theCol);
+                // Take in input like "a1"
+                String chesspiece = new Scanner(System.in).nextLine();
+                handleLegalMoves(chesspiece);
                 break;
             case "redraw":
                 handleRedrawBoard(teamColor);
                 break;
-            case "make move":
+            case "move":
                 System.out.println("What piece do you want to move? ");
-                System.out.print("Enter row: ");
-                int row = Integer.parseInt(new Scanner(System.in).nextLine());
-                System.out.print("Enter column: ");
-                int col = Integer.parseInt(new Scanner(System.in).nextLine());
+                // Take in input like "a1"
+                String position = new Scanner(System.in).nextLine();
                 System.out.println("Where do you want to move it? ");
-                System.out.print("Enter row: ");
-                int newRow = Integer.parseInt(new Scanner(System.in).nextLine());
-                System.out.print("Enter column: ");
-                int newCol = Integer.parseInt(new Scanner(System.in).nextLine());
-                handleMove(row, col, newRow, newCol);
+                // Take in input like "a2"
+                String newPosition = new Scanner(System.in).nextLine();
+                handleMove(position, newPosition);
                 break;
             case "list":
                 handleList();
@@ -179,12 +173,15 @@ public class ChessClient implements NotificationHandler {
         }
     }
 
-    private void handleLegalMoves(int theRow, int theCol) {
+    private void handleLegalMoves(String chesspiece) {
+        String[] positionArray = chesspiece.split("");
+        int row = Integer.parseInt(positionArray[1]);
+        int col = positionArray[0].charAt(0) - 'a' + 1;
+
         // Implementation for highlight legal moves
         System.out.println("Highlighting legal moves: ");
-        ChessPosition chessPosition = new Chess_Position(theRow, theCol);
+        ChessPosition chessPosition = new Chess_Position(row, col);
         ArrayList<ChessMove> moves = (ArrayList<ChessMove>) game.getBoard().getPiece(chessPosition).pieceMoves(game.getBoard(), chessPosition);
-        // TODO: Highlight the legal moves
         for (ChessMove move : moves) {
             System.out.println("Row: " + move.getEndPosition().getRow() + " Col: " + move.getEndPosition().getColumn());
         }
@@ -204,14 +201,20 @@ public class ChessClient implements NotificationHandler {
         showBoard(teamColor.toString().toLowerCase(), game.getBoard());
     }
 
-    private void handleMove(int row, int col, int newRow, int newCol) throws IOException {
+    private void handleMove(String position, String  newPosition) throws IOException {
+        // Break down "a1" into "a" and "1"
+        String[] positionArray = position.split("");
+        String[] newPositionArray = newPosition.split("");
+        int row = Integer.parseInt(positionArray[1]);
+        int col = positionArray[0].charAt(0) - 'a' + 1;
+
+        int newRow = Integer.parseInt(newPositionArray[1]);
+        int newCol = newPositionArray[0].charAt(0) - 'a' + 1;
+
         if(game.getTeamTurn() != teamColor){
             System.out.println("It is not your turn");
             return;
         }
-        ChessPosition chessPosition = new Chess_Position(row, col);
-        ChessPosition newChessPosition = new Chess_Position(newRow, newCol);
-        ChessMove move = new Chess_Move(chessPosition, newChessPosition);
 
         MakeMoveCommand command = new MakeMoveCommand(row, col, newRow, newCol, currentUserAuthToken, currentGameID, gson.toJson(game));
         websocketClient.send(command);
@@ -231,7 +234,7 @@ public class ChessClient implements NotificationHandler {
     }
 
     private void handleLeave() throws IOException{
-        LeaveCommand command = new LeaveCommand(currentUserAuthToken, currentGameID, teamColor);
+        LeaveCommand command = new LeaveCommand(currentUserAuthToken, currentGameID);
         websocketClient.send(command);
         System.out.println("Leaving game " + currentGameID + ": ");
         currentGameID = 0;
@@ -274,10 +277,10 @@ public class ChessClient implements NotificationHandler {
 
         if(result.getMessage() == null){
             System.out.println("Success\n");
-            ChessBoard board = new Chess_Board();
-            board.resetBoard();
-            showBoard("white", board);
-            showBoard("black", board);
+//            ChessBoard board = new Chess_Board();
+//            board.resetBoard();
+//            showBoard("white", board);
+//            showBoard("black", board);
             currentGameID = gameID;
 
             // Implementing the WebSocket
@@ -511,6 +514,11 @@ public class ChessClient implements NotificationHandler {
     @Override
     public void updateBoard(Chess_Game game) {
         this.game = game;
+        if(teamColor == null){
+            showBoard("white", game.getBoard());
+//            showBoard("black", game.getBoard());
+            return;
+        }
         showBoard(teamColor.toString().toLowerCase(), game.getBoard());
     }
 

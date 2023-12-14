@@ -4,7 +4,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.eclipse.jetty.websocket.api.Session;
 import webSocketMessages.serverMessages.Notification;
 import com.google.gson.Gson;
-import webSocketMessages.serverMessages.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,9 +28,23 @@ public class ConnectionHandler {
         }
     }
 
-    public void removeConnection(String username){
-        System.out.println("Removing connection for " + username);
-        gameConnections.remove(username);
+    public void removeGameConnections(int gameID){
+        System.out.println("Removing connections for game " + gameID);
+        var closedSessions = new ArrayList<Connection>();
+
+        for (Connection c : gameConnections.values()) {
+            if (c.session.isOpen()) {
+                if(c.gameID == gameID){
+                    c.gameID = 1;
+                }
+            }
+            else{
+                closedSessions.add(c);
+            }
+        }
+        for (Connection c : closedSessions) {
+            gameConnections.remove(c.username);
+        }
     }
 
     public void removeAllConnections(){

@@ -143,7 +143,6 @@ public class WebsocketHandler {
             WebSockets.Connection connection = new WebSockets.Connection(command.getAuthString(), command.getGameID(), session, username);
             connectionHandler.addConnection(username, session, connection);
             Notification notification = new Notification("User " + username + " has joined the game");
-            notification.message = "Some bullshit string";
             connectionHandler.broadcast(username, notification, connection.gameID);
         }
     }
@@ -178,6 +177,8 @@ public class WebsocketHandler {
             return;
         }
 
+        ChessGame.TeamColor opponentColor = chessGame.getTeamTurn() == ChessGame.TeamColor.WHITE ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
+
         // Turn the move into a ChessMove object then make the move then back to String
         try{
             chessGame.makeMove(move);
@@ -186,7 +187,19 @@ public class WebsocketHandler {
             throw new RuntimeException(e);
         }
 
-        // TODO: Check to see if the opponent is in check
+        // Check to see if player is in check
+        if(chessGame.isInCheck(opponentColor)){
+            if(chessGame.isInCheckmate(opponentColor)){
+                connectionHandler.broadcast(username, new Notification("Checkmate"), moveCommand.getGameID());
+                session.getRemote().sendString(gson.toJson(new Notification("Checkmate")));
+                connectionHandler.removeGameConnections(moveCommand.getGameID());
+                gameDatabase.deleteGame(moveCommand.getGameID(), db);
+            } else {
+                connectionHandler.broadcast(username, new Notification("Check"), moveCommand.getGameID());
+            }
+        }
+
+
         gameModel.setGameImplementation(gson.toJson(chessGame));
         gameDatabase.updateGame(gameModel, db);
 
