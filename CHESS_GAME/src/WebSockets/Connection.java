@@ -17,10 +17,11 @@ public class Connection {
         this.session = session;
     }
 
-    public Connection(String authToken, int gameID, Session session){
+    public Connection(String authToken, int gameID, Session session, String username){
         this.authToken = authToken;
         this.gameID = gameID;
         this.session = session;
+        this.username = username;
     }
 
     public void send(String message) throws IOException {

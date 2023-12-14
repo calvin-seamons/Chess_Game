@@ -12,26 +12,20 @@ import java.util.ArrayList;
 
 public class ConnectionHandler {
     public final ConcurrentHashMap<String, Connection> gameConnections = new ConcurrentHashMap<>();
+    Gson gson = new Gson();
 
     public void addConnection(String username, Session session, Connection connection){
         System.out.println("Adding connection for " + username);
-        // Iterate through the connections and remove any that are closed
-        for (Connection c : gameConnections.values()) {
-            if (c.session.isOpen()) {
-                if(c.gameID == connection.gameID){
-                    if(!c.username.equals(username)){
-                        try {
-                            c.send(new Gson().toJson(new Notification(username + " has joined the game")));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-            else{
-                gameConnections.remove(c.username);
-            }
+
+        if(!gameConnections.containsKey(username)){
+            System.out.println("Connection does not exist for " + username);
+            connection.session = session;
+            gameConnections.put(username, connection);
         }
+        else{
+            System.out.println("Connection already exists for " + username);
+        }
+
     }
 
     public void removeConnection(String username){
@@ -53,7 +47,7 @@ public class ConnectionHandler {
                 if(c.gameID == connection.gameID){
                     if(!c.username.equals(username)){
                         try {
-                            c.send(new Gson().toJson(message));
+                            c.send(gson.toJson(message));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -61,8 +55,11 @@ public class ConnectionHandler {
                 }
             }
             else{
-                gameConnections.remove(c.username);
+                closedSessions.add(c);
             }
+        }
+        for (Connection c : closedSessions) {
+            gameConnections.remove(c.username);
         }
     }
 
@@ -73,14 +70,17 @@ public class ConnectionHandler {
         for (Connection c : gameConnections.values()) {
             if (c.session.isOpen()) {
                 try {
-                    c.send(new Gson().toJson(notification));
+                    c.send(gson.toJson(notification));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
             else{
-                gameConnections.remove(c.username);
+                closedSessions.add(c);
             }
+        }
+        for (Connection c : closedSessions) {
+            gameConnections.remove(c.username);
         }
     }
 

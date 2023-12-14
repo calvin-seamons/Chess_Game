@@ -6,6 +6,7 @@ import Adapters.ChessPieceAdapter;
 import Adapters.LoadMessageAdapter;
 import chess.*;
 import com.google.gson.GsonBuilder;
+import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadMessage;
 import webSocketMessages.serverMessages.Notification;
 import com.google.gson.Gson;
@@ -38,7 +39,7 @@ public class WebsocketClient extends Endpoint {
                     switch (serverMessage.getServerMessageType()) {
                         case NOTIFICATION -> notificationHandler.message(new Gson().fromJson(message, Notification.class).message);
                         case LOAD_GAME -> notificationHandler.updateBoard(JSONToGame(message));
-                        case ERROR -> notificationHandler.error(new Gson().fromJson(message, Notification.class).message);
+                        case ERROR -> notificationHandler.error(new Gson().fromJson(message, ErrorMessage.class).errorMessage);
                     }
                 } catch (Exception e){
                     e.printStackTrace();

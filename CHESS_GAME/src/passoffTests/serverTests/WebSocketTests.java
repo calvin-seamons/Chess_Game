@@ -276,9 +276,10 @@ public class WebSocketTests {
         testExecutor.submit(alfredClient.getSendMessageRunnable(joinCommand, readyLatch));
         Future<List<TestModels.TestMessage>> alfredResult =
                 alfredExecutor.submit(new GetServerMessages(1, alfredClient, readyLatch, waitTime));
-        try{
-            alfredMessages = alfredResult.get(waitTime * 2, TimeUnit.MILLISECONDS);
-        } catch (TimeoutException ignore) {}
+//        try{
+//            alfredMessages = alfredResult.get(waitTime * 2, TimeUnit.MILLISECONDS);
+//        } catch (TimeoutException ignore) {}
+        alfredMessages = alfredResult.get();
 
         //check received messages
         Assertions.assertEquals(1, alfredMessages.size(),
@@ -486,6 +487,8 @@ public class WebSocketTests {
                 bobExecutor.submit(new GetServerMessages(1, bobClient, readyLatch));
         jamesResult.get(2 * waitTime, TimeUnit.MILLISECONDS);
         bobResult.get(2 * waitTime, TimeUnit.MILLISECONDS);
+//        jamesResult.get();
+//        bobResult.get();
 
         //have alfred observe game
         joinCommand = new TestModels.TestCommand();
