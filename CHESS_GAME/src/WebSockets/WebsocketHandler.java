@@ -9,12 +9,16 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadMessage;
+import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.userCommands.*;
 import webSockets.UserGameCommand;
+import webSockets.UserGameCommand.CommandType;
 
 
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Objects;
 
 
@@ -29,13 +33,16 @@ public class WebsocketHandler {
     Database db = new Database();
     Chess_Game game;
     Gson gson = new Gson();
-    public final ConnectionHandler connectionHandler = new ConnectionHandler();
+    ConnectionHandler connectionHandler = new ConnectionHandler();
 
     public WebsocketHandler(Connection connection, GameDAO gameDatabase, AuthDAO authDatabase, UserDAO userDatabase) {
         this.connection = connection;
         this.gameDatabase = gameDatabase;
         this.authDatabase = authDatabase;
         this.userDatabase = userDatabase;
+
+//        ConnectionHandler connectionHandler = new ConnectionHandler();
+//        GAMEConnections.add(connectionHandler);
     }
 
     @OnWebSocketMessage
@@ -48,11 +55,11 @@ public class WebsocketHandler {
 //        Gson gson = builder.create();
         switch (command.getCommandType(
         )) {
-            case JOIN_PLAYER -> join(session, new Gson().fromJson(message, JoinPlayerCommand.class));
-            case JOIN_OBSERVER -> observe(session, new Gson().fromJson(message, JoinObserverCommand.class));
-            case MAKE_MOVE -> move(session, new Gson().fromJson(message, MakeMoveCommand.class));
-            case LEAVE -> leave(session, new Gson().fromJson(message, LeaveCommand.class));
-            case RESIGN -> resign(session, new Gson().fromJson(message, ResignCommand.class));
+            case CommandType.JOIN_PLAYER -> join(session, new Gson().fromJson(message, JoinPlayerCommand.class));
+            case CommandType.JOIN_OBSERVER -> observe(session, new Gson().fromJson(message, JoinObserverCommand.class));
+            case CommandType.MAKE_MOVE -> move(session, new Gson().fromJson(message, MakeMoveCommand.class));
+            case CommandType.LEAVE -> leave(session, new Gson().fromJson(message, LeaveCommand.class));
+            case CommandType.RESIGN -> resign(session, new Gson().fromJson(message, ResignCommand.class));
         }
     }
 
@@ -72,6 +79,8 @@ public class WebsocketHandler {
             gameDatabase.addPlayer("black", command.getGameID(), gameModel.getBlackUsername(), db);
         }
 
+        WebSockets.Connection connection = new WebSockets.Connection(command.getAuthString(), command.getGameID(), session);
+        connectionHandler.addConnection(authDatabase.getUserName(command.getAuthString(), db), session, connection);
         LoadMessage loadMessage = new LoadMessage(gameModel);
         session.getRemote().sendString(new Gson().toJson(loadMessage));
     }
@@ -87,9 +96,12 @@ public class WebsocketHandler {
 
     private void move(Session session, MakeMoveCommand moveCommand) throws DataAccessException, IOException {
         ChessMove move = moveCommand.getMove();
-        Game gameModel = gameDatabase.getGameModel(moveCommand.getGameID(), db);
-        String gameImplementation = gameModel.getGameImplementation();
-        ChessGame chessGame = gameDatabase.JSONToGame(gameImplementation);
+        ChessGame chessGame = gameDatabase.JSONToGame(moveCommand.getGameImplementation());
+
+        if(moveCommand.getTeamColor() != chessGame.getTeamTurn()){
+            sendError(session, "It is not your turn");
+            return;
+        }
 
         // Turn the move into a ChessMove object then make the move then back to String
         try{
@@ -99,7 +111,9 @@ public class WebsocketHandler {
             throw new RuntimeException(e);
         }
 
+        Game gameModel = gameDatabase.getGameModel(moveCommand.getGameID(), db);
         gameModel.setGameImplementation(gson.toJson(chessGame));
+        gameDatabase.updateGame(gameModel, db);
         LoadMessage loadMessage = new LoadMessage(gameModel);
         session.getRemote().sendString(new Gson().toJson(loadMessage));
     }
@@ -107,6 +121,7 @@ public class WebsocketHandler {
     private void leave(Session session, LeaveCommand leaveCommand) throws DataAccessException {
         String userType = leaveCommand.getWhiteOrBlack().toLowerCase();
         gameDatabase.removePlayer(userType, leaveCommand.getGameID(), db);
+        connectionHandler.removeConnection(authDatabase.getUserName(leaveCommand.getAuthString(), db));
         // TODO: Broadcast notification to all users in the game
 
     }
@@ -117,7 +132,6 @@ public class WebsocketHandler {
             sendError(session, "Game does not exist");
         }
 
-        // Get the usename from the authToken
         String username = authDatabase.getUserName(resignCommand.getAuthString(), db);
         if(Objects.equals(gameModel.getBlackUsername(), username) || Objects.equals(gameModel.getWhiteUsername(), username)){
             gameDatabase.deleteGame(resignCommand.getGameID(), db);
@@ -128,6 +142,9 @@ public class WebsocketHandler {
 
         //Then broadcast the notification to all users in the game
         //Delete the connection from the connection handler
+        connectionHandler.removeConnection(username);
+        WebSockets.Connection connection = new WebSockets.Connection(resignCommand.getAuthString(), resignCommand.getGameID(), session);
+        connectionHandler.broadcast(username, new Notification(username + " has resigned"), connection);
     }
 
     public void sendError(Session session, String message) throws IOException {

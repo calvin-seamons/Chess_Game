@@ -9,7 +9,7 @@ import java.io.IOException;
 public class Connection {
     public String username;
     public String authToken;
-    public String gameID;
+    public int gameID;
     public Session session;
 
     public Connection(String username, Session session){
@@ -17,7 +17,7 @@ public class Connection {
         this.session = session;
     }
 
-    public Connection(String authToken, String gameID, Session session){
+    public Connection(String authToken, int gameID, Session session){
         this.authToken = authToken;
         this.gameID = gameID;
         this.session = session;

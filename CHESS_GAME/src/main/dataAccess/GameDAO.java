@@ -33,6 +33,7 @@ public class GameDAO {
     final String CLEAR_GAME_DATABASE_SQL = "DELETE FROM games"; // Replace 'games' with your actual table name
     final String SET_WHITE_USERNAME_SQL = "UPDATE games SET whiteUsername = ? WHERE gameID = ?";
     final String SET_BLACK_USERNAME_SQL = "UPDATE games SET blackUsername = ? WHERE gameID = ?";
+    final String UPDATE_GAME_IMPLEMENTATION_SQL = "UPDATE games SET gameImplementation = ? WHERE gameID = ?";
 
 
 
@@ -287,6 +288,22 @@ public class GameDAO {
         }
         return null;
     }
+
+//    public void madeMove(int gameID, String gameImplementation, Database db) throws DataAccessException {
+//        try (Connection conn = db.getConnection();
+//             PreparedStatement pstmt = conn.prepareStatement(UPDATE_GAME_IMPLEMENTATION_SQL)) {
+//
+//            pstmt.setString(1, gameImplementation);
+//            pstmt.setInt(2, gameID);
+//
+//            int affectedRows = pstmt.executeUpdate();
+//            if (affectedRows == 0) {
+//                throw new SQLException("Updating game failed, no rows affected.");
+//            }
+//        } catch (SQLException e) {
+//            throw new DataAccessException("Error updating the game in the database");
+//        }
+//    }
 
     public void removePlayer(String userType, int gameID, Database db) throws DataAccessException {
         String updateString;

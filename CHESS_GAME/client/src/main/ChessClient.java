@@ -5,6 +5,7 @@ import ui.EscapeSequences;
 import ui.HTTPClient;
 import ui.NotificationHandler;
 import ui.WebsocketClient;
+import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.userCommands.*;
 import java.util.concurrent.CountDownLatch;
 
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
+import com.google.gson.Gson;
 
 
 public class ChessClient implements NotificationHandler {
@@ -35,6 +37,7 @@ public class ChessClient implements NotificationHandler {
     private int currentGameID;
     static String URL = "http://localhost:8080";
     NotificationHandler notificationHandler;
+    Gson gson = new Gson();
 
     public ChessClient() throws Exception{
         client = new HTTPClient(URL);
@@ -202,13 +205,21 @@ public class ChessClient implements NotificationHandler {
     }
 
     private void handleMove(int row, int col, int newRow, int newCol) throws IOException {
+        if(game.getTeamTurn() != teamColor){
+            System.out.println("It is not your turn");
+            return;
+        }
         ChessPosition chessPosition = new Chess_Position(row, col);
         ChessPosition newChessPosition = new Chess_Position(newRow, newCol);
         ChessMove move = new Chess_Move(chessPosition, newChessPosition);
 
-        MakeMoveCommand command = new MakeMoveCommand(row, col, newRow, newCol, currentUserAuthToken, currentGameID);
+        MakeMoveCommand command = new MakeMoveCommand(row, col, newRow, newCol, currentUserAuthToken, currentGameID, gson.toJson(game), teamColor);
         websocketClient.send(command);
-//        System.out.println("Making move: " + move.toString());
+        try{
+            Thread.sleep(500);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void handleResign() throws IOException {
@@ -499,14 +510,14 @@ public class ChessClient implements NotificationHandler {
 
     @Override
     public void updateBoard(Chess_Game game) {
-        this.game.setBoard(game.getBoard());
+        this.game = game;
         showBoard(teamColor.toString().toLowerCase(), game.getBoard());
     }
 
     @Override
-    public void error(String error) {
-        if (error != null){
-            System.out.println(error);
+    public void error(String message) {
+        if (message != null){
+            System.out.println(message);
         }
     }
 

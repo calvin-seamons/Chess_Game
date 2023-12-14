@@ -38,7 +38,7 @@ public class WebsocketClient extends Endpoint {
                     switch (serverMessage.getServerMessageType()) {
                         case NOTIFICATION -> notificationHandler.message(new Gson().fromJson(message, Notification.class).message);
                         case LOAD_GAME -> notificationHandler.updateBoard(JSONToGame(message));
-                        case ERROR -> notificationHandler.error(new Gson().fromJson(message, Notification.class).toString());
+                        case ERROR -> notificationHandler.error(new Gson().fromJson(message, Notification.class).message);
                     }
                 } catch (Exception e){
                     e.printStackTrace();
@@ -67,8 +67,7 @@ public class WebsocketClient extends Endpoint {
         builder.registerTypeAdapter(ChessBoard.class, new ChessBoardAdapter());
         builder.registerTypeAdapter(ChessPiece.class, new ChessPieceAdapter());
 
-        ChessGame game = builder.create().fromJson(gameString, Chess_Game.class);
-        return (Chess_Game)game;
+        return builder.create().fromJson(gameString, Chess_Game.class);
     }
 
     @Override

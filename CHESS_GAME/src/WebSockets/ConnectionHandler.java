@@ -13,14 +13,24 @@ import java.util.ArrayList;
 public class ConnectionHandler {
     public final ConcurrentHashMap<String, Connection> gameConnections = new ConcurrentHashMap<>();
 
-    public void addConnection(String username, Session session){
+    public void addConnection(String username, Session session, Connection connection){
         System.out.println("Adding connection for " + username);
-        var connection = gameConnections.get(username);
-        if (!gameConnections.containsKey(username)) {
-            gameConnections.put(username, new Connection(username, session));
-        }
-        else {
-            connection.session = session;
+        // Iterate through the connections and remove any that are closed
+        for (Connection c : gameConnections.values()) {
+            if (c.session.isOpen()) {
+                if(c.gameID == connection.gameID){
+                    if(!c.username.equals(username)){
+                        try {
+                            c.send(new Gson().toJson(new Notification(username + " has joined the game")));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            else{
+                gameConnections.remove(c.username);
+            }
         }
     }
 
@@ -34,32 +44,44 @@ public class ConnectionHandler {
         gameConnections.clear();
     }
 
-    public <T> void broadcast(String username, T message) {
+    public <T> void broadcast(String username, T message, Connection connection) {
         System.out.println("Broadcasting to " + username);
         var closedSessions = new ArrayList<Connection>();
 
-        for (Connection connection : gameConnections.values()) {
-            if (connection.session.isOpen()) {
-                if (!connection.username.equals(username)) {
-                    try {
-                        String jsonMessage = new Gson().toJson(message);
-                        connection.send(jsonMessage);
-                    } catch (IOException e) {
-                        // closedSessions.add(connection);
+        for (Connection c : gameConnections.values()) {
+            if (c.session.isOpen()) {
+                if(c.gameID == connection.gameID){
+                    if(!c.username.equals(username)){
+                        try {
+                            c.send(new Gson().toJson(message));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            } else {
-                closedSessions.add(connection);
             }
-        }
-
-        for (var connection : closedSessions) {
-            gameConnections.remove(connection.username);
+            else{
+                gameConnections.remove(c.username);
+            }
         }
     }
 
     public void broadcastAll(Notification notification){
         System.out.println("Broadcasting to all");
+        var closedSessions = new ArrayList<Connection>();
+
+        for (Connection c : gameConnections.values()) {
+            if (c.session.isOpen()) {
+                try {
+                    c.send(new Gson().toJson(notification));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else{
+                gameConnections.remove(c.username);
+            }
+        }
     }
 
 
