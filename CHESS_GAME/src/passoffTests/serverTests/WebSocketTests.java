@@ -1287,11 +1287,15 @@ public class WebSocketTests {
 
         //wait to get all messages
         //only bob should get a message
-        try {
-            bobMessages = bobResult.get(waitTime * 4, TimeUnit.MILLISECONDS);
-            alfredMessages = alfredResult.get(waitTime * 4, TimeUnit.MILLISECONDS);
-            jamesMessages = jamesResult.get(waitTime * 4, TimeUnit.MILLISECONDS);
-        } catch (TimeoutException ignore) {}
+//        try {
+//            bobMessages = bobResult.get(waitTime * 4, TimeUnit.MILLISECONDS);
+//            alfredMessages = alfredResult.get(waitTime * 4, TimeUnit.MILLISECONDS);
+//            jamesMessages = jamesResult.get(waitTime * 4, TimeUnit.MILLISECONDS);
+//        } catch (TimeoutException ignore) {}
+
+        bobMessages = bobResult.get();
+        alfredMessages = alfredResult.get();
+        jamesMessages = jamesResult.get();
 
         //check message contents
         //james should have gotten error message
@@ -1386,12 +1390,16 @@ public class WebSocketTests {
         List<TestModels.TestMessage> alfredMessages = new ArrayList<>();
 
         //wait to get all messages
-        try {
-            bobMessages = bobResult.get(waitTime * 4, TimeUnit.MILLISECONDS);
-            jamesMessages = jamesResult.get(waitTime * 4, TimeUnit.MILLISECONDS);
-            alfredMessages = alfredResult.get(waitTime * 4, TimeUnit.MILLISECONDS);
+//        try {
+//            bobMessages = bobResult.get(waitTime * 4, TimeUnit.MILLISECONDS);
+//            jamesMessages = jamesResult.get(waitTime * 4, TimeUnit.MILLISECONDS);
+//            alfredMessages = alfredResult.get(waitTime * 4, TimeUnit.MILLISECONDS);
+//
+//        } catch (TimeoutException ignore) {}
 
-        } catch (TimeoutException ignore) {}
+        bobMessages = bobResult.get();
+        jamesMessages = jamesResult.get();
+        alfredMessages = alfredResult.get();
 
         //check message contents
         //everyone should have gotten a single NOTIFICATION
@@ -1756,10 +1764,13 @@ public class WebSocketTests {
 
         //wait to get all messages
         //Bob can get message if you want, but probably not. Everyone else needs to get notified
-        try {
-            jamesMessages = jamesResult.get(waitTime * 3, TimeUnit.MILLISECONDS);
-            alfredMessages = alfredResult.get(waitTime * 3, TimeUnit.MILLISECONDS);
-        } catch (TimeoutException ignore) {}
+//        try {
+//            jamesMessages = jamesResult.get(waitTime * 3, TimeUnit.MILLISECONDS);
+//            alfredMessages = alfredResult.get(waitTime * 3, TimeUnit.MILLISECONDS);
+//        } catch (TimeoutException ignore) {}
+
+        jamesMessages = jamesResult.get();
+        alfredMessages = alfredResult.get();
 
         //check message contents
         Assertions.assertEquals(1, alfredMessages.size(),

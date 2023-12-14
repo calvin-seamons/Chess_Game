@@ -47,7 +47,7 @@ public class WebsocketHandler {
         this.userDatabase = userDatabase;
     }
 
-//    @OnWebSocketMessage
+    @OnWebSocketMessage
     public void onMessage(Session session, String message) throws DataAccessException, IOException {
         executorService.submit(() -> {
             try {
@@ -57,7 +57,7 @@ public class WebsocketHandler {
             }
         });
     }
-    @OnWebSocketMessage
+//    @OnWebSocketMessage
     public void processMessage(Session session, String message) throws DataAccessException, IOException {
         System.out.println("Thread activated");
         connection = db.getConnection();
@@ -123,7 +123,7 @@ public class WebsocketHandler {
 
         WebSockets.Connection connection = new WebSockets.Connection(command.getAuthString(), command.getGameID(), session, authDatabase.getUserName(command.getAuthString(), db));
         connectionHandler.addConnection(authDatabase.getUserName(command.getAuthString(), db), session, connection);
-        connectionHandler.broadcast(username, new Notification("User " + username + " has joined the game"), connection);
+        connectionHandler.broadcast(username, new Notification("User " + username + " has joined the game"), connection.gameID);
 
         LoadMessage loadMessage = new LoadMessage(gameModel);
         session.getRemote().sendString(new Gson().toJson(loadMessage));
@@ -144,20 +144,21 @@ public class WebsocketHandler {
             connectionHandler.addConnection(username, session, connection);
             Notification notification = new Notification("User " + username + " has joined the game");
             notification.message = "Some bullshit string";
-            connectionHandler.broadcast(username, notification, connection);
+            connectionHandler.broadcast(username, notification, connection.gameID);
         }
     }
 
     private void move(Session session, MakeMoveCommand moveCommand) throws DataAccessException, IOException {
         ChessMove move = moveCommand.getMove();
         Game gameModel = gameDatabase.getGameModel(moveCommand.getGameID(), db);
-        ChessGame chessGame = gameDatabase.JSONToGame(gameModel.getGameImplementation());
-        String username = authDatabase.getUserName(moveCommand.getAuthString(), db);
 
         if(gameModel == null){
             errorSend(session, "Game does not exist");
             return;
         }
+
+        ChessGame chessGame = gameDatabase.JSONToGame(gameModel.getGameImplementation());
+        String username = authDatabase.getUserName(moveCommand.getAuthString(), db);
 
         if(username == null){
             errorSend(session, "Invalid auth token");
@@ -192,46 +193,57 @@ public class WebsocketHandler {
         // Send the updated game model to all users in the game
         LoadMessage loadMessage = new LoadMessage(gameModel);
         WebSockets.Connection connection = new WebSockets.Connection(moveCommand.getAuthString(), moveCommand.getGameID(), session, username);
-        connectionHandler.broadcast(moveCommand.getAuthString(), loadMessage, connection);
+        connectionHandler.broadcast(username, loadMessage, connection.gameID);
         session.getRemote().sendString(new Gson().toJson(loadMessage));
 
         //Then broadcast the notification to all users in the game
-        connectionHandler.broadcast(moveCommand.getAuthString(), new Notification("User " + authDatabase.getUserName(moveCommand.getAuthString(), db) + " has made a move"), connection);
+        connectionHandler.broadcast(username, new Notification("User " + authDatabase.getUserName(moveCommand.getAuthString(), db) + " has made a move"), connection.gameID);
     }
 
-    private void leave(Session session, LeaveCommand leaveCommand) throws DataAccessException {
-        String userType = leaveCommand.getWhiteOrBlack().toLowerCase();
-        gameDatabase.removePlayer(userType, leaveCommand.getGameID(), db);
-        connectionHandler.removeConnection(authDatabase.getUserName(leaveCommand.getAuthString(), db));
-        // TODO: Broadcast notification to all users in the game
+    private void leave(Session session, LeaveCommand leaveCommand) throws DataAccessException, IOException {
+        String username = authDatabase.getUserName(leaveCommand.getAuthString(), db);
+        Game gameModel = gameDatabase.getGameModel(leaveCommand.getGameID(), db);
+        String userType;
 
+        if(gameModel == null){
+            errorSend(session, "Game does not exist");
+            return;
+        }
+
+        if(Objects.equals(gameModel.getBlackUsername(), username)){
+            gameModel.setBlackUsername(null);
+            userType = "black";
+            gameDatabase.removePlayer(userType, leaveCommand.getGameID(), db);
+        }else if(Objects.equals(gameModel.getWhiteUsername(), username)){
+            gameModel.setWhiteUsername(null);
+            userType = "white";
+            gameDatabase.removePlayer(userType, leaveCommand.getGameID(), db);
+        }
+
+        gameDatabase.updateGame(gameModel, db);
+
+        connectionHandler.broadcast(username, new Notification("User " + username + " has left the game"), leaveCommand.getGameID());
+        connectionHandler.addConnection(username, session, new WebSockets.Connection(leaveCommand.getAuthString(), 0, session, username));
     }
 
     private void resign(Session session, ResignCommand resignCommand) throws DataAccessException, IOException {
         Game gameModel = gameDatabase.getGameModel(resignCommand.getGameID(), db);
         String username = authDatabase.getUserName(resignCommand.getAuthString(), db);
+
         if(gameModel == null){
             errorSend(session, "Game does not exist");
-        }
-
-        // Check if user is a player in the game
-        if(gameModel.getBlackUsername() == null && gameModel.getWhiteUsername() == null){
+        }else if(gameModel.getBlackUsername() == null && gameModel.getWhiteUsername() == null){
             errorSend(session, "No players exist");
-        }
-
-        if(!Objects.equals(gameModel.getBlackUsername(), username) || !Objects.equals(gameModel.getWhiteUsername(), username)){
+        }else if(!Objects.equals(gameModel.getBlackUsername(), username) && !Objects.equals(gameModel.getWhiteUsername(), username)){
             errorSend(session, "You are not a player in this game");
-        }
-
-        if(Objects.equals(gameModel.getBlackUsername(), username) || Objects.equals(gameModel.getWhiteUsername(), username)){
+        }else if (Objects.equals(gameModel.getBlackUsername(), username) || Objects.equals(gameModel.getWhiteUsername(), username)){
             gameDatabase.deleteGame(resignCommand.getGameID(), db);
+            connectionHandler.broadcastAll(new Notification(username + " has resigned"), resignCommand.getGameID());
+            WebSockets.Connection connection = new WebSockets.Connection(resignCommand.getAuthString(), 0, session, username);
+            connectionHandler.addConnection(username, session, connection);
+        } else {
+            errorSend(session, "Unknown error");
         }
-
-        //Then broadcast the notification to all users in the game
-        //Delete the connection from the connection handler
-        connectionHandler.removeConnection(username);
-        WebSockets.Connection connection = new WebSockets.Connection(resignCommand.getAuthString(), resignCommand.getGameID(), session, username);
-        connectionHandler.broadcast(username, new Notification(username + " has resigned"), connection);
     }
 
     public void errorSend(Session session, String message) throws IOException {

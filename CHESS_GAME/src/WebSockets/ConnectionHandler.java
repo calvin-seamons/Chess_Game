@@ -39,13 +39,13 @@ public class ConnectionHandler {
         gameConnections.clear();
     }
 
-    public <T> void broadcast(String username, T message, Connection connection) {
+    public <T> void broadcast(String username, T message, int gameID) {
         System.out.println("Broadcasting to " + username);
         var closedSessions = new ArrayList<Connection>();
 
         for (Connection c : gameConnections.values()) {
             if (c.session.isOpen()) {
-                if(c.gameID == connection.gameID){
+                if(c.gameID == gameID){
                     if(!c.username.equals(username)){
                         try {
                             c.send(gson.toJson(message));
@@ -64,16 +64,18 @@ public class ConnectionHandler {
         }
     }
 
-    public void broadcastAll(Notification notification){
+    public void broadcastAll(Notification notification, int gameID){
         System.out.println("Broadcasting to all");
         var closedSessions = new ArrayList<Connection>();
 
         for (Connection c : gameConnections.values()) {
             if (c.session.isOpen()) {
-                try {
-                    c.send(gson.toJson(notification));
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if(c.gameID == gameID){
+                    try {
+                        c.send(gson.toJson(notification));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             else{
