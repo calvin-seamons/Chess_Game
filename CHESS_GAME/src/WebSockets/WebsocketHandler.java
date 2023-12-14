@@ -1,5 +1,8 @@
 package WebSockets;
 
+import Adapters.ChessMoveAdapter;
+import Adapters.ChessPieceAdapter;
+import Adapters.ChessPositionAdapter;
 import Models.Game;
 import chess.*;
 import com.google.gson.*;
@@ -59,6 +62,13 @@ public class WebsocketHandler {
         System.out.println("Thread activated");
         connection = db.getConnection();
         UserGameCommand command = gson.fromJson(message, UserGameCommand.class);
+        var loadBuilder = new GsonBuilder();
+        loadBuilder.registerTypeAdapter(ChessMove.class, new ChessMoveAdapter());
+        loadBuilder.registerTypeAdapter(ChessPosition.class, new ChessPositionAdapter());
+        loadBuilder.registerTypeAdapter(ChessPiece.class, new ChessPieceAdapter());
+
+        gson = loadBuilder.create();
+
         switch (command.getCommandType(
         )) {
             case CommandType.JOIN_PLAYER -> join(session, gson.fromJson(message, JoinPlayerCommand.class));
@@ -122,30 +132,47 @@ public class WebsocketHandler {
     private void observe(Session session, JoinObserverCommand command) throws DataAccessException, IOException {
         String username = authDatabase.getUserName(command.getAuthString(), db);
         Game gameModel = gameDatabase.getGameModel(command.getGameID(), db);
+
         if(username == null){
             errorSend(session, "Invalid auth token");
-            return;
-        } else if(gameModel == null){
+        }else if(gameModel == null){
             errorSend(session, "Game does not exist");
-            return;
+        }else{
+            LoadMessage loadMessage = new LoadMessage(gameModel);
+            session.getRemote().sendString(gson.toJson(loadMessage));
+            WebSockets.Connection connection = new WebSockets.Connection(command.getAuthString(), command.getGameID(), session, username);
+            connectionHandler.addConnection(username, session, connection);
+            Notification notification = new Notification("User " + username + " has joined the game");
+            notification.message = "Some bullshit string";
+            connectionHandler.broadcast(username, notification, connection);
         }
-
-        LoadMessage loadMessage = new LoadMessage(gameModel);
-        session.getRemote().sendString(gson.toJson(loadMessage));
-        WebSockets.Connection connection = new WebSockets.Connection(command.getAuthString(), command.getGameID(), session, username);
-        connectionHandler.addConnection(username, session, connection);
-        Notification notification = new Notification("User " + username + " has joined the game");
-        notification.message = "Some bullshit string";
-        connectionHandler.broadcast(username, notification, connection);
-
-//        session.getRemote().sendString(new Gson().toJson(loadMessage));
     }
 
     private void move(Session session, MakeMoveCommand moveCommand) throws DataAccessException, IOException {
         ChessMove move = moveCommand.getMove();
-        ChessGame chessGame = gameDatabase.JSONToGame(moveCommand.getGameImplementation());
+        Game gameModel = gameDatabase.getGameModel(moveCommand.getGameID(), db);
+        ChessGame chessGame = gameDatabase.JSONToGame(gameModel.getGameImplementation());
+        String username = authDatabase.getUserName(moveCommand.getAuthString(), db);
 
-        if(moveCommand.getTeamColor() != chessGame.getTeamTurn()){
+        if(gameModel == null){
+            errorSend(session, "Game does not exist");
+            return;
+        }
+
+        if(username == null){
+            errorSend(session, "Invalid auth token");
+            return;
+        }
+
+        if(!Objects.equals(gameModel.getWhiteUsername(), username) && !Objects.equals(gameModel.getBlackUsername(), username)){
+            errorSend(session, "You are not a player in this game");
+            return;
+        }
+
+        if(Objects.equals(gameModel.getWhiteUsername(), username) && chessGame.getTeamTurn() == ChessGame.TeamColor.BLACK){
+            errorSend(session, "It is not your turn");
+            return;
+        } else if (Objects.equals(gameModel.getBlackUsername(), username) && chessGame.getTeamTurn() == ChessGame.TeamColor.WHITE){
             errorSend(session, "It is not your turn");
             return;
         }
@@ -158,11 +185,18 @@ public class WebsocketHandler {
             throw new RuntimeException(e);
         }
 
-        Game gameModel = gameDatabase.getGameModel(moveCommand.getGameID(), db);
+        // TODO: Check to see if the opponent is in check
         gameModel.setGameImplementation(gson.toJson(chessGame));
         gameDatabase.updateGame(gameModel, db);
+
+        // Send the updated game model to all users in the game
         LoadMessage loadMessage = new LoadMessage(gameModel);
+        WebSockets.Connection connection = new WebSockets.Connection(moveCommand.getAuthString(), moveCommand.getGameID(), session, username);
+        connectionHandler.broadcast(moveCommand.getAuthString(), loadMessage, connection);
         session.getRemote().sendString(new Gson().toJson(loadMessage));
+
+        //Then broadcast the notification to all users in the game
+        connectionHandler.broadcast(moveCommand.getAuthString(), new Notification("User " + authDatabase.getUserName(moveCommand.getAuthString(), db) + " has made a move"), connection);
     }
 
     private void leave(Session session, LeaveCommand leaveCommand) throws DataAccessException {

@@ -3,38 +3,26 @@ package webSocketMessages.userCommands;
 import chess.*;
 
 public class MakeMoveCommand extends UserGameCommand{
-    int row;
-    int col;
-    int newRow;
-    int newCol;
+    ChessMove move;
 
-    ChessGame.TeamColor teamColor;
+//    ChessGame.TeamColor playerColor;
 
     String gameImplementation;
 
-    public MakeMoveCommand(int row, int col, int newRow, int newCol, String authToken, int gameID, String gameImplementation, ChessGame.TeamColor teamColor) {
+    public MakeMoveCommand(int row, int col, int newRow, int newCol, String authToken, int gameID, String gameImplementation) {
         super(CommandType.MAKE_MOVE, authToken, gameID);
-        this.row = row;
-        this.col = col;
-        this.newRow = newRow;
-        this.newCol = newCol;
+        this.move = new Chess_Move(new Chess_Position(row, col), new Chess_Position(newRow, newCol));
         this.gameImplementation = gameImplementation;
-        this.teamColor = teamColor;
+//        this.playerColor = playerColor;
     }
 
     public ChessMove getMove() {
-        ChessPosition position = new Chess_Position(row, col);
-        ChessPosition newPosition = new Chess_Position(newRow, newCol);
-
-        return new Chess_Move(position, newPosition);
+        return move;
     }
 
     public String getGameImplementation() {
         return gameImplementation;
     }
 
-    public ChessGame.TeamColor getTeamColor() {
-        return teamColor;
-    }
 
 }

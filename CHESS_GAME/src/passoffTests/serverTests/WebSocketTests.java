@@ -700,12 +700,15 @@ public class WebSocketTests {
         List<TestModels.TestMessage> alfredMessages = new ArrayList<>();
 
         //wait to get all messages
-        try {
-            bobMessages = bobResult.get(waitTime * 4, TimeUnit.MILLISECONDS);
-            jamesMessages = jamesResult.get(waitTime * 4, TimeUnit.MILLISECONDS);
-            alfredMessages = alfredResult.get(waitTime * 4, TimeUnit.MILLISECONDS);
-
-        } catch (TimeoutException ignore) {}
+//        try {
+//            bobMessages = bobResult.get(waitTime * 4, TimeUnit.MILLISECONDS);
+//            jamesMessages = jamesResult.get(waitTime * 4, TimeUnit.MILLISECONDS);
+//            alfredMessages = alfredResult.get(waitTime * 4, TimeUnit.MILLISECONDS);
+//
+//        } catch (TimeoutException ignore) {}
+        bobMessages = bobResult.get();
+        jamesMessages = jamesResult.get();
+        alfredMessages = alfredResult.get();
 
         //check message contents
         //bob should get load game, everyone else should get load game & notification

@@ -23,9 +23,10 @@ public class ConnectionHandler {
             gameConnections.put(username, connection);
         }
         else{
+            connection.session = session;
+            gameConnections.replace(username, connection);
             System.out.println("Connection already exists for " + username);
         }
-
     }
 
     public void removeConnection(String username){

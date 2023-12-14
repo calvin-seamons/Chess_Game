@@ -213,7 +213,7 @@ public class ChessClient implements NotificationHandler {
         ChessPosition newChessPosition = new Chess_Position(newRow, newCol);
         ChessMove move = new Chess_Move(chessPosition, newChessPosition);
 
-        MakeMoveCommand command = new MakeMoveCommand(row, col, newRow, newCol, currentUserAuthToken, currentGameID, gson.toJson(game), teamColor);
+        MakeMoveCommand command = new MakeMoveCommand(row, col, newRow, newCol, currentUserAuthToken, currentGameID, gson.toJson(game));
         websocketClient.send(command);
         try{
             Thread.sleep(500);
