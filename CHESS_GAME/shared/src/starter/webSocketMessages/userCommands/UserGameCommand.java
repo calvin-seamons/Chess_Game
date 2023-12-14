@@ -7,11 +7,10 @@ import java.util.Objects;
  */
 public class UserGameCommand {
 
-    public UserGameCommand(CommandType commandType, String authToken, int gameID, String username) {
+    public UserGameCommand(CommandType commandType, String authToken, int gameID) {
         this.commandType = commandType;
         this.authToken = authToken;
         this.gameID = gameID;
-        this.username = username;
     }
 
     public enum CommandType {
@@ -25,7 +24,6 @@ public class UserGameCommand {
     protected CommandType commandType;
     private final String authToken;
     private final int gameID;
-    private final String username;
 
     public String getAuthString() {
         return authToken;
@@ -35,7 +33,6 @@ public class UserGameCommand {
 
     public int getGameID() { return this.gameID; }
 
-    public String getUsername() { return this.username; }
 
     @Override
     public boolean equals(Object o) {

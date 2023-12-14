@@ -5,7 +5,7 @@ import java.util.Collection;
 
 public class Chess_Board implements ChessBoard {
     private final ChessPiece[][] board;
-    private ChessMove lastMove;
+    public ChessMove lastMove = new Chess_Move(new Chess_Position(1, 1), new Chess_Position(1, 1));
 
     public Chess_Board() {
         board = new ChessPiece[8][8];
@@ -16,17 +16,27 @@ public class Chess_Board implements ChessBoard {
         for(int i = 0; i < 8; i++){
             System.arraycopy(board.board[i], 0, this.board[i], 0, 8);
         }
-        // TODO: This could be a problem
         this.lastMove = board.lastMove;
     }
 
+    public Chess_Board(ChessPiece[][] board, ChessMove lastMove) {
+        this.board = board;
+        this.lastMove = lastMove;
+    }
+
     // NOT IN OG INTERFACE
+    @Override
     public void setLastMove(ChessMove lastMove) {
         this.lastMove = lastMove;
     }
 
     // NOT IN OG INTERFACE
+    @Override
     public ChessMove getLastMove() {
+        return lastMove;
+    }
+
+    public ChessMove getTheRealLastMove() {
         return lastMove;
     }
 

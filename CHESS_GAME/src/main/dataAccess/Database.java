@@ -46,7 +46,6 @@ public class Database {
             if (connections.isEmpty()) {
                 connection = DriverManager.getConnection(CONNECTION_URL, DB_USERNAME, DB_PASSWORD);
                 connection.setCatalog(DB_NAME);
-                System.out.println("Successfully connected to the database server!");  // <-- Added this line
             } else {
                 connection = connections.removeFirst();
             }

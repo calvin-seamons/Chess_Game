@@ -1,6 +1,12 @@
 package ui;
 
-import chess.ChessBoard;
+import Adapters.ChessBoardAdapter;
+import Adapters.ChessGameAdapter;
+import Adapters.ChessPieceAdapter;
+import Adapters.LoadMessageAdapter;
+import chess.*;
+import com.google.gson.GsonBuilder;
+import webSocketMessages.serverMessages.LoadMessage;
 import webSocketMessages.serverMessages.Notification;
 import com.google.gson.Gson;
 import webSocketMessages.serverMessages.ServerMessage;
@@ -9,6 +15,7 @@ import webSocketMessages.userCommands.UserGameCommand;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.CountDownLatch;
 import javax.websocket.*;
 
 import static webSocketMessages.serverMessages.ServerMessage.ServerMessageType.*;
@@ -30,7 +37,7 @@ public class WebsocketClient extends Endpoint {
                     ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
                     switch (serverMessage.getServerMessageType()) {
                         case NOTIFICATION -> notificationHandler.message(new Gson().fromJson(message, Notification.class).message);
-                        case LOAD_GAME -> notificationHandler.updateBoard(JSONtoGame(message));
+                        case LOAD_GAME -> notificationHandler.updateBoard(JSONToGame(message));
                         case ERROR -> notificationHandler.error(new Gson().fromJson(message, Notification.class).toString());
                     }
                 } catch (Exception e){
@@ -45,9 +52,23 @@ public class WebsocketClient extends Endpoint {
         this.session.getBasicRemote().sendText(new Gson().toJson(command));
     }
 
-    private ChessBoard JSONtoGame(String message) {
-        System.out.println("JSON to game");
-        return null;
+    public Chess_Game JSONToGame(String json) {
+        // Check if the json is null
+        if (json == null) {
+            System.out.println("JSON is null");
+            return null;
+        }
+        var loadBuilder = new GsonBuilder();
+        loadBuilder.registerTypeAdapter(LoadMessage.class, new LoadMessageAdapter());
+        LoadMessage loadMessage = new Gson().fromJson(json, LoadMessage.class);
+        String gameString = loadMessage.game.getGameImplementation();
+
+        var builder = new GsonBuilder();
+        builder.registerTypeAdapter(ChessBoard.class, new ChessBoardAdapter());
+        builder.registerTypeAdapter(ChessPiece.class, new ChessPieceAdapter());
+
+        ChessGame game = builder.create().fromJson(gameString, Chess_Game.class);
+        return (Chess_Game)game;
     }
 
     @Override

@@ -17,6 +17,11 @@ public class Chess_Game implements ChessGame{
         this.board = new Chess_Board((Chess_Board) game.board);
     }
 
+    public Chess_Game(TeamColor teamTurn, ChessBoard board) {
+        this.teamTurn = teamTurn;
+        this.board = board;
+    }
+
     /**
      * @return Which team's turn it is
      */
@@ -50,7 +55,7 @@ public class Chess_Game implements ChessGame{
         boolean castleKingSideTried = false;
         boolean castleQueenSideTried = false;
 
-        Collection<ChessMove> chessMoves = board.getPiece(startPosition).pieceMoves(board, startPosition);
+        Collection<ChessMove> chessMoves = board.getPiece(startPosition).pieceMoves(board, (ChessPosition)startPosition);
         Collection<ChessMove> invalidChessMoves = new ArrayList<ChessMove>();
 
         if(board.getPiece(startPosition).getPieceType() == ChessPiece.PieceType.KING){

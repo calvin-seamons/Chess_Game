@@ -1,11 +1,12 @@
 package main.dataAccess;
 
+import Adapters.*;
 import Models.Game;
-import chess.ChessGame;
-import chess.Chess_Game;
+import chess.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,6 +20,7 @@ import java.util.List;
  * GameDAO class that has methods to create, read, update, and delete games
  */
 public class GameDAO {
+    Gson gson = new Gson();
     private List<Game> databaseGames = new ArrayList<>();
     private static final String INSERT_GAME_SQL = "INSERT INTO games (gameID, whiteUsername, blackUsername, gameName, gameImplementation) VALUES (?, ?, ?, ?, ?);";
     final String CHECK_GAME_SQL = "SELECT count(*) FROM games WHERE gameName = ?";
@@ -29,6 +31,8 @@ public class GameDAO {
     final String DELETE_GAME_SQL = "DELETE FROM games WHERE gameID = ?";
     final String FIND_ALL_GAMES_SQL = "SELECT * FROM games";
     final String CLEAR_GAME_DATABASE_SQL = "DELETE FROM games"; // Replace 'games' with your actual table name
+    final String SET_WHITE_USERNAME_SQL = "UPDATE games SET whiteUsername = ? WHERE gameID = ?";
+    final String SET_BLACK_USERNAME_SQL = "UPDATE games SET blackUsername = ? WHERE gameID = ?";
 
 
 
@@ -51,7 +55,10 @@ public class GameDAO {
             pstmt.setString(3, game.getBlackUsername());
             pstmt.setString(4, game.getGameName());
 
-            String json = gameToJSON(new Chess_Game());
+            // Making sure all the pieces are there by resetting it
+            Chess_Game chessGame = new Chess_Game();
+            chessGame.getBoard().resetBoard();
+            String json = gson.toJson(chessGame);
             pstmt.setString(5, json);
 
             int affectedRows = pstmt.executeUpdate();
@@ -256,7 +263,7 @@ public class GameDAO {
         }
     }
 
-    public Game getGame(int gameID, Database db) throws DataAccessException {
+    public Game getGameModel(int gameID, Database db) throws DataAccessException {
         try (Connection conn = db.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(GET_GAME_SQL)) {
 
@@ -279,6 +286,58 @@ public class GameDAO {
             throw new DataAccessException("Error reading the game from the database");
         }
         return null;
+    }
+
+    public void removePlayer(String userType, int gameID, Database db) throws DataAccessException {
+        String updateString;
+        if(userType.equals("white")){
+            updateString = SET_WHITE_USERNAME_SQL;
+        } else if(userType.equals("black")){
+            updateString = SET_BLACK_USERNAME_SQL;
+        } else{
+            System.out.println("Error: Invalid user type");
+            return;
+        }
+
+        try (Connection conn = db.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(updateString)) {
+
+            pstmt.setString(1, null);
+            pstmt.setInt(2, gameID);
+
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Updating game failed, no rows affected.");
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Error updating the game in the database");
+        }
+    }
+
+    public void addPlayer(String userType, int gameID, String username, Database db) throws DataAccessException {
+        String updateString;
+        if(userType.equals("white")){
+            updateString = SET_WHITE_USERNAME_SQL;
+        } else if(userType.equals("black")){
+            updateString = SET_BLACK_USERNAME_SQL;
+        } else{
+            System.out.println("Error: Invalid user type");
+            return;
+        }
+
+        try (Connection conn = db.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(updateString)) {
+
+            pstmt.setString(1, username);
+            pstmt.setInt(2, gameID);
+
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Updating game failed, no rows affected.");
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Error updating the game in the database");
+        }
     }
 
 
@@ -304,6 +363,16 @@ public class GameDAO {
     }
 
     public Chess_Game JSONToGame(String json) {
-        return new Gson().fromJson(json, Chess_Game.class);
+        // Check if the json is null
+        if (json == null) {
+            System.out.println("JSON is null");
+            return null;
+        }
+
+        var builder = new GsonBuilder();
+        builder.registerTypeAdapter(ChessBoard.class, new ChessBoardAdapter());
+        builder.registerTypeAdapter(ChessPiece.class, new ChessPieceAdapter());
+
+        return builder.create().fromJson(json, Chess_Game.class);
     }
 }

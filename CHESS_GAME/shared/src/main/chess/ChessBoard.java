@@ -6,7 +6,6 @@ import java.util.Collection;
  * A chessboard that can hold and rearrange chess pieces
  */
 public interface ChessBoard {
-
     /**
      * Adds a chess piece to the chessboard
      * @param position where to add the piece to
@@ -21,6 +20,7 @@ public interface ChessBoard {
      */
     ChessPiece getPiece(ChessPosition position);
 
+
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
@@ -30,6 +30,7 @@ public interface ChessBoard {
     void setLastMove(ChessMove move);
 
     ChessMove getLastMove();
+
 
     // NOT IN OG INTERFACE
     Collection<ChessPiece> getOpponentPieces(ChessGame.TeamColor teamColor);

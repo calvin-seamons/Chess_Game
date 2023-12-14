@@ -5,10 +5,11 @@ import ui.EscapeSequences;
 import ui.HTTPClient;
 import ui.NotificationHandler;
 import ui.WebsocketClient;
-import webSocketMessages.userCommands.JoinPlayerCommand;
+import webSocketMessages.userCommands.*;
+import java.util.concurrent.CountDownLatch;
+
 
 import java.io.IOException;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
@@ -29,13 +30,18 @@ public class ChessClient implements NotificationHandler {
     public HTTPClient client;
 
     private AppState currentState = AppState.PRE_LOGIN;
-    private Chess_Game game;
+    private Chess_Game game = new Chess_Game();
+    ChessGame.TeamColor teamColor;
+    private int currentGameID;
     static String URL = "http://localhost:8080";
     NotificationHandler notificationHandler;
 
     public ChessClient() throws Exception{
         client = new HTTPClient(URL);
         websocketClient = new WebsocketClient("ws://localhost:8080/connect", this);
+        Chess_Board board = new Chess_Board();
+        board.resetBoard();
+        game.setBoard(board);
     }
 
 
@@ -73,16 +79,17 @@ public class ChessClient implements NotificationHandler {
             System.out.println("Help - " + EscapeSequences.SET_TEXT_COLOR_YELLOW + "To display this menu" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
         }
         else{
-            System.out.println(EscapeSequences.SET_TEXT_COLOR_MAGENTA + "Redraw Chess Board - " + EscapeSequences.SET_TEXT_COLOR_YELLOW + "To redraw the chess board" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
+            System.out.println(EscapeSequences.SET_TEXT_COLOR_MAGENTA + "Redraw Chess Board - " + EscapeSequences.SET_TEXT_COLOR_YELLOW + "To redraw the chess board ('redraw')" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
             System.out.println("Make Move - " + EscapeSequences.SET_TEXT_COLOR_YELLOW  + "To make a move" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
-            System.out.println("Highlight Legal Moves - " + EscapeSequences.SET_TEXT_COLOR_YELLOW  + "To highlight legal moves" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            System.out.println("Highlight Legal Moves - " + EscapeSequences.SET_TEXT_COLOR_YELLOW  + "To highlight legal moves ('legal moves')" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
             System.out.println("Resign - " + EscapeSequences.SET_TEXT_COLOR_YELLOW  + "To resign" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
             System.out.println("Leave - " + EscapeSequences.SET_TEXT_COLOR_YELLOW  + "To leave the game" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
             System.out.println("Help - " + EscapeSequences.SET_TEXT_COLOR_YELLOW + "To display this menu" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
         }
     }
 
-    private void processInput(String input) {
+    private void processInput(String input) throws IOException {
         switch (input.toLowerCase()) {
             case "login":
                 System.out.print("Enter username: ");
@@ -105,6 +112,30 @@ public class ChessClient implements NotificationHandler {
                 String gameName = new Scanner(System.in).nextLine();
                 handleCreate(gameName);
                 break;
+            case "legal moves":
+                System.out.println("What piece do you want to move? ");
+                System.out.print("Enter row: ");
+                int theRow = Integer.parseInt(new Scanner(System.in).nextLine());
+                System.out.print("Enter column: ");
+                int theCol = Integer.parseInt(new Scanner(System.in).nextLine());
+                handleLegalMoves(theRow, theCol);
+                break;
+            case "redraw":
+                handleRedrawBoard(teamColor);
+                break;
+            case "make move":
+                System.out.println("What piece do you want to move? ");
+                System.out.print("Enter row: ");
+                int row = Integer.parseInt(new Scanner(System.in).nextLine());
+                System.out.print("Enter column: ");
+                int col = Integer.parseInt(new Scanner(System.in).nextLine());
+                System.out.println("Where do you want to move it? ");
+                System.out.print("Enter row: ");
+                int newRow = Integer.parseInt(new Scanner(System.in).nextLine());
+                System.out.print("Enter column: ");
+                int newCol = Integer.parseInt(new Scanner(System.in).nextLine());
+                handleMove(row, col, newRow, newCol);
+                break;
             case "list":
                 handleList();
                 break;
@@ -120,6 +151,9 @@ public class ChessClient implements NotificationHandler {
                     System.out.println("Error: Invalid game number\n*Don't forget to list the games first*\n");
                 }
                 break;
+            case "leave":
+                handleLeave();
+                break;
             case "logout":
                 handleLogout();
                 break;
@@ -128,21 +162,73 @@ public class ChessClient implements NotificationHandler {
                 String observeGameNumber = new Scanner(System.in).nextLine();
                 handleObserve(observeGameNumber);
                 break;
+            case "resign":
+                handleResign();
+                break;
             case "help":
                 break;
             case "quit":
                 System.exit(0);
                 break;
-// TODO: Implement Make move with websockets, Resign, Leave, and Highlight legal moves
             default:
                 System.out.println("Invalid command\n");
                 break;
         }
     }
 
+    private void handleLegalMoves(int theRow, int theCol) {
+        // Implementation for highlight legal moves
+        System.out.println("Highlighting legal moves: ");
+        ChessPosition chessPosition = new Chess_Position(theRow, theCol);
+        ArrayList<ChessMove> moves = (ArrayList<ChessMove>) game.getBoard().getPiece(chessPosition).pieceMoves(game.getBoard(), chessPosition);
+        // TODO: Highlight the legal moves
+        for (ChessMove move : moves) {
+            System.out.println("Row: " + move.getEndPosition().getRow() + " Col: " + move.getEndPosition().getColumn());
+        }
+        System.out.println();
+    }
+
+    private void handleRedrawBoard(ChessGame.TeamColor teamColor) {
+        // Implementation for redraw chess board
+//        System.out.println("Redrawing chess board: ");
+        // If teamColor is null, then print both boards
+        if (teamColor == null) {
+            showBoard("white", game.getBoard());
+            showBoard("black", game.getBoard());
+            return;
+        }
+
+        showBoard(teamColor.toString().toLowerCase(), game.getBoard());
+    }
+
+    private void handleMove(int row, int col, int newRow, int newCol) throws IOException {
+        ChessPosition chessPosition = new Chess_Position(row, col);
+        ChessPosition newChessPosition = new Chess_Position(newRow, newCol);
+        ChessMove move = new Chess_Move(chessPosition, newChessPosition);
+
+        MakeMoveCommand command = new MakeMoveCommand(row, col, newRow, newCol, currentUserAuthToken, currentGameID);
+        websocketClient.send(command);
+//        System.out.println("Making move: " + move.toString());
+    }
+
+    private void handleResign() throws IOException {
+        ResignCommand command = new ResignCommand(currentUserAuthToken, currentGameID);
+        websocketClient.send(command);
+//        System.out.println("Resigning game " + currentGameID + ": ");
+        currentGameID = 0;
+        currentState = AppState.POST_LOGIN;
+    }
+
+    private void handleLeave() throws IOException{
+        LeaveCommand command = new LeaveCommand(currentUserAuthToken, currentGameID, teamColor);
+        websocketClient.send(command);
+        System.out.println("Leaving game " + currentGameID + ": ");
+        currentGameID = 0;
+        currentState = AppState.POST_LOGIN;
+    }
+
     private void handleLogout() {
         // Implementation for logout
-        System.out.print("Logging out: ");
         LogoutResult result = client.logout(currentUserAuthToken);
 
         if(result == null){
@@ -160,9 +246,7 @@ public class ChessClient implements NotificationHandler {
         }
     }
 
-    private void handleObserve(String observeGameNumber) {
-        // TODO: Websockets
-        System.out.print("Observing game " + observeGameNumber + ": ");
+    private void handleObserve(String observeGameNumber) throws IOException {
         // Check to see if the game number is valid
         if(Integer.parseInt(observeGameNumber) > games.size() || Integer.parseInt(observeGameNumber) < 1){
             System.out.println(EscapeSequences.SET_TEXT_COLOR_RED + "Error: Invalid game number\n*Don't forget to list the games first*\n" + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
@@ -183,14 +267,18 @@ public class ChessClient implements NotificationHandler {
             board.resetBoard();
             showBoard("white", board);
             showBoard("black", board);
+            currentGameID = gameID;
+
+            // Implementing the WebSocket
+            JoinObserverCommand command = new JoinObserverCommand(gameID, currentUserAuthToken);
+            websocketClient.send(command);
+            currentState = AppState.IN_GAME;
         } else {
             errorMessageHandler(result.getMessage());
         }
     }
 
-    private void handleJoin(int gameNumber, String team) throws IOException {
-        // TODO: Websockets
-        System.out.println("Joining game " + gameNumber + " as " + team + ": ");
+    private void handleJoin(int gameNumber, String team) throws IOException, InterruptedException {
         if(!team.equalsIgnoreCase("white") && !team.equalsIgnoreCase("black")){
             System.out.println("Error: Invalid team color");
             return;
@@ -213,16 +301,28 @@ public class ChessClient implements NotificationHandler {
         //TODO: This will change
         if(result.getMessage() == null){
             System.out.println("Success\n");
-            ChessBoard board = new Chess_Board();
-            board.resetBoard();
-            showBoard("white", board);
-            showBoard("black", board);
+//            ChessBoard board = new Chess_Board();
+//            board.resetBoard();
+//            showBoard("white", board);
+//            showBoard("black", board);
 
             team = team.toUpperCase();
             ChessGame.TeamColor teamColor = team.equalsIgnoreCase("white") ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
-            JoinPlayerCommand command = new JoinPlayerCommand(gameID, teamColor, currentUsername, currentUserAuthToken);
+
+            currentGameID = gameID;
+            this.teamColor = teamColor;
+            JoinPlayerCommand command = new JoinPlayerCommand(gameID, teamColor, currentUserAuthToken);
+
             websocketClient.send(command);
-            System.out.println("\n You should've joined game " + gameID + " as " + teamColor + "\n");
+            try{
+                Thread.sleep(500);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+            currentState = AppState.IN_GAME;
+//            System.out.println("\n You should've joined game " + gameID + " as " + teamColor + "\n");
 
         } else {
             errorMessageHandler(result.getMessage());
@@ -231,7 +331,7 @@ public class ChessClient implements NotificationHandler {
 
     private void handleList() {
         // Implementation for list
-        System.out.print("Listing games: ");
+//        System.out.print("Listing games: ");
         ListGamesResult result = client.listGames(currentUserAuthToken);
 
         if(result == null) {
@@ -258,7 +358,7 @@ public class ChessClient implements NotificationHandler {
 
     private void handleCreate(String gameName) {
         // Implementation for create
-        System.out.print("Creating game " + gameName + ": ");
+//        System.out.print("Creating game " + gameName + ": ");
         CreateGameResult result = client.createGame(gameName, currentUserAuthToken);
 
         if(result == null) {
@@ -276,7 +376,7 @@ public class ChessClient implements NotificationHandler {
 
     private void handleRegister(String username, String password, String email) {
         // Implementation for register
-        System.out.print("Registering user " + username + " with password " + password + " and email " + email + ": ");
+//        System.out.print("Registering user " + username + " with password " + password + " and email " + email + ": ");
 
         // Check if username is already taken
         // If not, create user
@@ -300,7 +400,7 @@ public class ChessClient implements NotificationHandler {
     private void handleLogin(String username, String password) {
         // Implementation for login
         // On successful login, change state to POST_LOGIN
-        System.out.print("Logging in user: ");
+//        System.out.print("Logging in user: ");
         LoginResult result = client.login(username, password);
 
         if (result == null) {
@@ -372,25 +472,21 @@ public class ChessClient implements NotificationHandler {
         System.out.print(EscapeSequences.RESET_BG_COLOR);
     }
 
-    public String errorMessageHandler(String message) {
+    public void errorMessageHandler(String message) {
         // Check to see if the message contains the number 400
         if (message.contains("400")) {
             message = "Error: Bad Request\n";
             System.out.println(EscapeSequences.SET_TEXT_COLOR_RED + message + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
-            return message;
         } else if(message.contains("401")){
             message = "Error: Unauthorized\n";
             System.out.println(EscapeSequences.SET_TEXT_COLOR_RED + message + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
-            return message;
         } else if(message.contains("403")){
             message = "Error: Already Taken\n";
             System.out.println(EscapeSequences.SET_TEXT_COLOR_RED + message + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
-            return message;
         }
         else{
             message = "Error: Server Problem (Or something else)\n";
             System.out.println(EscapeSequences.SET_TEXT_COLOR_RED + message + EscapeSequences.SET_TEXT_COLOR_MAGENTA);
-            return message;
         }
     }
 
@@ -402,8 +498,9 @@ public class ChessClient implements NotificationHandler {
     }
 
     @Override
-    public void updateBoard(ChessBoard board) {
-        this.game.setBoard(board);
+    public void updateBoard(Chess_Game game) {
+        this.game.setBoard(game.getBoard());
+        showBoard(teamColor.toString().toLowerCase(), game.getBoard());
     }
 
     @Override

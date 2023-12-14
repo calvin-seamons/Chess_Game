@@ -87,7 +87,6 @@ public class Chess_Piece implements ChessPiece{
         else if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.QUEEN)
             return queenMoves(board, myPosition);
         else if(board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.KING) {
-//            board.setOpponentValidEndPositions(board.getPiece(myPosition).getTeamColor());
             return kingMoves(board, myPosition, false);
         }
         else
